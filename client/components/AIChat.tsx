@@ -59,7 +59,11 @@ export default function AIChat() {
         message: input,
         context: {
           chaosFactor: 5, // This would come from the adventure log
-          currentScene: "Current adventure scene",
+          currentScene: "Shadowbrook Village - investigating missing villagers",
+          activeThreads: [
+            "Investigate the missing villagers",
+            "Find the ancient tomb entrance",
+          ],
         },
       };
 
