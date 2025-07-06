@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Brain, Wand2 } from "lucide-react";
+import { AIChatRequest, AIChatResponse } from "@shared/api";
 
 interface Message {
   id: string;
