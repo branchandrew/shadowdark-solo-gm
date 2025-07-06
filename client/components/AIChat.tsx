@@ -103,24 +103,10 @@ export default function AIChat() {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between text-lg">
-          <div className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-primary" />
-            AI Game Master
-            <Wand2 className="h-4 w-4 text-accent" />
-          </div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Dices className="h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-0" align="end">
-              <div className="h-[500px]">
-                <DiceRoller />
-              </div>
-            </PopoverContent>
-          </Popover>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Brain className="h-5 w-5 text-primary" />
+          AI Game Master
+          <Wand2 className="h-4 w-4 text-accent" />
         </CardTitle>
       </CardHeader>
 
@@ -177,14 +163,32 @@ export default function AIChat() {
             className="flex-1 min-h-[60px] max-h-[120px] resize-none"
             disabled={isLoading}
           />
-          <Button
-            onClick={handleSend}
-            disabled={!input.trim() || isLoading}
-            size="icon"
-            className="h-[60px] w-[60px]"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-[28px] w-[60px]"
+                >
+                  <Dices className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="h-[500px]">
+                  <DiceRoller />
+                </div>
+              </PopoverContent>
+            </Popover>
+            <Button
+              onClick={handleSend}
+              disabled={!input.trim() || isLoading}
+              size="icon"
+              className="h-[28px] w-[60px]"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

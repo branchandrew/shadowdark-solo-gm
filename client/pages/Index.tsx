@@ -1,6 +1,11 @@
 import AIChat from "@/components/AIChat";
 import RightPanel from "@/components/RightPanel";
 import ThemeToggle from "@/components/ThemeToggle";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Sword } from "lucide-react";
@@ -33,17 +38,23 @@ export default function Index() {
       {/* Main Content */}
       <main className="h-[calc(100vh-5rem)] overflow-hidden">
         <div className="container mx-auto px-4 py-4 h-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
+          <ResizablePanelGroup direction="horizontal" className="h-full">
             {/* Left Panel - AI Chat */}
-            <div className="h-full">
-              <AIChat />
-            </div>
+            <ResizablePanel defaultSize={33} minSize={20} maxSize={50}>
+              <div className="h-full pr-2">
+                <AIChat />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle />
 
             {/* Right Panel - Tabs */}
-            <div className="h-full">
-              <RightPanel />
-            </div>
-          </div>
+            <ResizablePanel defaultSize={67} minSize={50}>
+              <div className="h-full pl-2">
+                <RightPanel />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </main>
     </div>
