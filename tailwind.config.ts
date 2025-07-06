@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        shadowdark: {
+          gold: "hsl(45, 100%, 65%)",
+          bronze: "hsl(30, 60%, 45%)",
+          steel: "hsl(210, 15%, 50%)",
+          shadow: "hsl(210, 25%, 15%)",
+          ember: "hsl(15, 80%, 55%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
