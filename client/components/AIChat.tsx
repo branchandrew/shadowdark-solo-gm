@@ -46,18 +46,42 @@ export default function AIChat() {
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual Claude API call)
-    setTimeout(() => {
+    // Call AI chat API
+    try {
+      const response = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: input,
+          context: {
+            chaosFactor: 5, // This would come from the adventure log
+            currentScene: "Current adventure scene",
+          },
+        }),
+      });
+
+      const data = await response.json();
       const gmResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: "gm",
-        content:
-          "I understand your action. Let me consult the Mythic oracle... [This would be connected to Claude 3.5 API for dynamic responses]",
+        content: data.response,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, gmResponse]);
+    } catch (error) {
+      console.error("Error calling AI:", error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "gm",
+        content: "Sorry, I encountered an error. Please try again.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
