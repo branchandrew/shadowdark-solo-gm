@@ -1,8 +1,9 @@
 import AIChat from "@/components/AIChat";
 import RightPanel from "@/components/RightPanel";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Sword, Moon, Star } from "lucide-react";
+import { Sword } from "lucide-react";
 
 export default function Index() {
   return (
@@ -24,14 +25,7 @@ export default function Index() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="p-1 rounded-full bg-primary/20">
-                <Moon className="h-4 w-4 text-primary" />
-              </div>
-              <div className="p-1 rounded-full bg-accent/20">
-                <Star className="h-4 w-4 text-accent" />
-              </div>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
