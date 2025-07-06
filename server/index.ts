@@ -3,6 +3,15 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAIChat } from "./routes/ai-chat";
 
+// Load environment variables if .env file exists
+if (process.env.NODE_ENV !== "production") {
+  try {
+    require("dotenv").config();
+  } catch {
+    // dotenv not available, continue without it
+  }
+}
+
 export function createServer() {
   const app = express();
 
