@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Sword, Shield, Heart, Zap, User, Scroll } from "lucide-react";
+import {
+  Sword,
+  Shield,
+  Heart,
+  Zap,
+  User,
+  Scroll,
+  Plus,
+  Upload,
+  FileText,
+} from "lucide-react";
 
 interface CharacterStats {
   name: string;
@@ -29,26 +40,106 @@ interface CharacterStats {
 }
 
 export default function CharacterSheet() {
-  const [character, setCharacter] = useState<CharacterStats>({
-    name: "Kael Shadowstep",
-    class: "Rogue",
-    ancestry: "Human",
-    background: "Urchin",
-    level: 1,
-    hitPoints: { current: 6, max: 6 },
-    armorClass: 12,
-    attributes: {
-      strength: 10,
-      dexterity: 15,
-      constitution: 12,
-      intelligence: 13,
-      wisdom: 14,
-      charisma: 8,
-    },
-    talents: ["Backstab", "Thievery"],
-    equipment: ["Shortsword", "Leather Armor", "Thieves' Tools", "50 gold"],
-    spells: [],
-  });
+  const [character, setCharacter] = useState<CharacterStats | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const createNewCharacter = () => {
+    const newCharacter: CharacterStats = {
+      name: "",
+      class: "",
+      ancestry: "",
+      background: "",
+      level: 1,
+      hitPoints: { current: 0, max: 0 },
+      armorClass: 10,
+      attributes: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10,
+      },
+      talents: [],
+      equipment: [],
+      spells: [],
+    };
+    setCharacter(newCharacter);
+    setIsCreating(true);
+  };
+
+  const importCharacter = () => {
+    // Simulate importing a character (in real implementation, this would open a file dialog)
+    const importedCharacter: CharacterStats = {
+      name: "Kael Shadowstep",
+      class: "Rogue",
+      ancestry: "Human",
+      background: "Urchin",
+      level: 1,
+      hitPoints: { current: 6, max: 6 },
+      armorClass: 12,
+      attributes: {
+        strength: 10,
+        dexterity: 15,
+        constitution: 12,
+        intelligence: 13,
+        wisdom: 14,
+        charisma: 8,
+      },
+      talents: ["Backstab", "Thievery"],
+      equipment: ["Shortsword", "Leather Armor", "Thieves' Tools", "50 gold"],
+      spells: [],
+    };
+    setCharacter(importedCharacter);
+    setIsCreating(false);
+  };
+
+  const resetCharacterSheet = () => {
+    setCharacter(null);
+    setIsCreating(false);
+  };
+
+  // Blank state when no character exists
+  if (!character) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2">
+              <User className="h-6 w-6" />
+              Character Sheet
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center space-y-2">
+              <FileText className="h-12 w-12 mx-auto text-muted-foreground" />
+              <p className="text-muted-foreground">
+                No character loaded. Create a new character or import an
+                existing one to get started.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button onClick={createNewCharacter} className="w-full" size="lg">
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Character
+              </Button>
+
+              <Button
+                onClick={importCharacter}
+                variant="outline"
+                className="w-full"
+                size="lg"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Import Character Sheet
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const getModifier = (score: number) => {
     return Math.floor((score - 10) / 2);
@@ -60,6 +151,20 @@ export default function CharacterSheet() {
 
   return (
     <div className="space-y-6">
+      {/* Character Management */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Character Management
+            </span>
+            <Button onClick={resetCharacterSheet} variant="outline" size="sm">
+              New Character
+            </Button>
+          </CardTitle>
+        </CardHeader>
+      </Card>
       {/* Character Identity */}
       <Card>
         <CardHeader>
