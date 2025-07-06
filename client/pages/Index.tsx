@@ -37,16 +37,16 @@ export default function Index() {
       </header>
 
       {/* Main Content */}
-      <main className="h-[calc(100vh-5rem)]">
+      <main className="h-[calc(100vh-5rem)] overflow-hidden">
         <div className="container mx-auto px-4 py-4 h-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
             {/* Left Panel - AI Chat */}
-            <div className="flex flex-col h-full">
+            <div className="h-full">
               <AIChat />
             </div>
 
             {/* Right Panel - Tabs */}
-            <div className="flex flex-col h-full">
+            <div className="h-full">
               <RightPanel />
             </div>
           </div>

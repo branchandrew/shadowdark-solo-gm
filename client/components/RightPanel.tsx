@@ -23,20 +23,22 @@ export default function RightPanel() {
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="character" className="flex-1 mt-4">
-        <ScrollArea className="h-full pr-2">
+      <TabsContent value="character" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <CharacterSheet />
         </ScrollArea>
       </TabsContent>
 
-      <TabsContent value="adventure" className="flex-1 mt-4">
-        <ScrollArea className="h-full pr-2">
+      <TabsContent value="adventure" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <AdventureLog />
         </ScrollArea>
       </TabsContent>
 
-      <TabsContent value="dice" className="flex-1 mt-4">
-        <DiceRoller />
+      <TabsContent value="dice" className="flex-1 mt-4 overflow-hidden">
+        <div className="h-[calc(100vh-12rem)]">
+          <DiceRoller />
+        </div>
       </TabsContent>
     </Tabs>
   );
