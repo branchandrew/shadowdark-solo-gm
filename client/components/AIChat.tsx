@@ -3,8 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Brain, Wand2 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Send, Brain, Wand2, Dices } from "lucide-react";
 import { AIChatRequest, AIChatResponse } from "@shared/api";
+import DiceRoller from "./DiceRoller";
 
 interface Message {
   id: string;
@@ -97,10 +103,24 @@ export default function AIChat() {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Brain className="h-5 w-5 text-primary" />
-          AI Game Master
-          <Wand2 className="h-4 w-4 text-accent" />
+        <CardTitle className="flex items-center justify-between text-lg">
+          <div className="flex items-center gap-2">
+            <Brain className="h-5 w-5 text-primary" />
+            AI Game Master
+            <Wand2 className="h-4 w-4 text-accent" />
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Dices className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-0" align="end">
+              <div className="h-[500px]">
+                <DiceRoller />
+              </div>
+            </PopoverContent>
+          </Popover>
         </CardTitle>
       </CardHeader>
 
