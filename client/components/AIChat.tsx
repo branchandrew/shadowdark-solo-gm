@@ -49,21 +49,23 @@ export default function AIChat() {
 
     // Call AI chat API
     try {
+      const requestBody: AIChatRequest = {
+        message: input,
+        context: {
+          chaosFactor: 5, // This would come from the adventure log
+          currentScene: "Current adventure scene",
+        },
+      };
+
       const response = await fetch("/api/ai-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          message: input,
-          context: {
-            chaosFactor: 5, // This would come from the adventure log
-            currentScene: "Current adventure scene",
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
+      const data: AIChatResponse = await response.json();
       const gmResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: "gm",
