@@ -128,9 +128,6 @@ export default function AIChat() {
                   <p className="text-sm whitespace-pre-wrap">
                     {message.content}
                   </p>
-                  <span className="text-xs opacity-70 mt-1 block">
-                    {message.timestamp.toLocaleTimeString()}
-                  </span>
                 </div>
               </div>
             ))}
