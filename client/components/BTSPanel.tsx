@@ -41,7 +41,49 @@ interface AdventureArc {
 }
 
 export default function BTSPanel() {
-  const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
+  const [adventureArc, setAdventureArc] = useState<AdventureArc>({
+    bbeg: {
+      name: "Malachar the Shadow Weaver",
+      description:
+        "An ancient necromancer who seeks to merge the Material Plane with the Shadowfell",
+      motivation:
+        "Believes death is the only truth and seeks to end all suffering by ending all life",
+      power: "Can manipulate shadows, raise undead, and corrupt living beings",
+    },
+    secrets: [
+      "The local temple's high priest is secretly working for Malachar",
+      "The missing villagers are being turned into shadow thralls",
+      "A hidden portal to the Shadowfell lies beneath the old oak tree",
+      "Malachar's power wanes during the new moon",
+    ],
+    highTowerSurprise:
+      "The tower that appears to be Malachar's stronghold is actually a decoy - his real lair is in the village crypt",
+    lieutenants: [
+      {
+        name: "Brother Thaddeus",
+        role: "Corrupted Priest",
+        description:
+          "Once holy, now serves shadow. Provides information and recruits from within the village",
+      },
+      {
+        name: "Shade Captain Korth",
+        role: "Undead Commander",
+        description: "A fallen paladin now commanding Malachar's undead forces",
+      },
+    ],
+    minions: [
+      {
+        type: "Shadow Thralls",
+        count: 12,
+        description: "Corrupted villagers with shadowy tendrils",
+      },
+      {
+        type: "Skeleton Warriors",
+        count: 8,
+        description: "Armed with rusty weapons and dark magic",
+      },
+    ],
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [scriptInput, setScriptInput] = useState("");
   const [promptInput, setPromptInput] = useState("");
@@ -50,58 +92,59 @@ export default function BTSPanel() {
   const [isRunningScript, setIsRunningScript] = useState(false);
   const [isRunningPrompt, setIsRunningPrompt] = useState(false);
 
-  const generateAdventure = async () => {
+  const regenerateAdventure = async () => {
     setIsGenerating(true);
 
-    // Simulate adventure generation (replace with actual Python script calls)
+    // Simulate adventure regeneration with different content
     setTimeout(() => {
-      const mockAdventure: AdventureArc = {
+      const newAdventure: AdventureArc = {
         bbeg: {
-          name: "Malachar the Shadow Weaver",
+          name: "The Crimson Serpent",
           description:
-            "An ancient necromancer who seeks to merge the Material Plane with the Shadowfell",
+            "A powerful cult leader who seeks to awaken an ancient dragon god",
           motivation:
-            "Believes death is the only truth and seeks to end all suffering by ending all life",
+            "Believes chaos and destruction will cleanse the world for rebirth",
           power:
-            "Can manipulate shadows, raise undead, and corrupt living beings",
+            "Commands fire magic, has a network of cultists, and dragon-blessed abilities",
         },
         secrets: [
-          "The local temple's high priest is secretly working for Malachar",
-          "The missing villagers are being turned into shadow thralls",
-          "A hidden portal to the Shadowfell lies beneath the old oak tree",
-          "Malachar's power wanes during the new moon",
+          "The mayor's daughter has joined the cult willingly",
+          "Ancient dragon scales buried beneath the town square",
+          "The cult plans to sacrifice during the solar eclipse",
+          "A former cult member is hiding in the old windmill",
         ],
         highTowerSurprise:
-          "The tower that appears to be Malachar's stronghold is actually a decoy - his real lair is in the village crypt",
+          "The cult's ritual site isn't in the mountains but in the town's own bell tower",
         lieutenants: [
           {
-            name: "Brother Thaddeus",
-            role: "Corrupted Priest",
+            name: "Flame Tongue Kassandra",
+            role: "High Priestess",
             description:
-              "Once holy, now serves shadow. Provides information and recruits from within the village",
+              "Charismatic leader who recruits through promises of power",
           },
           {
-            name: "Shade Captain Korth",
-            role: "Undead Commander",
+            name: "Scorched Marcus",
+            role: "Enforcer",
             description:
-              "A fallen paladin now commanding Malachar's undead forces",
+              "Former town guard, now bears dragon-scale tattoos that grant him fire immunity",
           },
         ],
         minions: [
           {
-            type: "Shadow Thralls",
-            count: 12,
-            description: "Corrupted villagers with shadowy tendrils",
+            type: "Fire Cultists",
+            count: 15,
+            description: "Townspeople turned fanatics, wielding flame magic",
           },
           {
-            type: "Skeleton Warriors",
-            count: 8,
-            description: "Armed with rusty weapons and dark magic",
+            type: "Dragonborn Servants",
+            count: 6,
+            description:
+              "Physically transformed cultists with draconic features",
           },
         ],
       };
 
-      setAdventureArc(mockAdventure);
+      setAdventureArc(newAdventure);
       setIsGenerating(false);
     }, 2000);
   };
@@ -171,19 +214,20 @@ This creates interesting moral dilemmas for players who must navigate between of
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
             <Button
-              onClick={generateAdventure}
+              onClick={regenerateAdventure}
               disabled={isGenerating}
+              variant="outline"
               className="flex-1"
             >
               {isGenerating ? (
                 <>
                   <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                  Generating...
+                  Regenerating...
                 </>
               ) : (
                 <>
-                  <Zap className="h-4 w-4 mr-2" />
-                  Generate New Adventure Arc
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Regenerate Adventure Arc
                 </>
               )}
             </Button>
@@ -191,117 +235,115 @@ This creates interesting moral dilemmas for players who must navigate between of
         </CardContent>
       </Card>
 
-      {/* Generated Adventure Display */}
-      {adventureArc && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Skull className="h-5 w-5 text-destructive" />
-              Current Adventure Arc
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* BBEG */}
-            <div className="space-y-3">
-              <h4 className="font-semibold flex items-center gap-2">
-                <Crown className="h-4 w-4" />
-                Big Bad Evil Guy (BBEG)
-              </h4>
-              <div className="p-3 border rounded space-y-2">
-                <h5 className="font-medium text-primary">
-                  {adventureArc.bbeg.name}
-                </h5>
-                <p className="text-sm text-muted-foreground">
-                  {adventureArc.bbeg.description}
+      {/* Current Adventure Arc */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Skull className="h-5 w-5 text-destructive" />
+            Current Adventure Arc
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* BBEG */}
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <Crown className="h-4 w-4" />
+              Big Bad Evil Guy (BBEG)
+            </h4>
+            <div className="p-3 border rounded space-y-2">
+              <h5 className="font-medium text-primary">
+                {adventureArc.bbeg.name}
+              </h5>
+              <p className="text-sm text-muted-foreground">
+                {adventureArc.bbeg.description}
+              </p>
+              <div className="space-y-1">
+                <p className="text-sm">
+                  <span className="font-medium">Motivation:</span>{" "}
+                  {adventureArc.bbeg.motivation}
                 </p>
-                <div className="space-y-1">
-                  <p className="text-sm">
-                    <span className="font-medium">Motivation:</span>{" "}
-                    {adventureArc.bbeg.motivation}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Power:</span>{" "}
-                    {adventureArc.bbeg.power}
+                <p className="text-sm">
+                  <span className="font-medium">Power:</span>{" "}
+                  {adventureArc.bbeg.power}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Secrets & Rumors */}
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              Secrets & Rumors
+            </h4>
+            <div className="space-y-2">
+              {adventureArc.secrets.map((secret, index) => (
+                <div key={index} className="p-2 bg-muted/50 rounded text-sm">
+                  {secret}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* High Tower Surprise */}
+          <div className="space-y-3">
+            <h4 className="font-semibold">High Tower Surprise</h4>
+            <div className="p-3 border rounded bg-accent/10">
+              <p className="text-sm">{adventureArc.highTowerSurprise}</p>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Lieutenants */}
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Lieutenants
+            </h4>
+            <div className="space-y-3">
+              {adventureArc.lieutenants.map((lieutenant, index) => (
+                <div key={index} className="p-3 border rounded space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{lieutenant.name}</span>
+                    <Badge variant="secondary">{lieutenant.role}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {lieutenant.description}
                   </p>
                 </div>
-              </div>
+              ))}
             </div>
+          </div>
 
-            <Separator />
+          <Separator />
 
-            {/* Secrets & Rumors */}
-            <div className="space-y-3">
-              <h4 className="font-semibold flex items-center gap-2">
-                <Eye className="h-4 w-4" />
-                Secrets & Rumors
-              </h4>
-              <div className="space-y-2">
-                {adventureArc.secrets.map((secret, index) => (
-                  <div key={index} className="p-2 bg-muted/50 rounded text-sm">
-                    {secret}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* High Tower Surprise */}
-            <div className="space-y-3">
-              <h4 className="font-semibold">High Tower Surprise</h4>
-              <div className="p-3 border rounded bg-accent/10">
-                <p className="text-sm">{adventureArc.highTowerSurprise}</p>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Lieutenants */}
-            <div className="space-y-3">
-              <h4 className="font-semibold flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Lieutenants
-              </h4>
-              <div className="space-y-3">
-                {adventureArc.lieutenants.map((lieutenant, index) => (
-                  <div key={index} className="p-3 border rounded space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{lieutenant.name}</span>
-                      <Badge variant="secondary">{lieutenant.role}</Badge>
-                    </div>
+          {/* Minions */}
+          <div className="space-y-3">
+            <h4 className="font-semibold">Minions</h4>
+            <div className="space-y-2">
+              {adventureArc.minions.map((minion, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-2 border rounded"
+                >
+                  <div>
+                    <span className="font-medium">{minion.type}</span>
                     <p className="text-sm text-muted-foreground">
-                      {lieutenant.description}
+                      {minion.description}
                     </p>
                   </div>
-                ))}
-              </div>
+                  <Badge>{minion.count}</Badge>
+                </div>
+              ))}
             </div>
-
-            <Separator />
-
-            {/* Minions */}
-            <div className="space-y-3">
-              <h4 className="font-semibold">Minions</h4>
-              <div className="space-y-2">
-                {adventureArc.minions.map((minion, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 border rounded"
-                  >
-                    <div>
-                      <span className="font-medium">{minion.type}</span>
-                      <p className="text-sm text-muted-foreground">
-                        {minion.description}
-                      </p>
-                    </div>
-                    <Badge>{minion.count}</Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Script Testing */}
       <Card>
