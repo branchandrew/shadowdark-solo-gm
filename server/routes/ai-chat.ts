@@ -10,6 +10,13 @@ export const handleAIChat: RequestHandler = async (req, res) => {
   const { message, context } = req.body as AIChatRequest;
 
   try {
+    console.log("API Key present:", !!process.env.ANTHROPIC_API_KEY);
+    console.log("API Key length:", process.env.ANTHROPIC_API_KEY?.length);
+    console.log(
+      "API Key starts with:",
+      process.env.ANTHROPIC_API_KEY?.substring(0, 10),
+    );
+
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error("ANTHROPIC_API_KEY environment variable is not set");
     }
