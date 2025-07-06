@@ -1,23 +1,5 @@
 import { RequestHandler } from "express";
-
-export interface AIChatRequest {
-  message: string;
-  context?: {
-    chaosFactor: number;
-    currentScene?: string;
-    activeThreads?: string[];
-  };
-}
-
-export interface AIChatResponse {
-  response: string;
-  suggestions?: string[];
-  oracle?: {
-    question: string;
-    answer: "yes" | "no" | "maybe";
-    confidence: number;
-  };
-}
+import { AIChatRequest, AIChatResponse } from "@shared/api";
 
 export const handleAIChat: RequestHandler = (req, res) => {
   const { message, context } = req.body as AIChatRequest;
