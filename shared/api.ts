@@ -10,3 +10,25 @@
 export interface DemoResponse {
   message: string;
 }
+
+/**
+ * AI Chat API types for Shadowdark GM simulator
+ */
+export interface AIChatRequest {
+  message: string;
+  context?: {
+    chaosFactor: number;
+    currentScene?: string;
+    activeThreads?: string[];
+  };
+}
+
+export interface AIChatResponse {
+  response: string;
+  suggestions?: string[];
+  oracle?: {
+    question: string;
+    answer: "yes" | "no" | "maybe";
+    confidence: number;
+  };
+}
