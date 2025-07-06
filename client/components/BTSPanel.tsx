@@ -1,0 +1,405 @@
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Eye,
+  Crown,
+  Skull,
+  Users,
+  Zap,
+  Play,
+  FileText,
+  Settings,
+  RefreshCw,
+} from "lucide-react";
+
+interface AdventureArc {
+  bbeg: {
+    name: string;
+    description: string;
+    motivation: string;
+    power: string;
+  };
+  secrets: string[];
+  highTowerSurprise: string;
+  lieutenants: Array<{
+    name: string;
+    role: string;
+    description: string;
+  }>;
+  minions: Array<{
+    type: string;
+    count: number;
+    description: string;
+  }>;
+}
+
+export default function BTSPanel() {
+  const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [scriptInput, setScriptInput] = useState("");
+  const [promptInput, setPromptInput] = useState("");
+  const [scriptOutput, setScriptOutput] = useState("");
+  const [promptOutput, setPromptOutput] = useState("");
+  const [isRunningScript, setIsRunningScript] = useState(false);
+  const [isRunningPrompt, setIsRunningPrompt] = useState(false);
+
+  const generateAdventure = async () => {
+    setIsGenerating(true);
+
+    // Simulate adventure generation (replace with actual Python script calls)
+    setTimeout(() => {
+      const mockAdventure: AdventureArc = {
+        bbeg: {
+          name: "Malachar the Shadow Weaver",
+          description:
+            "An ancient necromancer who seeks to merge the Material Plane with the Shadowfell",
+          motivation:
+            "Believes death is the only truth and seeks to end all suffering by ending all life",
+          power:
+            "Can manipulate shadows, raise undead, and corrupt living beings",
+        },
+        secrets: [
+          "The local temple's high priest is secretly working for Malachar",
+          "The missing villagers are being turned into shadow thralls",
+          "A hidden portal to the Shadowfell lies beneath the old oak tree",
+          "Malachar's power wanes during the new moon",
+        ],
+        highTowerSurprise:
+          "The tower that appears to be Malachar's stronghold is actually a decoy - his real lair is in the village crypt",
+        lieutenants: [
+          {
+            name: "Brother Thaddeus",
+            role: "Corrupted Priest",
+            description:
+              "Once holy, now serves shadow. Provides information and recruits from within the village",
+          },
+          {
+            name: "Shade Captain Korth",
+            role: "Undead Commander",
+            description:
+              "A fallen paladin now commanding Malachar's undead forces",
+          },
+        ],
+        minions: [
+          {
+            type: "Shadow Thralls",
+            count: 12,
+            description: "Corrupted villagers with shadowy tendrils",
+          },
+          {
+            type: "Skeleton Warriors",
+            count: 8,
+            description: "Armed with rusty weapons and dark magic",
+          },
+        ],
+      };
+
+      setAdventureArc(mockAdventure);
+      setIsGenerating(false);
+    }, 2000);
+  };
+
+  const runScript = async () => {
+    if (!scriptInput.trim()) return;
+
+    setIsRunningScript(true);
+    setScriptOutput("");
+
+    // Simulate running Python script
+    setTimeout(() => {
+      const mockOutput = `Running script: ${scriptInput}
+
+Output:
+- Generated BBEG motivation: "Seeks eternal power through shadow magic"
+- Created 3 lieutenant concepts
+- Generated 15 minion types
+- Established 5 plot hooks
+- Set chaos factor adjustments
+
+Script completed successfully.`;
+
+      setScriptOutput(mockOutput);
+      setIsRunningScript(false);
+    }, 1500);
+  };
+
+  const runPrompt = async () => {
+    if (!promptInput.trim()) return;
+
+    setIsRunningPrompt(true);
+    setPromptOutput("");
+
+    // Simulate running AI prompt
+    setTimeout(() => {
+      const mockOutput = `Prompt: "${promptInput}"
+
+AI Response:
+Based on your prompt, here's a generated adventure element:
+
+The ancient tome speaks of a shadow cult that operates from within trusted institutions. Their leader, known only as "The Veiled Prophet," has infiltrated the local government and uses their position to gather information on potential threats while slowly corrupting the town from within.
+
+Key elements:
+- Operates in plain sight
+- Uses bureaucracy as cover
+- Slowly building network of informants
+- Planning ritual during the harvest festival
+
+This creates interesting moral dilemmas for players who must navigate between official authority and hidden corruption.`;
+
+      setPromptOutput(mockOutput);
+      setIsRunningPrompt(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Adventure Generation */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Crown className="h-5 w-5 text-primary" />
+            Adventure Arc Generator
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={generateAdventure}
+              disabled={isGenerating}
+              className="flex-1"
+            >
+              {isGenerating ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Zap className="h-4 w-4 mr-2" />
+                  Generate New Adventure Arc
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Generated Adventure Display */}
+      {adventureArc && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Skull className="h-5 w-5 text-destructive" />
+              Current Adventure Arc
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* BBEG */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Crown className="h-4 w-4" />
+                Big Bad Evil Guy (BBEG)
+              </h4>
+              <div className="p-3 border rounded space-y-2">
+                <h5 className="font-medium text-primary">
+                  {adventureArc.bbeg.name}
+                </h5>
+                <p className="text-sm text-muted-foreground">
+                  {adventureArc.bbeg.description}
+                </p>
+                <div className="space-y-1">
+                  <p className="text-sm">
+                    <span className="font-medium">Motivation:</span>{" "}
+                    {adventureArc.bbeg.motivation}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">Power:</span>{" "}
+                    {adventureArc.bbeg.power}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Secrets & Rumors */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                Secrets & Rumors
+              </h4>
+              <div className="space-y-2">
+                {adventureArc.secrets.map((secret, index) => (
+                  <div key={index} className="p-2 bg-muted/50 rounded text-sm">
+                    {secret}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* High Tower Surprise */}
+            <div className="space-y-3">
+              <h4 className="font-semibold">High Tower Surprise</h4>
+              <div className="p-3 border rounded bg-accent/10">
+                <p className="text-sm">{adventureArc.highTowerSurprise}</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Lieutenants */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Lieutenants
+              </h4>
+              <div className="space-y-3">
+                {adventureArc.lieutenants.map((lieutenant, index) => (
+                  <div key={index} className="p-3 border rounded space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{lieutenant.name}</span>
+                      <Badge variant="secondary">{lieutenant.role}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {lieutenant.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Minions */}
+            <div className="space-y-3">
+              <h4 className="font-semibold">Minions</h4>
+              <div className="space-y-2">
+                {adventureArc.minions.map((minion, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 border rounded"
+                  >
+                    <div>
+                      <span className="font-medium">{minion.type}</span>
+                      <p className="text-sm text-muted-foreground">
+                        {minion.description}
+                      </p>
+                    </div>
+                    <Badge>{minion.count}</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Script Testing */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Python Script Testing
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="script-input">Script Command</Label>
+            <div className="flex gap-2">
+              <Input
+                id="script-input"
+                placeholder="python generate_bbeg.py --type necromancer"
+                value={scriptInput}
+                onChange={(e) => setScriptInput(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && runScript()}
+              />
+              <Button
+                onClick={runScript}
+                disabled={isRunningScript || !scriptInput.trim()}
+                size="icon"
+              >
+                {isRunningScript ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {scriptOutput && (
+            <div className="space-y-2">
+              <Label>Script Output</Label>
+              <ScrollArea className="h-32 p-3 border rounded bg-muted/50">
+                <pre className="text-sm whitespace-pre-wrap">
+                  {scriptOutput}
+                </pre>
+              </ScrollArea>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Prompt Testing */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            AI Prompt Testing
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="prompt-input">Test Prompt</Label>
+            <div className="space-y-2">
+              <Textarea
+                id="prompt-input"
+                placeholder="Generate a mysterious NPC who appears helpful but has dark motives..."
+                value={promptInput}
+                onChange={(e) => setPromptInput(e.target.value)}
+                rows={3}
+              />
+              <Button
+                onClick={runPrompt}
+                disabled={isRunningPrompt || !promptInput.trim()}
+                className="w-full"
+              >
+                {isRunningPrompt ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                    Running Prompt...
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 mr-2" />
+                    Test Prompt
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {promptOutput && (
+            <div className="space-y-2">
+              <Label>AI Response</Label>
+              <ScrollArea className="h-40 p-3 border rounded bg-muted/50">
+                <div className="text-sm whitespace-pre-wrap">
+                  {promptOutput}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

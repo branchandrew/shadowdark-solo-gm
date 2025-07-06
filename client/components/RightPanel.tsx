@@ -3,12 +3,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import CharacterSheet from "./CharacterSheet";
 import AdventureLog from "./AdventureLog";
 import DiceRoller from "./DiceRoller";
-import { User, BookOpen, Dices } from "lucide-react";
+import BTSPanel from "./BTSPanel";
+import { User, BookOpen, Dices, Eye } from "lucide-react";
 
 export default function RightPanel() {
   return (
     <Tabs defaultValue="character" className="h-full flex flex-col">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
           Character
@@ -20,6 +21,10 @@ export default function RightPanel() {
         <TabsTrigger value="dice" className="flex items-center gap-2">
           <Dices className="h-4 w-4" />
           Dice
+        </TabsTrigger>
+        <TabsTrigger value="bts" className="flex items-center gap-2">
+          <Eye className="h-4 w-4" />
+          BTS
         </TabsTrigger>
       </TabsList>
 
@@ -39,6 +44,12 @@ export default function RightPanel() {
         <div className="h-[calc(100vh-12rem)]">
           <DiceRoller />
         </div>
+      </TabsContent>
+
+      <TabsContent value="bts" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+          <BTSPanel />
+        </ScrollArea>
       </TabsContent>
     </Tabs>
   );
