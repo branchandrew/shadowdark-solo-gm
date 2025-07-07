@@ -101,17 +101,26 @@ export default function BTSPanel() {
     setIsGenerating(true);
 
     try {
+      const requestBody = {
+        theme: theme.trim() || "Dark Fantasy",
+        tone: tone.trim() || "Mysterious",
+        voice: voice.trim() || "Atmospheric",
+      };
+
       console.log("Making fetch request to /api/generate-adventure...");
+      console.log("Request body:", requestBody);
+
       const response = await fetch("/api/generate-adventure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          theme: theme.trim() || "Dark Fantasy",
-          tone: tone.trim() || "Mysterious",
-          voice: voice.trim() || "Atmospheric",
-        }),
+        body: JSON.stringify(requestBody),
+      }).catch((networkError) => {
+        console.error("Network error:", networkError);
+        throw new Error(
+          `Network error: Unable to connect to server. Please check your connection.`,
+        );
       });
 
       console.log("Response status:", response.status);
