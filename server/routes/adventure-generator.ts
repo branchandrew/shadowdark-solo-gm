@@ -279,6 +279,45 @@ Return one clean JSON object and nothing else.  Keep values concise:
     /* ---------- 3. Response ---------- */
     res.json({ ...villain, success: true });
   } catch (err) {
-    res.status(500).json({ success: false, error: String(err) });
+    console.error("Adventure generation error:", err);
+
+    // Provide more specific error messages based on error type
+    let errorMessage = "Unknown error occurred";
+    let statusCode = 500;
+
+    if (err instanceof Error) {
+      errorMessage = err.message;
+
+      // Handle specific API errors
+      if (errorMessage.includes("529") || errorMessage.includes("overloaded")) {
+        errorMessage =
+          "Claude API is currently overloaded. Please try again in a few moments.";
+        statusCode = 503; // Service Unavailable
+      } else if (
+        errorMessage.includes("401") ||
+        errorMessage.includes("authentication")
+      ) {
+        errorMessage = "API authentication failed. Please check configuration.";
+        statusCode = 401;
+      } else if (
+        errorMessage.includes("rate limit") ||
+        errorMessage.includes("429")
+      ) {
+        errorMessage = "Rate limit exceeded. Please wait before trying again.";
+        statusCode = 429;
+      } else if (errorMessage.includes("Invalid JSON")) {
+        errorMessage = "Failed to parse AI response. Please try again.";
+        statusCode = 502; // Bad Gateway
+      } else if (errorMessage.includes("Python exited")) {
+        errorMessage = "Adventure seed generation failed. Please try again.";
+        statusCode = 502;
+      }
+    }
+
+    res.status(statusCode).json({
+      success: false,
+      error: errorMessage,
+      retryable: statusCode === 503 || statusCode === 429,
+    });
   }
 };
