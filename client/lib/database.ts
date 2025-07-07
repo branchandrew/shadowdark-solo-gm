@@ -1,25 +1,17 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
-// Database types
-export interface GameSession {
-  id?: string;
-  user_id?: string;
-  character_data?: any;
-  adventure_arc?: any;
-  campaign_elements?: {
-    threads: any[];
-    characters: any[];
-    factions: any[];
-    clues: any[];
-  };
-  adventure_log?: any[];
-  chaos_factor?: number;
-  theme?: string;
-  tone?: string;
-  voice?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+import {
+  createClient,
+  SupabaseClient,
+  RealtimeChannel,
+} from "@supabase/supabase-js";
+import type {
+  GameSession,
+  DatabaseChange,
+  Character,
+  AdventureArc,
+  CampaignElements,
+  AdventureLogEntry,
+  ChatMessage,
+} from "../../shared/types";
 
 export interface DatabaseOptions {
   enableCloudSync?: boolean;
