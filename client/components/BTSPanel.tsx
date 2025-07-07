@@ -142,10 +142,7 @@ export default function BTSPanel() {
       if (data.success) {
         console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
 
-        // Store the raw JSON response
-        setRawAdventureData(data);
-
-        // Use the new response structure
+        // Create single adventure arc object (no duplication)
         const newAdventure: AdventureArc = {
           bbeg: {
             name: data.bbeg_name,
@@ -167,8 +164,8 @@ export default function BTSPanel() {
         console.log("Setting new adventure arc...");
         setAdventureArc(newAdventure);
 
-        // Save to localStorage
-        saveToLocalStorage(newAdventure, data);
+        // Save single source of truth to localStorage
+        saveAdventureToLocalStorage(newAdventure);
         saveStyleToLocalStorage(
           theme.trim() || "Dark Fantasy",
           tone.trim() || "Mysterious",
