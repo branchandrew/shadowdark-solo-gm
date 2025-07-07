@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Eye, Crown, Skull, Users, RefreshCw } from "lucide-react";
 import CloudSync from "./CloudSync";
+import SchemaVisualizer from "./SchemaVisualizer";
 
 import type { AdventureArcDisplay } from "../../shared/types";
 
