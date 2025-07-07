@@ -18,9 +18,8 @@ interface AdventureGenerationResult {
 }
 
 interface AdventureResponse {
+  villainName: string;
   villainProfile: string;
-  adventureHook: string;
-  seedData: AdventureGenerationResult;
   success: boolean;
   error?: string;
 }
@@ -140,11 +139,15 @@ D. Finish with a one-sentence adventure hook the GM can read aloud.`;
 
     console.log("Villain content length:", villainContent.length);
 
+    // Extract name from the villain profile
+    const nameMatch = villainContent.match(/(?:Name:|^)([^\n]+)/i);
+    const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
+    const cleanName = extractedName.replace(/^(Name:|Title:)\s*/i, "");
+
     // For now, let's just return the villain profile without the naming step
     const response: AdventureResponse = {
+      villainName: cleanName,
       villainProfile: villainContent,
-      adventureHook: "Adventure hook extracted from villain profile",
-      seedData: pythonResult,
       success: true,
     };
 
@@ -306,9 +309,8 @@ ${villainContent}`;
     console.error("Adventure generation error:", error);
 
     const errorResponse: AdventureResponse = {
+      villainName: "Error",
       villainProfile: "Failed to generate adventure",
-      adventureHook: "Error occurred during generation",
-      seedData: {} as any,
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
     };

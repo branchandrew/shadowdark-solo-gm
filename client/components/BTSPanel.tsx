@@ -79,42 +79,33 @@ export default function BTSPanel() {
           data.villainProfile.length,
         );
 
-        // Parse the villain profile to extract structured information
-        const profile = data.villainProfile;
-
-        // Extract name from the profile (look for patterns like "Name:" or just grab the first line)
-        const nameMatch = profile.match(/(?:Name:|^)([^\n]+)/i);
-        const extractedName = nameMatch
-          ? nameMatch[1].trim()
-          : "Generated Villain";
-
-        // Update the adventure arc display with parsed data
+        // Use the simplified response data
         const newAdventure: AdventureArc = {
           bbeg: {
-            name: extractedName.replace(/^(Name:|Title:)\s*/i, ""),
-            description: profile.substring(0, 300) + "...",
-            motivation: data.seedData.goal,
-            power: `${data.seedData.race} ${data.seedData.gender} with powers derived from ${data.seedData.cards[3]?.card_text || "mystical forces"}`,
+            name: data.villainName,
+            description: data.villainProfile,
+            motivation: "See profile for detailed motivation",
+            power: "See profile for powers and abilities",
           },
           secrets: [
-            `Seed influence: ${data.seedData.cards[0]?.card_text}`,
-            `Virtue creates: ${data.seedData.cards[1]?.card_text}`,
-            `Vice corrupts through: ${data.seedData.cards[2]?.card_text}`,
-            `Breaking point: ${data.seedData.cards[4]?.card_text}`,
+            "Secret 1 from generated profile",
+            "Secret 2 from generated profile",
+            "Secret 3 from generated profile",
+            "Secret 4 from generated profile",
           ],
-          highTowerSurprise: `The fate card reveals: ${data.seedData.cards[5]?.card_text}`,
+          highTowerSurprise: "High tower surprise from generated profile",
           lieutenants: [
             {
-              name: "Lieutenant from Rising Power",
-              role: `Empowered by ${data.seedData.cards[3]?.card_text}`,
-              description: "Details generated from tarot interpretation",
+              name: "Lieutenant from profile",
+              role: "Role from generated content",
+              description: "Details from generated profile",
             },
           ],
           minions: [
             {
-              type: `Servants aligned with ${data.seedData.goal}`,
+              type: "Minions from profile",
               count: 8,
-              description: "Generated based on villain's motivation",
+              description: "Generated minions based on villain",
             },
           ],
         };
@@ -277,23 +268,32 @@ This creates interesting moral dilemmas for players who must navigate between of
                 <Crown className="h-4 w-4" />
                 Big Bad Evil Guy (BBEG)
               </h4>
-              <div className="p-3 border rounded space-y-2">
-                <h5 className="font-medium text-primary">
+              <div className="p-4 border rounded space-y-3">
+                <h5 className="font-medium text-primary text-lg">
                   {adventureArc.bbeg.name}
                 </h5>
-                <p className="text-sm text-muted-foreground">
-                  {adventureArc.bbeg.description}
-                </p>
-                <div className="space-y-1">
-                  <p className="text-sm">
-                    <span className="font-medium">Motivation:</span>{" "}
-                    {adventureArc.bbeg.motivation}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Power:</span>{" "}
-                    {adventureArc.bbeg.power}
-                  </p>
-                </div>
+                <ScrollArea className="h-40 w-full">
+                  <div className="space-y-3 pr-2">
+                    <div>
+                      <span className="font-medium text-sm">Profile:</span>
+                      <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
+                        {adventureArc.bbeg.description}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-sm">Motivation:</span>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {adventureArc.bbeg.motivation}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-sm">Power:</span>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {adventureArc.bbeg.power}
+                      </p>
+                    </div>
+                  </div>
+                </ScrollArea>
               </div>
             </div>
 
