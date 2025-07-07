@@ -22,7 +22,7 @@ import DiceRoller from "./DiceRoller";
 
 interface Message {
   id: string;
-  type: "user" | "gm" | "system";
+  type: "user" | "gm" | "system" | "fate";
   content: string;
   timestamp: Date;
 }
@@ -95,6 +95,7 @@ export default function AIChat() {
 
   const rollFateChart = async () => {
     try {
+      // Call the fate chart API - this is separate from AI/Claude
       const response = await fetch("/api/roll-fate", {
         method: "POST",
         headers: {
@@ -126,19 +127,39 @@ export default function AIChat() {
               : "No, it doesn't happen."
         }*`;
 
+        // Create a fate roll message - this is LOCAL ONLY, not sent to AI
         const fateMessage: Message = {
           id: Date.now().toString(),
-          type: "system",
+          type: "fate", // Use "fate" type to distinguish from regular system messages
           content: resultMessage,
           timestamp: new Date(),
         };
 
+        // Add to local chat display only - no AI/Claude involvement
         setMessages((prev) => [...prev, fateMessage]);
       } else {
         console.error("Fate chart roll failed:", data.error);
+
+        // Show error message locally
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          type: "fate",
+          content: "❌ Fate Chart roll failed. Please try again.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error("Error rolling fate chart:", error);
+
+      // Show error message locally
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: "fate",
+        content: "❌ Unable to roll Fate Chart. Please check your connection.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     }
   };
 
@@ -156,7 +177,8 @@ export default function AIChat() {
     setInput("");
     setIsLoading(true);
 
-    // Call AI chat API
+    // Call AI chat API - this sends messages to Claude/AI
+    // Note: Fate Chart rolls are handled separately and do NOT go through this function
     try {
       const requestBody: AIChatRequest = {
         message: input,
@@ -232,7 +254,9 @@ export default function AIChat() {
                         ? "bg-primary text-primary-foreground ml-auto"
                         : message.type === "system"
                           ? "bg-blue-50 border border-blue-200 text-blue-900 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-100"
-                          : "bg-muted text-muted-foreground"
+                          : message.type === "fate"
+                            ? "bg-purple-50 border border-purple-200 text-purple-900 dark:bg-purple-950 dark:border-purple-800 dark:text-purple-100"
+                            : "bg-muted text-muted-foreground"
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">
