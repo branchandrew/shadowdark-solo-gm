@@ -40,11 +40,7 @@ interface AdventureArc {
       reward: string;
     };
   }>;
-  minions: Array<{
-    type: string;
-    count: number;
-    description: string;
-  }>;
+  minions: string;
 }
 
 export default function BTSPanel() {
@@ -103,13 +99,7 @@ export default function BTSPanel() {
           secrets: [],
           highTowerSurprise: data.high_tower_surprise || "",
           lieutenants: data.lieutenants || [],
-          minions: [
-            {
-              type: "Minions from profile",
-              count: 8,
-              description: "Generated minions based on villain",
-            },
-          ],
+          minions: data.minions || "",
         };
 
         console.log("Setting new adventure arc...");
@@ -445,25 +435,16 @@ This creates interesting moral dilemmas for players who must navigate between of
             <Separator />
 
             {/* Minions */}
-            <div className="space-y-3">
-              <h4 className="font-semibold">Minions</h4>
-              <div className="space-y-2">
-                {adventureArc.minions.map((minion, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 border rounded"
-                  >
-                    <div>
-                      <span className="font-medium">{minion.type}</span>
-                      <p className="text-sm text-muted-foreground">
-                        {minion.description}
-                      </p>
-                    </div>
-                    <Badge>{minion.count}</Badge>
-                  </div>
-                ))}
+            {adventureArc.minions && (
+              <div className="space-y-3">
+                <h4 className="font-semibold">Minions</h4>
+                <div className="p-3 border rounded">
+                  <p className="text-sm whitespace-pre-wrap">
+                    {adventureArc.minions}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       ) : (

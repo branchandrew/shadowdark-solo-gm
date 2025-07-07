@@ -39,6 +39,7 @@ interface VillainJson {
   clues: string[];
   high_tower_surprise: string;
   lieutenants: Lieutenant[];
+  minions: string;
 }
 
 /**
@@ -138,6 +139,12 @@ Tarot Spread:\n${cardsFormatted}
      - How Protect: What methods do they use to serve/protect the BBEG?
      - Reward: What do characters gain by defeating them?
    • Keep each tarot interpretation to 1-2 sentences
+9. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
+   • A creature type that fits thematically with the BBEG and theme
+   • Common enough to be encountered frequently
+   • Challenging but not overwhelming for regular encounters
+   • Reflect the BBEG's influence and corruption
+   • 2-3 sentences describing their nature, appearance, and capabilities
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
@@ -148,6 +155,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" – the major plot twist (2-3 sentences)
 • "lieutenants" – array of 1-3 lieutenant objects, each with name and tarot_spread
+• "minions" – description of common minion creature type (2-3 sentences)
 
 {
   "bbeg_name": "",
