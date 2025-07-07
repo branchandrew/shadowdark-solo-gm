@@ -183,6 +183,11 @@ export default function BTSPanel() {
       }
     } catch (error) {
       console.error("Error generating adventure:", error);
+
+      // Show user-friendly error message
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      alert(`Adventure generation error: ${errorMessage}`);
     } finally {
       console.log("Setting isGenerating to false");
       setIsGenerating(false);
