@@ -11,6 +11,7 @@ interface Thread {
   id: string;
   description: string;
   status: "active" | "resolved" | "dormant";
+  hidden: boolean;
 }
 
 interface Character {
@@ -18,6 +19,7 @@ interface Character {
   name: string;
   description: string;
   disposition: "friendly" | "neutral" | "hostile" | "unknown";
+  hidden: boolean;
 }
 
 interface Faction {
@@ -26,6 +28,15 @@ interface Faction {
   description: string;
   influence: "minor" | "moderate" | "major";
   relationship: "allied" | "neutral" | "opposed" | "unknown";
+  hidden: boolean;
+}
+
+interface Clue {
+  id: string;
+  description: string;
+  discovered: boolean;
+  importance: "minor" | "moderate" | "major";
+  hidden: boolean;
 }
 
 export default function CampaignElements() {
