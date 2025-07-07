@@ -256,8 +256,9 @@ export interface CampaignElements {
   monsters: SessionMonster[];
 }
 
-// Legacy interface for backward compatibility (will be phased out)
-export interface LegacyAdventureArc {
+// Adventure Arc for frontend display (consolidates data from relational tables)
+export interface AdventureArcDisplay {
+  id: string;
   bbeg: {
     name: string;
     description: string;
@@ -265,7 +266,6 @@ export interface LegacyAdventureArc {
     hook: string;
   };
   clues: string[];
-  secrets: string[];
   highTowerSurprise: string;
   lieutenants: Array<{
     name: string;
