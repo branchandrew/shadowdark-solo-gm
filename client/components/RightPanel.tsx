@@ -11,7 +11,7 @@ import { User, BookOpen, Network, Eye, MapPin, Database } from "lucide-react";
 export default function RightPanel() {
   return (
     <Tabs defaultValue="character" className="h-full flex flex-col">
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
           Character
@@ -27,6 +27,10 @@ export default function RightPanel() {
         <TabsTrigger value="map" className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
           Map
+        </TabsTrigger>
+        <TabsTrigger value="schema" className="flex items-center gap-2">
+          <Database className="h-4 w-4" />
+          Schema
         </TabsTrigger>
         <TabsTrigger value="bts" className="flex items-center gap-2">
           <Eye className="h-4 w-4" />
