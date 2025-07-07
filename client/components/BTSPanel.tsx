@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,10 +34,63 @@ interface AdventureArc {
 
 export default function BTSPanel() {
   const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
+  const [rawAdventureData, setRawAdventureData] = useState<any>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [theme, setTheme] = useState("");
   const [tone, setTone] = useState("");
   const [voice, setVoice] = useState("");
+
+  // Load persisted data on component mount
+  useEffect(() => {
+    const savedAdventureArc = localStorage.getItem("shadowdark_adventure_arc");
+    const savedRawData = localStorage.getItem("shadowdark_raw_adventure_data");
+    const savedTheme = localStorage.getItem("shadowdark_theme");
+    const savedTone = localStorage.getItem("shadowdark_tone");
+    const savedVoice = localStorage.getItem("shadowdark_voice");
+
+    if (savedAdventureArc) {
+      try {
+        setAdventureArc(JSON.parse(savedAdventureArc));
+      } catch (error) {
+        console.error("Failed to parse saved adventure arc:", error);
+      }
+    }
+
+    if (savedRawData) {
+      try {
+        setRawAdventureData(JSON.parse(savedRawData));
+      } catch (error) {
+        console.error("Failed to parse saved raw adventure data:", error);
+      }
+    }
+
+    if (savedTheme) setTheme(savedTheme);
+    if (savedTone) setTone(savedTone);
+    if (savedVoice) setVoice(savedVoice);
+  }, []);
+
+  // Save data to localStorage whenever it changes
+  const saveToLocalStorage = (adventureData: AdventureArc, rawData: any) => {
+    localStorage.setItem(
+      "shadowdark_adventure_arc",
+      JSON.stringify(adventureData),
+    );
+    localStorage.setItem(
+      "shadowdark_raw_adventure_data",
+      JSON.stringify(rawData),
+    );
+  };
+
+  // Save theme/tone/voice to localStorage
+  const saveStyleToLocalStorage = (
+    newTheme: string,
+    newTone: string,
+    newVoice: string,
+  ) => {
+    localStorage.setItem("shadowdark_theme", newTheme);
+    localStorage.setItem("shadowdark_tone", newTone);
+    localStorage.setItem("shadowdark_voice", newVoice);
+  };
 
   const regenerateAdventure = async () => {
     console.log("Starting regenerate adventure...");
@@ -70,6 +123,9 @@ export default function BTSPanel() {
       if (data.success) {
         console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
 
+        // Store the raw JSON response
+        setRawAdventureData(data);
+
         // Use the new response structure
         const newAdventure: AdventureArc = {
           bbeg: {
@@ -87,6 +143,14 @@ export default function BTSPanel() {
 
         console.log("Setting new adventure arc...");
         setAdventureArc(newAdventure);
+
+        // Save to localStorage
+        saveToLocalStorage(newAdventure, data);
+        saveStyleToLocalStorage(
+          theme.trim() || "Dark Fantasy",
+          tone.trim() || "Mysterious",
+          voice.trim() || "Atmospheric",
+        );
 
         // Combine all the BBEG information for display
         const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
@@ -129,6 +193,59 @@ export default function BTSPanel() {
       console.log("Dispatched chat message event");
     } catch (error) {
       console.error("Error sending villain to chat:", error);
+    }
+  };
+
+  const sendCompleteAdventureToChat = () => {
+    if (!rawAdventureData || !adventureArc) {
+      console.error("No adventure data to send");
+      return;
+    }
+
+    try {
+      // Format the complete adventure data for chat
+      const formattedContent = `🎭 **Complete Adventure Arc Details**
+
+**${adventureArc.bbeg.name}**
+${adventureArc.bbeg.hook}
+
+**Motivation:** ${adventureArc.bbeg.motivation}
+
+**Description:** ${adventureArc.bbeg.description}
+
+**Clues:**
+${adventureArc.clues.map((clue, index) => `${index + 1}. ${clue}`).join("\n")}
+
+**High Tower Surprise:** ${adventureArc.highTowerSurprise}
+
+**Lieutenants:**
+${adventureArc.lieutenants
+  .map(
+    (lt, index) => `
+**${lt.name}**
+- Background: ${lt.tarot_spread.background}
+- Nature: ${lt.tarot_spread.seed}
+- Occupation: ${lt.tarot_spread.location}
+- Why Protect: ${lt.tarot_spread.why_protect}
+- How Protect: ${lt.tarot_spread.how_protect}
+- Reward: ${lt.tarot_spread.reward}`,
+  )
+  .join("\n")}
+
+**Minions:** ${adventureArc.minions}`;
+
+      const event = new CustomEvent("addChatMessage", {
+        detail: {
+          type: "gm",
+          content: formattedContent,
+          timestamp: new Date(),
+        },
+      });
+
+      window.dispatchEvent(event);
+      console.log("Dispatched complete adventure data to chat");
+    } catch (error) {
+      console.error("Error sending complete adventure to chat:", error);
     }
   };
 
@@ -193,6 +310,15 @@ export default function BTSPanel() {
                 </>
               )}
             </Button>
+            {adventureArc && (
+              <Button
+                onClick={sendCompleteAdventureToChat}
+                variant="outline"
+                size="sm"
+              >
+                Send to Chat
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
