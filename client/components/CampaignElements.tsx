@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Network, Users, Crown } from "lucide-react";
+import { Plus, Network, Users, Crown, Search, Eye, EyeOff } from "lucide-react";
 
 interface Thread {
   id: string;
