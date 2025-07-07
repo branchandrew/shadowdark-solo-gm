@@ -29,8 +29,8 @@ class HybridDatabase {
     // Initialize Supabase if environment variables are available
     this.initializeSupabase();
 
-    // Generate or load session ID
-    this.currentSessionId = this.getOrCreateSessionId();
+    // Generate fresh session ID each time (no persistence during development)
+    this.currentSessionId = this.generateSessionId();
 
     // Set up real-time subscriptions if cloud is available
     this.setupRealtimeSubscriptions();
