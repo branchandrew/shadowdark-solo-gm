@@ -1,139 +1,319 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sword,
-  Shield,
-  Heart,
-  Zap,
-  User,
-  Scroll,
-  Plus,
-  Upload,
-  FileText,
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Trash2, Upload, Download, User } from "lucide-react";
 
-interface CharacterStats {
-  name: string;
-  class: string;
-  ancestry: string;
-  background: string;
-  level: number;
-  hitPoints: { current: number; max: number };
-  armorClass: number;
-  attributes: {
-    strength: number;
-    dexterity: number;
-    constitution: number;
-    intelligence: number;
-    wisdom: number;
-    charisma: number;
-  };
-  talents: string[];
-  equipment: string[];
-  spells: string[];
+interface Stats {
+  STR: number;
+  DEX: number;
+  CON: number;
+  INT: number;
+  WIS: number;
+  CHA: number;
 }
 
+interface Level {
+  HitPointRoll: number;
+  talentRolledName: string;
+  talentRolledDesc: string;
+  stoutHitPointRoll: number;
+  level: number;
+  Rolled12ChosenTalentName: string;
+  Rolled12TalentOrTwoStatPoints: string;
+  Rolled12ChosenTalentDesc: string;
+}
+
+interface Bonus {
+  name: string;
+  bonusAmount?: number;
+  sourceCategory: string;
+  sourceType: string;
+  sourceName: string;
+  bonusName: string;
+  gainedAtLevel: number;
+  bonusTo: string;
+}
+
+interface GearItem {
+  instanceId: string;
+  gearId: string;
+  name: string;
+  type: string;
+  quantity: number;
+  totalUnits: number;
+  slots: number;
+  cost: number;
+  currency: string;
+}
+
+interface LedgerEntry {
+  silverChange: number;
+  desc: string;
+  copperChange: number;
+  notes: string;
+  goldChange: number;
+}
+
+interface Edit {
+  order: number;
+  desc: string;
+  level: number;
+  theField: string;
+}
+
+interface Character {
+  name: string;
+  stats: Stats;
+  rolledStats: Stats;
+  ancestry: string;
+  class: string;
+  level: number;
+  levels: Level[];
+  XP: number;
+  ambitionTalentLevel: Level;
+  title: string;
+  alignment: string;
+  background: string;
+  deity: string;
+  maxHitPoints: number;
+  armorClass: number;
+  gearSlotsTotal: number;
+  gearSlotsUsed: number;
+  bonuses: Bonus[];
+  goldRolled: number;
+  gold: number;
+  silver: number;
+  copper: number;
+  gear: GearItem[];
+  treasures: any[];
+  magicItems: any[];
+  attacks: string[];
+  ledger: LedgerEntry[];
+  spellsKnown: string;
+  languages: string;
+  creationMethod: string;
+  coreRulesOnly: boolean;
+  activeSources: string[];
+  edits: Edit[];
+}
+
+const EMPTY_CHARACTER: Character = {
+  name: "",
+  stats: { STR: 10, DEX: 10, CON: 10, INT: 10, WIS: 10, CHA: 10 },
+  rolledStats: { STR: 10, DEX: 10, CON: 10, INT: 10, WIS: 10, CHA: 10 },
+  ancestry: "",
+  class: "",
+  level: 1,
+  levels: [],
+  XP: 0,
+  ambitionTalentLevel: {
+    HitPointRoll: 0,
+    talentRolledName: "",
+    talentRolledDesc: "",
+    stoutHitPointRoll: 0,
+    level: 1,
+    Rolled12ChosenTalentName: "",
+    Rolled12TalentOrTwoStatPoints: "",
+    Rolled12ChosenTalentDesc: "",
+  },
+  title: "",
+  alignment: "",
+  background: "",
+  deity: "",
+  maxHitPoints: 0,
+  armorClass: 10,
+  gearSlotsTotal: 10,
+  gearSlotsUsed: 0,
+  bonuses: [],
+  goldRolled: 0,
+  gold: 0,
+  silver: 0,
+  copper: 0,
+  gear: [],
+  treasures: [],
+  magicItems: [],
+  attacks: [],
+  ledger: [],
+  spellsKnown: "None",
+  languages: "Common",
+  creationMethod: "Manual",
+  coreRulesOnly: true,
+  activeSources: ["SD"],
+  edits: [],
+};
+
 export default function CharacterSheet() {
-  const [character, setCharacter] = useState<CharacterStats | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
+  const [character, setCharacter] = useState<Character>(EMPTY_CHARACTER);
+  const [newGearName, setNewGearName] = useState("");
+  const [newAttack, setNewAttack] = useState("");
 
-  const createNewCharacter = () => {
-    const newCharacter: CharacterStats = {
-      name: "",
-      class: "",
-      ancestry: "",
-      background: "",
-      level: 1,
-      hitPoints: { current: 0, max: 0 },
-      armorClass: 10,
-      attributes: {
-        strength: 10,
-        dexterity: 10,
-        constitution: 10,
-        intelligence: 10,
-        wisdom: 10,
-        charisma: 10,
-      },
-      talents: [],
-      equipment: [],
-      spells: [],
-    };
-    setCharacter(newCharacter);
-    setIsCreating(true);
+  // Load character from localStorage on mount
+  useEffect(() => {
+    const savedCharacter = localStorage.getItem("shadowdark_character");
+    if (savedCharacter) {
+      try {
+        setCharacter(JSON.parse(savedCharacter));
+      } catch (error) {
+        console.error("Failed to parse saved character:", error);
+      }
+    }
+  }, []);
+
+  // Save character to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem("shadowdark_character", JSON.stringify(character));
+  }, [character]);
+
+  const updateCharacter = (updates: Partial<Character>) => {
+    setCharacter((prev) => ({ ...prev, ...updates }));
   };
 
-  const importCharacter = () => {
-    // Simulate importing a character (in real implementation, this would open a file dialog)
-    const importedCharacter: CharacterStats = {
-      name: "Kael Shadowstep",
-      class: "Rogue",
-      ancestry: "Human",
-      background: "Urchin",
-      level: 1,
-      hitPoints: { current: 6, max: 6 },
-      armorClass: 12,
-      attributes: {
-        strength: 10,
-        dexterity: 15,
-        constitution: 12,
-        intelligence: 13,
-        wisdom: 14,
-        charisma: 8,
-      },
-      talents: ["Backstab", "Thievery"],
-      equipment: ["Shortsword", "Leather Armor", "Thieves' Tools", "50 gold"],
-      spells: [],
-    };
-    setCharacter(importedCharacter);
-    setIsCreating(false);
+  const updateStats = (stat: keyof Stats, value: number) => {
+    setCharacter((prev) => ({
+      ...prev,
+      stats: { ...prev.stats, [stat]: value },
+      rolledStats: { ...prev.rolledStats, [stat]: value },
+    }));
   };
 
-  const resetCharacterSheet = () => {
-    setCharacter(null);
-    setIsCreating(false);
+  const getStatModifier = (score: number): string => {
+    const mod = Math.floor((score - 10) / 2);
+    return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
-  // Blank state when no character exists
-  if (!character) {
+  const addGearItem = () => {
+    if (newGearName.trim()) {
+      const newItem: GearItem = {
+        instanceId: Date.now().toString(),
+        gearId: `custom_${Date.now()}`,
+        name: newGearName,
+        type: "sundry",
+        quantity: 1,
+        totalUnits: 1,
+        slots: 1,
+        cost: 0,
+        currency: "gp",
+      };
+      setCharacter((prev) => ({
+        ...prev,
+        gear: [...prev.gear, newItem],
+        gearSlotsUsed: prev.gearSlotsUsed + 1,
+      }));
+      setNewGearName("");
+    }
+  };
+
+  const removeGearItem = (instanceId: string) => {
+    setCharacter((prev) => {
+      const item = prev.gear.find((g) => g.instanceId === instanceId);
+      return {
+        ...prev,
+        gear: prev.gear.filter((g) => g.instanceId !== instanceId),
+        gearSlotsUsed: prev.gearSlotsUsed - (item?.slots || 0),
+      };
+    });
+  };
+
+  const addAttack = () => {
+    if (newAttack.trim()) {
+      setCharacter((prev) => ({
+        ...prev,
+        attacks: [...prev.attacks, newAttack],
+      }));
+      setNewAttack("");
+    }
+  };
+
+  const removeAttack = (index: number) => {
+    setCharacter((prev) => ({
+      ...prev,
+      attacks: prev.attacks.filter((_, i) => i !== index),
+    }));
+  };
+
+  const exportCharacter = () => {
+    const dataStr = JSON.stringify(character, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${character.name || "character"}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importCharacter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target?.result as string);
+          setCharacter(imported);
+        } catch (error) {
+          console.error("Failed to import character:", error);
+          alert("Invalid character file");
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const hasCharacterData =
+    character.name !== "" ||
+    character.ancestry !== "" ||
+    character.class !== "";
+
+  if (!hasCharacterData) {
     return (
-      <div className="h-full flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2">
-              <User className="h-6 w-6" />
-              Character Sheet
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-center space-y-2">
-              <FileText className="h-12 w-12 mx-auto text-muted-foreground" />
-              <p className="text-muted-foreground">
-                No character loaded. Create a new character or import an
-                existing one to get started.
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <User className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
+                No Character Created
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Create a new character or import one from Shadowdarklings.net
               </p>
-            </div>
-
-            <div className="space-y-3">
-              <Button onClick={createNewCharacter} className="w-full" size="lg">
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Character
-              </Button>
-
-              <Button
-                onClick={importCharacter}
-                variant="outline"
-                className="w-full"
-                size="lg"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Import Character Sheet
-              </Button>
+              <div className="flex gap-2 justify-center">
+                <Button
+                  onClick={() => updateCharacter({ name: "New Character" })}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create Character
+                </Button>
+                <div>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={importCharacter}
+                    className="hidden"
+                    id="import-character"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      document.getElementById("import-character")?.click()
+                    }
+                    className="flex items-center gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Import Character
+                  </Button>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -141,199 +321,470 @@ export default function CharacterSheet() {
     );
   }
 
-  const getModifier = (score: number) => {
-    return Math.floor((score - 10) / 2);
-  };
-
-  const formatModifier = (modifier: number) => {
-    return modifier >= 0 ? `+${modifier}` : `${modifier}`;
-  };
-
   return (
     <div className="space-y-6">
-      {/* Character Management */}
+      {/* Character Header */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
-              Character Management
-            </span>
-            <Button onClick={resetCharacterSheet} variant="outline" size="sm">
-              New Character
-            </Button>
-          </CardTitle>
-        </CardHeader>
-      </Card>
-      {/* Character Identity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
-            Character Identity
-          </CardTitle>
+              Character Sheet
+            </CardTitle>
+            <div className="flex gap-2">
+              <div>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={importCharacter}
+                  className="hidden"
+                  id="import-character"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    document.getElementById("import-character")?.click()
+                  }
+                >
+                  <Upload className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button variant="outline" size="sm" onClick={exportCharacter}>
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
+          {/* Basic Info */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>Name</Label>
               <Input
-                id="name"
                 value={character.name}
-                onChange={(e) =>
-                  setCharacter((prev) => ({ ...prev, name: e.target.value }))
-                }
+                onChange={(e) => updateCharacter({ name: e.target.value })}
+                placeholder="Character name"
               />
             </div>
-            <div>
-              <Label htmlFor="class">Class</Label>
+            <div className="space-y-2">
+              <Label>Ancestry</Label>
               <Input
-                id="class"
-                value={character.class}
-                onChange={(e) =>
-                  setCharacter((prev) => ({ ...prev, class: e.target.value }))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="ancestry">Ancestry</Label>
-              <Input
-                id="ancestry"
                 value={character.ancestry}
+                onChange={(e) => updateCharacter({ ancestry: e.target.value })}
+                placeholder="e.g., Human, Elf, Dwarf"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Class</Label>
+              <Input
+                value={character.class}
+                onChange={(e) => updateCharacter({ class: e.target.value })}
+                placeholder="e.g., Fighter, Thief, Wizard"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label>Level</Label>
+              <Input
+                type="number"
+                min="1"
+                max="10"
+                value={character.level}
                 onChange={(e) =>
-                  setCharacter((prev) => ({
-                    ...prev,
-                    ancestry: e.target.value,
-                  }))
+                  updateCharacter({ level: parseInt(e.target.value) || 1 })
                 }
               />
             </div>
-            <div>
-              <Label htmlFor="background">Background</Label>
+            <div className="space-y-2">
+              <Label>XP</Label>
               <Input
-                id="background"
+                type="number"
+                min="0"
+                value={character.XP}
+                onChange={(e) =>
+                  updateCharacter({ XP: parseInt(e.target.value) || 0 })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Title</Label>
+              <Input
+                value={character.title}
+                onChange={(e) => updateCharacter({ title: e.target.value })}
+                placeholder="Character title"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Alignment</Label>
+              <Input
+                value={character.alignment}
+                onChange={(e) => updateCharacter({ alignment: e.target.value })}
+                placeholder="e.g., Lawful, Neutral, Chaotic"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Background</Label>
+              <Input
                 value={character.background}
                 onChange={(e) =>
-                  setCharacter((prev) => ({
-                    ...prev,
-                    background: e.target.value,
-                  }))
+                  updateCharacter({ background: e.target.value })
                 }
+                placeholder="Character background"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Deity</Label>
+              <Input
+                value={character.deity}
+                onChange={(e) => updateCharacter({ deity: e.target.value })}
+                placeholder="Patron deity"
               />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Combat Stats */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sword className="h-5 w-5" />
-            Combat Stats
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <Label className="text-sm font-medium">Level</Label>
-              <div className="text-2xl font-bold text-primary">
-                {character.level}
-              </div>
-            </div>
-            <div className="text-center">
-              <Label className="text-sm font-medium flex items-center justify-center gap-1">
-                <Heart className="h-4 w-4" /> Hit Points
-              </Label>
-              <div className="text-2xl font-bold">
-                <span className="text-primary">
-                  {character.hitPoints.current}
-                </span>
-                <span className="text-muted-foreground">
-                  /{character.hitPoints.max}
-                </span>
-              </div>
-            </div>
-            <div className="text-center">
-              <Label className="text-sm font-medium flex items-center justify-center gap-1">
-                <Shield className="h-4 w-4" /> Armor Class
-              </Label>
-              <div className="text-2xl font-bold text-primary">
-                {character.armorClass}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="stats" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="stats">Stats & Combat</TabsTrigger>
+          <TabsTrigger value="gear">Gear & Equipment</TabsTrigger>
+          <TabsTrigger value="abilities">Abilities & Talents</TabsTrigger>
+          <TabsTrigger value="notes">Notes & Details</TabsTrigger>
+        </TabsList>
 
-      {/* Attributes */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5" />
-            Attributes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            {Object.entries(character.attributes).map(([attr, value]) => (
-              <div
-                key={attr}
-                className="flex items-center justify-between p-2 border rounded"
-              >
-                <Label className="capitalize font-medium">{attr}</Label>
-                <div className="text-right">
-                  <div className="text-lg font-bold">{value}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {formatModifier(getModifier(value))}
+        <TabsContent value="stats" className="space-y-4">
+          {/* Stats */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Ability Scores</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                {Object.entries(character.stats).map(([stat, value]) => (
+                  <div key={stat} className="text-center space-y-2">
+                    <Label className="font-bold">{stat}</Label>
+                    <Input
+                      type="number"
+                      min="3"
+                      max="18"
+                      value={value}
+                      onChange={(e) =>
+                        updateStats(
+                          stat as keyof Stats,
+                          parseInt(e.target.value) || 10,
+                        )
+                      }
+                      className="text-center"
+                    />
+                    <div className="text-sm text-muted-foreground">
+                      {getStatModifier(value)}
+                    </div>
                   </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Combat Stats */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Combat</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Hit Points</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={character.maxHitPoints}
+                    onChange={(e) =>
+                      updateCharacter({
+                        maxHitPoints: parseInt(e.target.value) || 1,
+                      })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Armor Class</Label>
+                  <Input
+                    type="number"
+                    min="10"
+                    value={character.armorClass}
+                    onChange={(e) =>
+                      updateCharacter({
+                        armorClass: parseInt(e.target.value) || 10,
+                      })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>
+                    Gear Slots ({character.gearSlotsUsed}/
+                    {character.gearSlotsTotal})
+                  </Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={character.gearSlotsTotal}
+                    onChange={(e) =>
+                      updateCharacter({
+                        gearSlotsTotal: parseInt(e.target.value) || 10,
+                      })
+                    }
+                  />
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* Talents */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Scroll className="h-5 w-5" />
-            Talents & Abilities
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {character.talents.map((talent, index) => (
-              <Badge key={index} variant="secondary">
-                {talent}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+          {/* Attacks */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Attacks</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {character.attacks.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No attacks configured
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {character.attacks.map((attack, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 p-2 border rounded"
+                    >
+                      <span className="flex-1 font-mono text-sm">{attack}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeAttack(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="e.g., LONGSWORD: +3 (N), 1d8+1"
+                  value={newAttack}
+                  onChange={(e) => setNewAttack(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addAttack()}
+                />
+                <Button onClick={addAttack} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Equipment */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Equipment</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={character.equipment.join("\n")}
-            onChange={(e) =>
-              setCharacter((prev) => ({
-                ...prev,
-                equipment: e.target.value
-                  .split("\n")
-                  .filter((item) => item.trim()),
-              }))
-            }
-            placeholder="List your equipment, one item per line..."
-            rows={6}
-          />
-        </CardContent>
-      </Card>
+        <TabsContent value="gear" className="space-y-4">
+          {/* Currency */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Currency</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Gold</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={character.gold}
+                    onChange={(e) =>
+                      updateCharacter({ gold: parseInt(e.target.value) || 0 })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Silver</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={character.silver}
+                    onChange={(e) =>
+                      updateCharacter({ silver: parseInt(e.target.value) || 0 })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Copper</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={character.copper}
+                    onChange={(e) =>
+                      updateCharacter({ copper: parseInt(e.target.value) || 0 })
+                    }
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Gear */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Equipment</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {character.gear.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No equipment added
+                </p>
+              ) : (
+                <ScrollArea className="h-60">
+                  <div className="space-y-2">
+                    {character.gear.map((item) => (
+                      <div
+                        key={item.instanceId}
+                        className="flex items-center gap-2 p-3 border rounded"
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{item.name}</span>
+                            <Badge variant="outline">{item.type}</Badge>
+                            {item.quantity > 1 && (
+                              <Badge variant="secondary">
+                                x{item.quantity}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Slots: {item.slots} • Cost: {item.cost}{" "}
+                            {item.currency}
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeGearItem(item.instanceId)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add equipment..."
+                  value={newGearName}
+                  onChange={(e) => setNewGearName(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addGearItem()}
+                />
+                <Button onClick={addGearItem} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="abilities" className="space-y-4">
+          {/* Bonuses & Talents */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Bonuses & Talents</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {character.bonuses.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No bonuses or talents recorded
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {character.bonuses.map((bonus, index) => (
+                    <div key={index} className="p-3 border rounded space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{bonus.name}</span>
+                        <Badge variant="outline">{bonus.sourceType}</Badge>
+                        <Badge variant="secondary">
+                          Level {bonus.gainedAtLevel}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Source: {bonus.sourceName} • Applies to: {bonus.bonusTo}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notes" className="space-y-4">
+          {/* Languages & Spells */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Languages & Magic</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Languages</Label>
+                <Input
+                  value={character.languages}
+                  onChange={(e) =>
+                    updateCharacter({ languages: e.target.value })
+                  }
+                  placeholder="e.g., Common, Elvish, Draconic"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Spells Known</Label>
+                <Textarea
+                  value={character.spellsKnown}
+                  onChange={(e) =>
+                    updateCharacter({ spellsKnown: e.target.value })
+                  }
+                  placeholder="List known spells..."
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Character Details */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Character Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium">Creation Method:</span>{" "}
+                  {character.creationMethod}
+                </div>
+                <div>
+                  <span className="font-medium">Core Rules Only:</span>{" "}
+                  {character.coreRulesOnly ? "Yes" : "No"}
+                </div>
+                <div>
+                  <span className="font-medium">Active Sources:</span>{" "}
+                  {character.activeSources.join(", ")}
+                </div>
+                <div>
+                  <span className="font-medium">Starting Gold:</span>{" "}
+                  {character.goldRolled}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
