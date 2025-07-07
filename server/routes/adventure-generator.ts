@@ -123,12 +123,33 @@ Tarot Spread:\n${cardsFormatted}
    • Information about where the BBEG might be found or operates
    • Evidence of the BBEG's evil doings
    Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc. All clues must reflect the theme, tone, and voice.
-7. **Create a "High Tower Surprise"** - a major plot twist or revelation about this BBEG that subverts player expectations while maintaining the style guidance. This could be:
-   • The apparent stronghold is actually a decoy
-   • The BBEG's true identity or nature is different than expected
-   • An unexpected relationship to a trusted NPC or location
-   • A hidden motivation that recontextualizes everything
-   • The real threat being something else entirely
+7. **Generate a High Tower Surprise** — a twist that escalates danger during the final confrontation of the campaign. This is a key narrative reversal or complication that alters the expected outcome at the climax.
+
+Follow these steps using Mythic GME rules:
+
+1. Ask a Complex Fate Question:
+   "What unexpected event or revelation occurs during the final confrontation with the BBEG?"
+
+2. Roll for:
+   - Chaos Factor (current value)
+   - Scene Setup: is this scene expected, altered, or interrupted?
+   - Event Focus + Meaning Table (if scene is altered or interrupted)
+
+3. Interpret the result as a surprising, thematic escalation:
+   - A new enemy appears?
+   - A ritual completes accidentally?
+   - The BBEG transforms or reveals a hidden agenda?
+   - An ally betrays the party?
+   - The location becomes unstable or cursed?
+
+4. Show your reasoning:
+   - Fate Question logic
+   - Chaos roll
+   - Scene setup determination
+   - Event Focus and Meaning rolls
+   - Justification for how this surprise fits with the BBEG's long-term arc
+
+5. Return the final result as a one-paragraph narrative twist to insert during the final battle
 8. **Generate exactly 2 Lieutenants** with the following requirements:
    • **First Lieutenant**: Must be a massive contrast to the BBEG - an unlikely ally who serves them despite being fundamentally different in nature, methods, or motivation
    • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
