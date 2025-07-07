@@ -70,7 +70,7 @@ export const generateAdventure: RequestHandler = async (_req, res) => {
 
     /* ---------- 2. Claude call ---------- */
     const userPrompt =
-      `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+      `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
 ### SOURCE DATA
 Goal: ${seeds.goal}
@@ -115,12 +115,28 @@ Return one clean JSON object and nothing else.  Keep values short:
       },
     ];
 
+    console.log("Making Claude API call with messages:", messages.length);
+    console.log(
+      "First message content preview:",
+      messages[0].content.substring(0, 100),
+    );
+
     const ai = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       system: "Return only the JSON object requested.",
       max_tokens: 600,
       temperature: 0.5,
       messages,
+    });
+
+    console.log("Claude API response structure:", {
+      id: ai.id,
+      type: ai.type,
+      role: ai.role,
+      model: ai.model,
+      contentLength: ai.content?.length,
+      stopReason: ai.stop_reason,
+      usage: ai.usage,
     });
 
     console.log("Claude response received");
