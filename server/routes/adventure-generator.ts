@@ -79,6 +79,13 @@ export const generateAdventure: RequestHandler = async (req, res) => {
     );
     const seeds = await runPython(pythonPath);
 
+    const {
+      theme = "Dark Fantasy",
+      tone = "Mysterious",
+      voice = "Atmospheric",
+    } = req.body || {};
+    console.log("Adventure generation with style:", { theme, tone, voice });
+
     const cardsFormatted = seeds.cards
       .map((c) => `${c.position}: ${c.card_text}`)
       .join("\n");
