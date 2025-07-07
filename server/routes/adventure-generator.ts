@@ -88,19 +88,27 @@ Tarot Spread:\n${cardsFormatted}
 3. **Forge a compelling name**
    • Capture core mood, element/domain, and cultural flavor.  • Build a phonetic palette (2‑3 consonant clusters, 1‑2 vowel sounds) that fits mood.  • Select/construct a syllable template (e.g. CVC‑CVC) and blend morphemes to yield pronounceable candidates.  • Apply quality rules (pronounceability, tone match, distinctiveness).  • Choose the best.
 4. **Write a one‑sentence adventure hook** for the GM to read aloud.
+5. **Generate 6 investigative clues** that heroes might discover about this BBEG. These should include:
+   • Clues pointing to the BBEG as the source of evil
+   • Hints about potential weaknesses or vulnerabilities
+   • Information about where the BBEG might be found or operates
+   • Evidence of the BBEG's evil doings
+   Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc.
 
 --- OUTPUT ---
-Return one clean JSON object and nothing else.  Keep values short:
+Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_name" – the chosen name (title optional)
 • "bbeg_hook" – the single sentence hook
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
+• "clues" – array of exactly 6 strings, each a different type of clue
 
 {
   "bbeg_name": "",
   "bbeg_hook": "",
   "bbeg_motivation": "",
-  "bbeg_detailed_description": ""
+  "bbeg_detailed_description": "",
+  "clues": ["", "", "", "", "", ""]
 }`.trim();
 
     const messages = [{ role: "user" as const, content: userPrompt }];
