@@ -22,6 +22,8 @@ class HybridDatabase {
   private supabase: SupabaseClient | null = null;
   private isCloudEnabled = false;
   private currentSessionId: string | null = null;
+  private realtimeChannel: RealtimeChannel | null = null;
+  private subscribers: Map<string, Array<(data: any) => void>> = new Map();
 
   constructor() {
     // Initialize Supabase if environment variables are available
@@ -29,6 +31,9 @@ class HybridDatabase {
 
     // Generate or load session ID
     this.currentSessionId = this.getOrCreateSessionId();
+
+    // Set up real-time subscriptions if cloud is available
+    this.setupRealtimeSubscriptions();
   }
 
   private initializeSupabase() {
