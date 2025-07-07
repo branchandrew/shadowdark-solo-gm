@@ -63,14 +63,122 @@ class HybridDatabase {
     return sessionId;
   }
 
+  // Set up real-time subscriptions
+  private setupRealtimeSubscriptions() {
+    if (!this.supabase || !this.currentSessionId) return;
+
+    this.realtimeChannel = this.supabase
+      .channel(`session-${this.currentSessionId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "game_sessions",
+          filter: `id=eq.${this.currentSessionId}`,
+        },
+        (payload) => {
+          console.log("Real-time database change:", payload);
+          this.handleRealtimeUpdate(payload);
+        },
+      )
+      .subscribe();
+  }
+
+  // Handle real-time updates from database
+  private handleRealtimeUpdate(payload: any) {
+    const { eventType, new: newRecord, old: oldRecord } = payload;
+
+    if (eventType === "UPDATE" && newRecord) {
+      // Update localStorage with new data from database
+      this.syncRealtimeToLocalStorage(newRecord);
+
+      // Notify subscribers
+      this.notifySubscribers("session", newRecord);
+    }
+  }
+
+  // Sync real-time changes to localStorage
+  private syncRealtimeToLocalStorage(session: GameSession) {
+    if (session.character_data) {
+      localStorage.setItem(
+        "shadowdark_character",
+        JSON.stringify(session.character_data),
+      );
+      localStorage.setItem("shadowdark_has_character", "true");
+    }
+    if (session.adventure_arc) {
+      localStorage.setItem(
+        "shadowdark_adventure_arc",
+        JSON.stringify(session.adventure_arc),
+      );
+    }
+    if (session.chaos_factor) {
+      localStorage.setItem(
+        "shadowdark_chaos_factor",
+        session.chaos_factor.toString(),
+      );
+    }
+    if (session.campaign_elements) {
+      localStorage.setItem(
+        "shadowdark_campaign_elements",
+        JSON.stringify(session.campaign_elements),
+      );
+    }
+    if (session.adventure_log) {
+      localStorage.setItem(
+        "shadowdark_adventure_log",
+        JSON.stringify(session.adventure_log),
+      );
+    }
+    if (session.theme) localStorage.setItem("shadowdark_theme", session.theme);
+    if (session.tone) localStorage.setItem("shadowdark_tone", session.tone);
+    if (session.voice) localStorage.setItem("shadowdark_voice", session.voice);
+  }
+
+  // Subscribe to real-time changes
+  subscribe(key: string, callback: (data: any) => void) {
+    if (!this.subscribers.has(key)) {
+      this.subscribers.set(key, []);
+    }
+    this.subscribers.get(key)!.push(callback);
+
+    // Return unsubscribe function
+    return () => {
+      const callbacks = this.subscribers.get(key);
+      if (callbacks) {
+        const index = callbacks.indexOf(callback);
+        if (index > -1) {
+          callbacks.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  // Notify subscribers of changes
+  private notifySubscribers(key: string, data: any) {
+    const callbacks = this.subscribers.get(key);
+    if (callbacks) {
+      callbacks.forEach((callback) => callback(data));
+    }
+  }
+
   // Enable/disable cloud sync
   setCloudSync(enabled: boolean) {
     this.isCloudEnabled = enabled && this.supabase !== null;
     localStorage.setItem("shadowdark_cloud_sync", enabled.toString());
 
     if (this.isCloudEnabled) {
+      // Set up real-time subscriptions
+      this.setupRealtimeSubscriptions();
       // Sync current localStorage data to cloud
       this.syncToCloud();
+    } else {
+      // Clean up subscriptions
+      if (this.realtimeChannel) {
+        this.realtimeChannel.unsubscribe();
+        this.realtimeChannel = null;
+      }
     }
   }
 
