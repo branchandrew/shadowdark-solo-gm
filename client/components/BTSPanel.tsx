@@ -3,21 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Eye,
-  Crown,
-  Skull,
-  Users,
-  Zap,
-  Play,
-  FileText,
-  Settings,
-  RefreshCw,
-} from "lucide-react";
+import { Eye, Crown, Skull, Users, RefreshCw } from "lucide-react";
 
 interface AdventureArc {
   bbeg: {
@@ -46,12 +35,6 @@ interface AdventureArc {
 export default function BTSPanel() {
   const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [scriptInput, setScriptInput] = useState("");
-  const [promptInput, setPromptInput] = useState("");
-  const [scriptOutput, setScriptOutput] = useState("");
-  const [promptOutput, setPromptOutput] = useState("");
-  const [isRunningScript, setIsRunningScript] = useState(false);
-  const [isRunningPrompt, setIsRunningPrompt] = useState(false);
   const [theme, setTheme] = useState("");
   const [tone, setTone] = useState("");
   const [voice, setVoice] = useState("");
@@ -108,14 +91,6 @@ export default function BTSPanel() {
         // Combine all the BBEG information for display
         const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
 
-        console.log("Setting prompt output...");
-        setPromptOutput(fullProfile);
-
-        // Also try setting script output as a backup
-        setScriptOutput(
-          `Adventure Generated Successfully!\n\nBBEG: ${data.bbeg_name}\n\n${fullProfile}`,
-        );
-
         // Send the villain profile to the AI chat
         console.log("Sending villain profile to AI chat...");
         await sendVillainToChat(`**${data.bbeg_name}**\n\n${fullProfile}`);
@@ -159,58 +134,6 @@ export default function BTSPanel() {
     } catch (error) {
       console.error("Error sending villain to chat:", error);
     }
-  };
-
-  const runScript = async () => {
-    if (!scriptInput.trim()) return;
-
-    setIsRunningScript(true);
-    setScriptOutput("");
-
-    // Simulate running Python script
-    setTimeout(() => {
-      const mockOutput = `Running script: ${scriptInput}
-
-Output:
-- Generated BBEG motivation: "Seeks eternal power through shadow magic"
-- Created 3 lieutenant concepts
-- Generated 15 minion types
-- Established 5 plot hooks
-- Set chaos factor adjustments
-
-Script completed successfully.`;
-
-      setScriptOutput(mockOutput);
-      setIsRunningScript(false);
-    }, 1500);
-  };
-
-  const runPrompt = async () => {
-    if (!promptInput.trim()) return;
-
-    setIsRunningPrompt(true);
-    setPromptOutput("");
-
-    // Simulate running AI prompt
-    setTimeout(() => {
-      const mockOutput = `Prompt: "${promptInput}"
-
-AI Response:
-Based on your prompt, here's a generated adventure element:
-
-The ancient tome speaks of a shadow cult that operates from within trusted institutions. Their leader, known only as "The Veiled Prophet," has infiltrated the local government and uses their position to gather information on potential threats while slowly corrupting the town from within.
-
-Key elements:
-- Operates in plain sight
-- Uses bureaucracy as cover
-- Slowly building network of informants
-- Planning ritual during the harvest festival
-
-This creates interesting moral dilemmas for players who must navigate between official authority and hidden corruption.`;
-
-      setPromptOutput(mockOutput);
-      setIsRunningPrompt(false);
-    }, 2000);
   };
 
   return (
@@ -471,104 +394,6 @@ This creates interesting moral dilemmas for players who must navigate between of
           </CardContent>
         </Card>
       )}
-
-      {/* Script Testing */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Python Script Testing
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="script-input">Script Command</Label>
-            <div className="flex gap-2">
-              <Input
-                id="script-input"
-                placeholder="python generate_bbeg.py --type necromancer"
-                value={scriptInput}
-                onChange={(e) => setScriptInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && runScript()}
-              />
-              <Button
-                onClick={runScript}
-                disabled={isRunningScript || !scriptInput.trim()}
-                size="icon"
-              >
-                {isRunningScript ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Play className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {scriptOutput && (
-            <div className="space-y-2">
-              <Label>Script Output</Label>
-              <ScrollArea className="h-32 p-3 border rounded bg-muted/50">
-                <pre className="text-sm whitespace-pre-wrap">
-                  {scriptOutput}
-                </pre>
-              </ScrollArea>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Prompt Testing */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            AI Prompt Testing
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="prompt-input">Test Prompt</Label>
-            <div className="space-y-2">
-              <Textarea
-                id="prompt-input"
-                placeholder="Generate a mysterious NPC who appears helpful but has dark motives..."
-                value={promptInput}
-                onChange={(e) => setPromptInput(e.target.value)}
-                rows={3}
-              />
-              <Button
-                onClick={runPrompt}
-                disabled={isRunningPrompt || !promptInput.trim()}
-                className="w-full"
-              >
-                {isRunningPrompt ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                    Running Prompt...
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-4 w-4 mr-2" />
-                    Test Prompt
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {promptOutput && (
-            <div className="space-y-2">
-              <Label>AI Response</Label>
-              <ScrollArea className="h-40 p-3 border rounded bg-muted/50">
-                <div className="text-sm whitespace-pre-wrap">
-                  {promptOutput}
-                </div>
-              </ScrollArea>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 }
