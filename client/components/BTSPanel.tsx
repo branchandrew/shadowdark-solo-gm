@@ -83,9 +83,7 @@ export default function BTSPanel() {
         theme: theme.trim() || "Dark Fantasy",
         tone: tone.trim() || "Mysterious",
         voice: voice.trim() || "Atmospheric",
-        session_id:
-          localStorage.getItem("shadowdark_session_id") ||
-          `session_${Date.now()}`,
+        session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       };
 
       console.log("Making fetch request to /api/generate-adventure...");
