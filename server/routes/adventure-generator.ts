@@ -4,312 +4,129 @@ import { spawn } from "child_process";
 import path from "path";
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
 
-interface AdventureGenerationResult {
+interface TarotCard {
+  position: string;
+  card_text: string;
+}
+
+interface PythonResult {
   goal: string;
   gender: string;
   race: string;
-  cards: Array<{
-    position: string;
-    card_text: string;
-  }>;
+  cards: TarotCard[];
 }
 
-interface AdventureResponse {
-  villainName: string;
-  villainProfile: string;
-  success: boolean;
-  error?: string;
+interface VillainJson {
+  bbeg_name: string;
+  bbeg_hook: string;
+  bbeg_motivation: string;
+  bbeg_detailed_description: string;
 }
 
-export const generateAdventure: RequestHandler = async (req, res) => {
+/**
+ * Executes the Python helper script and returns its JSON payload.
+ */
+const runPython = (scriptPath: string): Promise<PythonResult> =>
+  new Promise((resolve, reject) => {
+    const proc = spawn("python3", [scriptPath]);
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (d) => (stdout += d));
+    proc.stderr.on("data", (d) => (stderr += d));
+
+    proc.on("close", (code) => {
+      if (code !== 0)
+        return reject(new Error(stderr || `Python exited with ${code}`));
+      try {
+        resolve(JSON.parse(stdout.trim()));
+      } catch {
+        reject(new Error("Invalid JSON from Python script"));
+      }
+    });
+  });
+
+/**
+ * Express handler: creates a concise BBEG JSON object.
+ */
+export const generateAdventure: RequestHandler = async (_req, res) => {
   try {
-    console.log("Starting adventure generation...");
-
-    // Step 1: Run Python script to generate random elements
-    const pythonScriptPath = path.join(
+    /* ---------- 1. Seed data from Python ---------- */
+    const pythonPath = path.join(
       __dirname,
       "..",
       "scripts",
       "adventure_generator.py",
     );
+    const seeds = await runPython(pythonPath);
 
-    const pythonResult = await new Promise<AdventureGenerationResult>(
-      (resolve, reject) => {
-        const pythonProcess = spawn("python3", [pythonScriptPath]);
-        let output = "";
-        let errorOutput = "";
-
-        pythonProcess.stdout.on("data", (data) => {
-          output += data.toString();
-        });
-
-        pythonProcess.stderr.on("data", (data) => {
-          errorOutput += data.toString();
-        });
-
-        pythonProcess.on("close", (code) => {
-          if (code !== 0) {
-            console.error("Python script error:", errorOutput);
-            reject(
-              new Error(
-                `Python script failed with code ${code}: ${errorOutput}`,
-              ),
-            );
-          } else {
-            try {
-              const result = JSON.parse(output.trim());
-              resolve(result);
-            } catch (e) {
-              console.error("Failed to parse Python output:", output);
-              reject(new Error("Failed to parse Python script output"));
-            }
-          }
-        });
-      },
-    );
-
-    console.log("Python generation complete:", pythonResult);
-
-    // Step 2: Format data for Claude prompt
-    const cardsFormatted = pythonResult.cards
-      .map((card) => `${card.position}: ${card.card_text}`)
+    const cardsFormatted = seeds.cards
+      .map((c) => `${c.position}: ${c.card_text}`)
       .join("\n");
 
-    // Step 3: Send to Claude for villain creation
-    console.log("Sending villain prompt to Claude...");
+    /* ---------- 2. Claude call ---------- */
+    const userPrompt = `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
-    const villainPrompt = `You are a narrative design assistant. Your job is to take the goal (first value)
-and combine and interpret it with the six Tarot card draws into a compelling and
-multidimensional Big Bad Evil Guy (BBEG) for a TTRPG campaign.
-Follow the exact structure and rules below to create the Villain's outline.
+### SOURCE DATA
+Goal: ${seeds.goal}
+Gender: ${seeds.gender}
+Race: ${seeds.race}
+Tarot Spread:\n${cardsFormatted}
 
-Your job is not to name the villain yet.
+--- HIDDEN REASONING STEPS (do not expose) ---
+1. **Interpret each tarot card** in context of the villain's life.  Follow these shortcuts:
+   • Major Arcana = fate‑shaping forces.  • Suits — Wands: ambition; Cups: emotion/loyalty; Swords: ideology/conflict; Pentacles: resources/influence.
+   • Numbers — Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
+   • Reversed indicates blockage, secrecy, or excess.
+2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
+3. **Forge a compelling name**
+   • Capture core mood, element/domain, and cultural flavor.  • Build a phonetic palette (2‑3 consonant clusters, 1‑2 vowel sounds) that fits mood.  • Select/construct a syllable template (e.g. CVC‑CVC) and blend morphemes to yield pronounceable candidates.  • Apply quality rules (pronounceability, tone match, distinctiveness).  • Choose the best.
+4. **Write a one‑sentence adventure hook** for the GM to read aloud.
 
-Here is the goal of the villain: ${pythonResult.goal}
-Here is the gender of the villain: ${pythonResult.gender}
-Here is the race of the villain: ${pythonResult.race}
-Here are the six cards, each with its position in the Villain Life spread:
-${cardsFormatted}
+--- OUTPUT ---
+Return one clean JSON object and nothing else.  Keep values short:
+• "bbeg_name" – the chosen name (title optional)
+• "bbeg_hook" – the single sentence hook
+• "bbeg_motivation" – one concise sentence
+• "bbeg_detailed_description" – 3‑4 vivid sentences
 
-TASKS
-A. Interpret each card in two sentences or fewer, obeying these guidelines:
-   • Major Arcana = life-defining events or forces.
-   • Suits: Wands = ambition or creativity; Cups = emotion or loyalty; Swords = conflict or ideology;
-     Pentacles = resources or influence.
-   • Numbers: Ace-Four = beginnings; Five-Seven = struggle; Eight-Ten = culmination;
-     Court cards represent key NPCs (Page = scout, Knight = enforcer, Queen = strategist, King = ruler).
-   • Reversed means blockage, inversion, secrecy, or excess—choose whichever fits best.
+{
+  "bbeg_name": "",
+  "bbeg_hook": "",
+  "bbeg_motivation": "",
+  "bbeg_detailed_description": ""
+}`.trim();
 
-B. Using the six interpretations, write a cohesive villain profile using the Tone of this adventure:
-   1. Striking visual.
-   2. Core motivation (one sentence).
-   3. Contradiction: show how the Virtue and Vice coexist.
-   4. Primary resource or lieutenant (from Rising Power).
-   5. Secret weakness or ticking clock (from Breaking Point).
-   6. Worst-case future if heroes fail (from Fate).
+    const messages = [
+      { role: "user" as const, content: userPrompt },
+      {
+        role: "assistant" as const,
+        content: `{
+  "bbeg_name": "",
+  "bbeg_hook": "",
+  "bbeg_motivation": "",
+  "bbeg_detailed_description": ""
+}`,
+      },
+    ];
 
-D. Finish with a one-sentence adventure hook the GM can read aloud.`;
-
-    console.log("Making Claude API call for villain...");
-    const villainResponse = (await Promise.race([
-      anthropic.messages.create({
-        model: "claude-3-5-sonnet-20241022",
-        max_tokens: 1000,
-        temperature: 0.7,
-        messages: [
-          {
-            role: "user",
-            content: villainPrompt,
-          },
-        ],
-      }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Claude API timeout")), 30000),
-      ),
-    ])) as any;
-
-    console.log("Claude villain response received");
-    const villainContent =
-      villainResponse.content[0].type === "text"
-        ? villainResponse.content[0].text
-        : "Failed to generate villain profile";
-
-    console.log("Villain content length:", villainContent.length);
-
-    // Step 4: Generate villain name
-    const namingPrompt = `You are a fantasy‑naming assistant. Your task is to prepare raw building blocks
-for a compelling villain name that works with the villain's persona.
-
-Follow Steps 1 and 2 exactly.
-
-TASKS
-Step 1. Extract three short keyword phrases from the villain profile:
-    • Core mood   – one or two words that sum up personality (examples: ruthless ambition, cold logic)
-    • Element or domain – one or two words tied to powers or theme (shadow, frost, plague)
-    • Cultural flavor – one or two words suggesting linguistic or regional tone (Nordic, Latin, Abyssal)
-
-Step 2. Build a phonetic palette table using the mood word from Step 1:
-    • Choose 2‑3 strong consonant clusters that fit the mood
-    • Choose 1‑2 vowel sounds that match the same mood
-    • Present the results in a table like this:
-
-| Mood | Consonants | Vowels | Effect |
-|------|------------|--------|--------|
-| <mood word> | <C1, C2, C3> | <V1, V2> | <one‑line rationale> |
-
-OUTPUT FORMAT
-Keywords:
-- Core mood: <text>
-- Element or domain: <text>
-- Cultural flavor: <text>
-
-Phonetic Palette:
-| Mood | Consonants | Vowels | Effect |
-|------|------------|--------|--------|
-| ...  | ...        | ...    | ...    |
-
-After you have completed Steps 1 and 2, output them as the example above and then
-proceed to Step 3. Do not wait for user response.
-
-Step 3. Build a phonetic palette
-Use these examples of clusters that could be used to reinforce the mood of the villain:
-
-Mood	Consonants	Vowels	Sample effect
-Brutal / martial	K, G, Gr, Kr, Dr	short A, O	"Drakgor"
-Sinister / occult	Sh, Zh, Th, S	long E, I, U	"Zheilith"
-Noble / tragic	L, V, R, D	diphthongs Ae, Ei, Oa	"Vaelor"
-Cold / calculating	X, Q, K, T	neutral A, I	"Qitali"
-
-Pick 2–3 consonant clusters and 1–2 vowels.
-
-Step 4. Choose a syllable template
-Select one that fits the gravitas of the Villain (or create a new one):
-
-[C]V[C]V – elegant, flows (Va‑e‑lor)
-
-CVC‑CVC – harsh, militaristic (Drak‑gor)
-
-CV‑CV‑CV – chant‑like, eldritch (Zi‑lo‑thu)
-
-CVVC‑CVC – regal, archaic (Khael‑vorn)
-
-Step 5. Forge two root morphemes
-
-Root A – embodies the villain's domain
-Example:
-Use Latin, Old Norse, or a quick English syllable twist.
-shadow ➜ "umbra", "skot", "dusk"
-
-Root B – hints at motivation or fate
-Example:
-dominion ➜ "crat", "vald", "rex"
-
-Step 5. Assemble 8 candidates
-Slot morphemes into the template.
-
-Swap vowels or consonants to fit the palette.
-
-Vary accents or doubled letters for texture.
-
-Step 6. QUALITY RULES
-1. Pronounceability – must be speakable in two seconds without unusual tongue‑twisters.
-2. Tone match – must evoke the "core_mood", respect the "element", and feel consistent
-   with the "cultural flavor".
-3. Distinctiveness – skip names that Google shows as 10+ exact matches or are obvious
-   modern brands, real places, or common English words.
-4. Not overly difficult to remember or pronounce
-
-Step 7. CHOOSE ONE
-A. Take the list of candidates.
-B. Check guardrails from Steps 1-2 to consider mood, element, culture, consonant palette, and vowel palette. Eliminate any names that don't meet the standard.
-C. Check each candidate name to pass Quality Rules
-C. Of the remaining, choose the best.
-D. Output
-   • "name" – the final spelling, capitalized.
-   • "reason" – one line explaining how it fits the guardrails and passes the rules.
-
-Step 8. CONSIDER TITLE
-
-If the villain has a role or occupation and it makes sense to do so,
-please add the title prior to name. Ensure the role fits with the theme and
-tone of the adventure.
-
-FINAL VILLAIN OUTPUT:
-
-{Name}
-
-Adventure Hook:
-...
-
-Villain Profile:
-1. ...
-2. ...
-3. ...
-4. ...
-5. ...
-6. ...
-
-Seed ideas:
-- Original goal: ${pythonResult.goal}
-- Seed: ${pythonResult.cards[0].card_text}
-- Virtue: ${pythonResult.cards[1].card_text}
-- Vice: ${pythonResult.cards[2].card_text}
-- Rising Power: ${pythonResult.cards[3].card_text}
-- Breaking Point: ${pythonResult.cards[4].card_text}
-- Fate: ${pythonResult.cards[5].card_text}
-
-Previous villain profile to work with:
-${villainContent}`;
-
-    const nameResponse = await anthropic.messages.create({
+    const ai = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
-      max_tokens: 1500,
-      temperature: 0.7,
-      messages: [
-        {
-          role: "user",
-          content: namingPrompt,
-        },
-      ],
+      system: "Return only the JSON object requested.",
+      max_tokens: 600,
+      temperature: 0.5,
+      messages,
     });
 
-    const finalResult =
-      nameResponse.content[0].type === "text"
-        ? nameResponse.content[0].text
-        : "Failed to generate villain name and final output";
+    const villain: VillainJson = JSON.parse(ai.content[0].text);
 
-    console.log("Final result with name:", finalResult.substring(0, 200));
-
-    // Extract name from the final result (look for the final name output)
-    const nameMatch =
-      finalResult.match(/(?:Name:|^)([^\n]+)/i) ||
-      finalResult.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
-    const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
-    const cleanName = extractedName.replace(/^(Name:|Title:)\s*/i, "");
-
-    // Combine the original villain profile with the final naming output
-    const completeProfile = `${villainContent}\n\n--- NAMING PROCESS ---\n${finalResult}`;
-
-    const finalResponse: AdventureResponse = {
-      villainName: cleanName,
-      villainProfile: completeProfile,
-      success: true,
-    };
-
-    res.json(finalResponse);
-  } catch (error) {
-    console.error("Adventure generation error:", error);
-
-    const errorResponse: AdventureResponse = {
-      villainName: "Error",
-      villainProfile: "Failed to generate adventure",
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-
-    res.status(500).json(errorResponse);
+    /* ---------- 3. Response ---------- */
+    res.json({ ...villain, success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: String(err) });
   }
 };
