@@ -139,23 +139,7 @@ D. Finish with a one-sentence adventure hook the GM can read aloud.`;
 
     console.log("Villain content length:", villainContent.length);
 
-    // Extract name from the villain profile
-    const nameMatch = villainContent.match(/(?:Name:|^)([^\n]+)/i);
-    const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
-    const cleanName = extractedName.replace(/^(Name:|Title:)\s*/i, "");
-
-    // For now, let's just return the villain profile without the naming step
-    const response: AdventureResponse = {
-      villainName: cleanName,
-      villainProfile: villainContent,
-      success: true,
-    };
-
-    console.log("Sending response to client");
-    res.json(response);
-    return;
-
-    // Step 4: Generate villain name (temporarily disabled for debugging)
+    // Step 4: Generate villain name
     const namingPrompt = `You are a fantasy‑naming assistant. Your task is to prepare raw building blocks
 for a compelling villain name that works with the villain's persona.
 
@@ -297,10 +281,16 @@ ${villainContent}`;
         ? nameResponse.content[0].text
         : "Failed to generate villain name and final output";
 
+    console.log("Final result with name:", finalResult.substring(0, 200));
+
+    // Extract name from the final result
+    const nameMatch = finalResult.match(/(?:Name:|^)([^\n]+)/i);
+    const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
+    const cleanName = extractedName.replace(/^(Name:|Title:)\s*/i, "");
+
     const finalResponse: AdventureResponse = {
+      villainName: cleanName,
       villainProfile: finalResult,
-      adventureHook: "Adventure hook will be extracted from final result",
-      seedData: pythonResult,
       success: true,
     };
 
