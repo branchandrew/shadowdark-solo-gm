@@ -95,7 +95,7 @@ Tarot Spread:\n${cardsFormatted}
 
 --- HIDDEN REASONING STEPS (do not expose) ---
 1. **Interpret each tarot card** in context of the villain's life.  Follow these shortcuts:
-   • Major Arcana = fate‑shaping forces.  • Suits — Wands: ambition; Cups: emotion/loyalty; Swords: ideology/conflict; Pentacles: resources/influence.
+   • Major Arcana = fate‑shaping forces.  • Suits �� Wands: ambition; Cups: emotion/loyalty; Swords: ideology/conflict; Pentacles: resources/influence.
    • Numbers — Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
    • Reversed indicates blockage, secrecy, or excess.
 2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
@@ -114,12 +114,22 @@ Tarot Spread:\n${cardsFormatted}
    • An unexpected relationship to a trusted NPC or location
    • A hidden motivation that recontextualizes everything
    • The real threat being something else entirely
+7. **Generate 1-3 Lieutenants** (whatever number makes sense for this BBEG). For each lieutenant:
+   • Create a name that fits the theme
+   • Draw 6 new tarot cards and interpret them to answer these specific questions:
+     - Seed: What defines their core nature?
+     - Background: What is their origin story?
+     - Location: Where will characters most likely encounter them?
+     - Why Protect: What motivates their loyalty to the BBEG?
+     - How Protect: What methods do they use to serve/protect the BBEG?
+     - Reward: What do characters gain by defeating them?
+   • Keep each tarot interpretation to 1-2 sentences
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_name" – the chosen name (title optional)
 • "bbeg_hook" – the single sentence hook
-• "bbeg_motivation" – one concise sentence
+��� "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" – the major plot twist (2-3 sentences)
