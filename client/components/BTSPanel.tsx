@@ -231,7 +231,7 @@ export default function BTSPanel() {
   };
 
   const sendCompleteAdventureToChat = () => {
-    if (!rawAdventureData || !adventureArc) {
+    if (!adventureArc) {
       console.error("No adventure data to send");
       return;
     }
