@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Send, Brain, Wand2, Dices, Target } from "lucide-react";
+import { Send, Brain, Wand2, Dices, Target, BookOpen } from "lucide-react";
 import { AIChatRequest, AIChatResponse } from "@shared/api";
 import DiceRoller from "./DiceRoller";
 
@@ -195,6 +195,69 @@ export default function AIChat() {
         id: Date.now().toString(),
         type: "fate",
         content: `❌ Unable to roll Fate Chart: ${error instanceof Error ? error.message : String(error)}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
+  };
+
+  const rollMeaningTable = async () => {
+    console.log("Rolling Meaning Table (Action/Subject)");
+
+    try {
+      const response = await fetch("/api/roll-meaning", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Meaning Table API response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Meaning Table API response data:", data);
+
+      if (data.success) {
+        const resultMessage = `📖 **Meaning Table Roll**
+
+**Action (Verb):** ${data.verb} (rolled ${data.verb_roll})
+**Subject:** ${data.subject} (rolled ${data.subject_roll})
+**Combined Meaning:** ${data.meaning}
+
+*Use this meaning to inspire events, NPC actions, or scene elements.*`;
+
+        // Create a meaning table message
+        const meaningMessage: Message = {
+          id: Date.now().toString(),
+          type: "fate", // Use same styling as fate rolls
+          content: resultMessage,
+          timestamp: new Date(),
+        };
+
+        // Add to local chat display only
+        setMessages((prev) => [...prev, meaningMessage]);
+      } else {
+        console.error("Meaning table roll failed. Full response:", data);
+
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          type: "fate",
+          content: `❌ Meaning Table roll failed: ${data.error || "Unknown error"}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      console.error("Error rolling meaning table:", error);
+
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: "fate",
+        content: `❌ Unable to roll Meaning Table: ${error instanceof Error ? error.message : String(error)}`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -459,6 +522,15 @@ export default function AIChat() {
                   </div>
                 </PopoverContent>
               </Popover>
+              <Button
+                onClick={rollMeaningTable}
+                variant="outline"
+                size="icon"
+                className="h-[28px] w-[60px]"
+                title="Roll Meaning Table (Action/Subject)"
+              >
+                <BookOpen className="h-4 w-4" />
+              </Button>
               <Button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
