@@ -9,7 +9,7 @@ import { User, BookOpen, Network, Eye } from "lucide-react";
 export default function RightPanel() {
   return (
     <Tabs defaultValue="character" className="h-full flex flex-col">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
           Character
@@ -17,6 +17,10 @@ export default function RightPanel() {
         <TabsTrigger value="adventure" className="flex items-center gap-2">
           <BookOpen className="h-4 w-4" />
           Adventure Log
+        </TabsTrigger>
+        <TabsTrigger value="elements" className="flex items-center gap-2">
+          <Network className="h-4 w-4" />
+          Campaign
         </TabsTrigger>
         <TabsTrigger value="bts" className="flex items-center gap-2">
           <Eye className="h-4 w-4" />
@@ -33,6 +37,12 @@ export default function RightPanel() {
       <TabsContent value="adventure" className="flex-1 mt-4 overflow-hidden">
         <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <AdventureLog />
+        </ScrollArea>
+      </TabsContent>
+
+      <TabsContent value="elements" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+          <CampaignElements />
         </ScrollArea>
       </TabsContent>
 
