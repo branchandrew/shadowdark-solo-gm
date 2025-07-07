@@ -45,33 +45,10 @@ export default function BTSPanel() {
   const [tone, setTone] = useState("");
   const [voice, setVoice] = useState("");
 
-  // Load persisted data on component mount
+  // Development mode: start fresh each time, no auto-loading
   useEffect(() => {
-    const savedAdventureArc = localStorage.getItem("shadowdark_adventure_arc");
-    const savedRawData = localStorage.getItem("shadowdark_raw_adventure_data");
-    const savedTheme = localStorage.getItem("shadowdark_theme");
-    const savedTone = localStorage.getItem("shadowdark_tone");
-    const savedVoice = localStorage.getItem("shadowdark_voice");
-
-    if (savedAdventureArc) {
-      try {
-        setAdventureArc(JSON.parse(savedAdventureArc));
-      } catch (error) {
-        console.error("Failed to parse saved adventure arc:", error);
-      }
-    }
-
-    if (savedRawData) {
-      try {
-        setRawAdventureData(JSON.parse(savedRawData));
-      } catch (error) {
-        console.error("Failed to parse saved raw adventure data:", error);
-      }
-    }
-
-    if (savedTheme) setTheme(savedTheme);
-    if (savedTone) setTone(savedTone);
-    if (savedVoice) setVoice(savedVoice);
+    console.log("BTSPanel: Starting fresh (development mode)");
+    // No auto-loading during development - always start empty
   }, []);
 
   // Save data to localStorage whenever it changes
