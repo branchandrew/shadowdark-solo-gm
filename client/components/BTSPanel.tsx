@@ -29,6 +29,10 @@ interface AdventureArc {
       reward: string;
     };
   }>;
+  faction: {
+    name: string;
+    description: string;
+  };
   minions: string;
 }
 
@@ -138,6 +142,10 @@ export default function BTSPanel() {
           secrets: [],
           highTowerSurprise: data.high_tower_surprise || "",
           lieutenants: data.lieutenants || [],
+          faction: {
+            name: data.faction_name || "",
+            description: data.faction_description || "",
+          },
           minions: data.minions || "",
         };
 
@@ -473,6 +481,23 @@ ${adventureArc.lieutenants
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* Faction */}
+            {adventureArc.faction?.name && (
+              <div className="space-y-3">
+                <h4 className="font-semibold">Aligned Faction</h4>
+                <div className="p-3 border rounded space-y-2">
+                  <h5 className="font-medium text-primary">
+                    {adventureArc.faction.name}
+                  </h5>
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {adventureArc.faction.description}
+                  </p>
                 </div>
               </div>
             )}

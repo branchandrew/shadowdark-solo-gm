@@ -39,6 +39,8 @@ interface VillainJson {
   clues: string[];
   high_tower_surprise: string;
   lieutenants: Lieutenant[];
+  faction_name: string;
+  faction_description: string;
   minions: string;
 }
 
@@ -163,7 +165,12 @@ Follow these steps using Mythic GME rules:
        * How Protect: What methods do they use to serve/protect the BBEG?
        * Reward: What do characters gain by defeating them?
      - Keep each tarot interpretation to 1-2 sentences
-9. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
+9. **Create the Faction** which most aligns with the BBEG. It should reinforce the tone and theme of the adventure. Answer the following questions about it to create its details:
+   • The faction should align to at least one of the two Lieutenants. Which one? And why?
+   • Is the faction loyal to the BBEG or do their motives just happen to align with it?
+   • What sort of domain or territory does the faction control?
+   • Provide a faction name and 2-3 sentence description that captures their nature, goals, and relationship to the BBEG
+10. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
    • A creature type that fits thematically with the BBEG and theme
    • Common enough to be encountered frequently
    • Challenging but not overwhelming for regular encounters
@@ -172,13 +179,15 @@ Follow these steps using Mythic GME rules:
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
-• "bbeg_name" – the chosen name (title optional)
+• "bbeg_name" �� the chosen name (title optional)
 • "bbeg_hook" – the single sentence hook
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" – the major plot twist (2-3 sentences)
 • "lieutenants" – array of 1-3 lieutenant objects, each with name and tarot_spread
+• "faction_name" – name of the aligned faction
+• "faction_description" – description of faction (2-3 sentences)
 • "minions" – description of common minion creature type (2-3 sentences)
 
 {
