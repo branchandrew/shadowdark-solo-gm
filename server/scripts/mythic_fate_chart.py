@@ -179,7 +179,7 @@ def has_doubles(roll):
     ones = roll % 10
     return tens == ones
 
-def roll_fate_chart(likelihood="50/50", chaos_factor=5, force_doubles=False):
+def roll_fate_chart(likelihood="50/50", chaos_factor=5):
     """
     Roll on the Mythic Fate Chart
 
@@ -202,12 +202,7 @@ def roll_fate_chart(likelihood="50/50", chaos_factor=5, force_doubles=False):
         likelihood_index = LIKELIHOOD_NAMES.index(likelihood)
 
     # Roll d100 (1-99, treating 100 as 00)
-    if force_doubles:
-        # Force a doubles roll for testing (but not exceptional)
-        doubles_options = [11, 22, 33, 44, 55, 66, 77, 88, 99]
-        roll = random.choice(doubles_options)
-    else:
-        roll = random.randint(1, 99)
+    roll = random.randint(1, 99)
 
     # Get threshold from chart
     threshold = FATE_CHART[likelihood_index][chaos_factor - 1]
@@ -259,7 +254,6 @@ def main():
     # Parse command line arguments or use defaults
     likelihood = "50/50"
     chaos_factor = 5
-    force_doubles = False
 
     if len(sys.argv) > 1:
         likelihood = sys.argv[1]
@@ -268,10 +262,8 @@ def main():
             chaos_factor = int(sys.argv[2])
         except ValueError:
             chaos_factor = 5
-    if len(sys.argv) > 3:
-        force_doubles = sys.argv[3].lower() == "true"
 
-    result = roll_fate_chart(likelihood, chaos_factor, force_doubles)
+    result = roll_fate_chart(likelihood, chaos_factor)
     print(json.dumps(result, indent=2))
 
 if __name__ == "__main__":

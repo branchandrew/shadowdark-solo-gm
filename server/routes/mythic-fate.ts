@@ -35,7 +35,6 @@ interface FateRollResult {
 interface FateRollRequest {
   likelihood?: string;
   chaos_factor?: number;
-  force_doubles?: boolean;
 }
 
 /**
@@ -44,7 +43,6 @@ interface FateRollRequest {
 const runFateChart = (
   likelihood: string = "50/50",
   chaosFactor: number = 5,
-  forceDoubles: boolean = false,
 ): Promise<FateRollResult> =>
   new Promise((resolve, reject) => {
     const scriptPath = path.join(
@@ -57,7 +55,6 @@ const runFateChart = (
       scriptPath,
       likelihood,
       chaosFactor.toString(),
-      forceDoubles.toString(),
     ]);
 
     let stdout = "";
@@ -85,17 +82,10 @@ const runFateChart = (
  */
 export const rollFateChart: RequestHandler = async (req, res) => {
   try {
-    const {
-      likelihood = "50/50",
-      chaos_factor = 5,
-      force_doubles = false,
-    }: FateRollRequest = req.body || {};
+    const { likelihood = "50/50", chaos_factor = 5 }: FateRollRequest =
+      req.body || {};
 
-    console.log("Rolling Fate Chart with:", {
-      likelihood,
-      chaos_factor,
-      force_doubles,
-    });
+    console.log("Rolling Fate Chart with:", { likelihood, chaos_factor });
 
     // Validate chaos factor
     const validChaosFactor = Math.max(
@@ -103,11 +93,7 @@ export const rollFateChart: RequestHandler = async (req, res) => {
       Math.min(9, Number(chaos_factor) || 5),
     );
 
-    const result = await runFateChart(
-      likelihood,
-      validChaosFactor,
-      force_doubles,
-    );
+    const result = await runFateChart(likelihood, validChaosFactor);
 
     console.log("Fate Chart result:", result);
 
