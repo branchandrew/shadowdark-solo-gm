@@ -93,9 +93,11 @@ export default function BTSPanel() {
   const [isRunningPrompt, setIsRunningPrompt] = useState(false);
 
   const regenerateAdventure = async () => {
+    console.log("Starting regenerate adventure...");
     setIsGenerating(true);
 
     try {
+      console.log("Making fetch request to /api/generate-adventure...");
       const response = await fetch("/api/generate-adventure", {
         method: "POST",
         headers: {
@@ -103,10 +105,21 @@ export default function BTSPanel() {
         },
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log("Received data:", data);
 
       if (data.success) {
-        console.log("Adventure generation succeeded:", data);
+        console.log(
+          "Adventure generation succeeded! Villain profile length:",
+          data.villainProfile.length,
+        );
 
         // Update the adventure arc display
         const newAdventure: AdventureArc = {
@@ -139,19 +152,34 @@ export default function BTSPanel() {
           ],
         };
 
+        console.log("Setting new adventure arc...");
         setAdventureArc(newAdventure);
 
-        // For now, just log the villain profile to console so we can see it
-        console.log("Generated Villain Profile:", data.villainProfile);
-
-        // Set the villain profile as output in the prompt testing area for now
+        // Set the villain profile as output in the prompt testing area
+        console.log("Setting prompt output...");
         setPromptOutput(data.villainProfile);
+
+        // Also try setting script output as a backup
+        setScriptOutput(
+          `Adventure Generated Successfully!\n\nVillain Profile:\n${data.villainProfile}`,
+        );
+
+        console.log("Adventure generation complete!");
       } else {
         console.error("Adventure generation failed:", data.error);
+        setPromptOutput(`Error: ${data.error || "Unknown error occurred"}`);
+        setScriptOutput(
+          `Adventure generation failed: ${data.error || "Unknown error"}`,
+        );
       }
     } catch (error) {
       console.error("Error generating adventure:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      setPromptOutput(`Fetch Error: ${errorMessage}`);
+      setScriptOutput(`Network error occurred: ${errorMessage}`);
     } finally {
+      console.log("Setting isGenerating to false");
       setIsGenerating(false);
     }
   };
