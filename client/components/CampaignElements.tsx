@@ -161,6 +161,21 @@ export default function CampaignElements() {
     );
   };
 
+  const updateClueDiscovered = (clueId: string, discovered: boolean) => {
+    setClues((prev) =>
+      prev.map((clue) => (clue.id === clueId ? { ...clue, discovered } : clue)),
+    );
+  };
+
+  const updateClueImportance = (
+    clueId: string,
+    importance: Clue["importance"],
+  ) => {
+    setClues((prev) =>
+      prev.map((clue) => (clue.id === clueId ? { ...clue, importance } : clue)),
+    );
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
