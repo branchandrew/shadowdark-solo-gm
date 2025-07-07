@@ -25,6 +25,7 @@ interface VillainJson {
   bbeg_motivation: string;
   bbeg_detailed_description: string;
   clues: string[];
+  high_tower_surprise: string;
 }
 
 /**
@@ -94,6 +95,12 @@ Tarot Spread:\n${cardsFormatted}
    • Information about where the BBEG might be found or operates
    • Evidence of the BBEG's evil doings
    Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc.
+6. **Create a "High Tower Surprise"** - a major plot twist or revelation about this BBEG that subverts player expectations. This could be:
+   • The apparent stronghold is actually a decoy
+   • The BBEG's true identity or nature is different than expected
+   • An unexpected relationship to a trusted NPC or location
+   • A hidden motivation that recontextualizes everything
+   • The real threat being something else entirely
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
