@@ -5,6 +5,7 @@ import AdventureLog from "./AdventureLog";
 import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
 import Map from "./Map";
+import SchemaVisualizer from "./SchemaVisualizer";
 import { User, BookOpen, Network, Eye, MapPin, Database } from "lucide-react";
 
 export default function RightPanel() {
