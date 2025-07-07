@@ -21,7 +21,7 @@ export default function RightPanel() {
         </TabsTrigger>
         <TabsTrigger value="elements" className="flex items-center gap-2">
           <Network className="h-4 w-4" />
-          Threads & NPCs
+          Campaign Elements
         </TabsTrigger>
         <TabsTrigger value="map" className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
