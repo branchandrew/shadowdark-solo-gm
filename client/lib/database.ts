@@ -194,20 +194,13 @@ class HybridDatabase {
     return null;
   }
 
-  // Generic set method that saves to both localStorage and cloud
+  // Generic set method - save to localStorage only during development
   async set<T>(key: string, value: T): Promise<void> {
-    // Always save to localStorage
+    // Save to localStorage for current session only
     localStorage.setItem(`shadowdark_${key}`, JSON.stringify(value));
-
-    // If cloud sync is enabled, also save to cloud
-    if (this.isCloudSyncEnabled() && this.supabase) {
-      try {
-        await this.saveToCloud(key, value);
-      } catch (error) {
-        console.error("Failed to sync to cloud:", error);
-        // Continue anyway - localStorage is the primary storage
-      }
-    }
+    console.log(
+      `Saved ${key} to localStorage (session-only during development)`,
+    );
   }
 
   // Remove data
