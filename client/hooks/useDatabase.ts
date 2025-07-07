@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { db } from "@/lib/database";
 
-// Hook for managing database state with automatic sync
+// Hook for managing database state with automatic sync and real-time updates
 export function useDatabase<T>(key: string, defaultValue: T) {
   const [data, setData] = useState<T>(defaultValue);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load data on mount
+  // Load data on mount and set up real-time subscriptions
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -26,7 +26,44 @@ export function useDatabase<T>(key: string, defaultValue: T) {
     };
 
     loadData();
+
+    // Subscribe to real-time changes
+    const unsubscribe = db.subscribe("session", (session: any) => {
+      // Extract the relevant data for this key from the session update
+      const extractedData = extractFieldFromSession(session, key);
+      if (extractedData !== null) {
+        setData(extractedData);
+      }
+    });
+
+    return unsubscribe;
   }, [key]);
+
+  // Helper function to extract field from session (similar to database service)
+  const extractFieldFromSession = (session: any, key: string) => {
+    switch (key) {
+      case "character":
+        return session.character_data;
+      case "has_character":
+        return session.character_data ? "true" : "false";
+      case "adventure_arc":
+        return session.adventure_arc;
+      case "chaos_factor":
+        return session.chaos_factor;
+      case "theme":
+        return session.theme;
+      case "tone":
+        return session.tone;
+      case "voice":
+        return session.voice;
+      case "campaign_elements":
+        return session.campaign_elements;
+      case "adventure_log":
+        return session.adventure_log;
+      default:
+        return null;
+    }
+  };
 
   // Update data and save to database
   const updateData = useCallback(
