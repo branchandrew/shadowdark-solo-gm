@@ -132,11 +132,11 @@ export default function AIChat() {
           );
         }
 
-        const resultMessage = `🎲 **Fate Chart Roll**
+        let resultMessage = `🎲 **Fate Chart Roll**
 
 **Question Likelihood:** ${data.likelihood || fateLogLikelihood}
 **Chaos Factor:** ${data.chaos_factor || chaosFactor}
-**Roll:** ${data.roll} (needed ≤${data.threshold})
+**Roll:** ${data.roll} (needed ≤${data.threshold})${data.doubles ? " 🎯 DOUBLES!" : ""}
 **Result:** ${data.result || "Unknown"}${data.exceptional ? " ✨" : ""}
 
 *${
@@ -148,6 +148,17 @@ export default function AIChat() {
               ? "An exceptional no - something goes wrong or backfires!"
               : "No, it doesn't happen."
         }*`;
+
+        // Add random event if doubles were rolled (and not exceptional)
+        if (data.random_event) {
+          resultMessage += `
+
+🎲 **Random Event Triggered!**
+**Event Roll:** ${data.random_event.event_roll} (${data.random_event.event_range})
+**Event Type:** ${data.random_event.event_type}
+
+*A random event occurs! Consider how this event type manifests in your current scene.*`;
+        }
 
         // Create a fate roll message - this is LOCAL ONLY, not sent to AI
         const fateMessage: Message = {

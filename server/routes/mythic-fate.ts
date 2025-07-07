@@ -2,6 +2,12 @@ import { RequestHandler } from "express";
 import { spawn } from "child_process";
 import path from "path";
 
+interface RandomEvent {
+  event_roll: number;
+  event_type: string;
+  event_range: string;
+}
+
 interface FateRollResult {
   roll: number;
   threshold: number;
@@ -11,6 +17,8 @@ interface FateRollResult {
   likelihood: string;
   chaos_factor: number;
   likelihood_index: number;
+  doubles: boolean;
+  random_event?: RandomEvent;
 }
 
 interface FateRollRequest {
@@ -89,6 +97,8 @@ export const rollFateChart: RequestHandler = async (req, res) => {
       likelihood: result.likelihood || likelihood,
       chaos_factor: result.chaos_factor || validChaosFactor,
       likelihood_index: result.likelihood_index || 0,
+      doubles: result.doubles || false,
+      random_event: result.random_event || null,
       timestamp: new Date().toISOString(),
     };
 
