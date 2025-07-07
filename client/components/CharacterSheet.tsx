@@ -16,7 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, Clipboard, Download, User, X } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Clipboard,
+  Download,
+  User,
+  X,
+  Skull,
+} from "lucide-react";
 
 interface Stats {
   STR: number;
