@@ -163,26 +163,36 @@ export default function CharacterSheet() {
   const [newAttack, setNewAttack] = useState("");
   const [showPasteDialog, setShowPasteDialog] = useState(false);
   const [pastedJson, setPastedJson] = useState("");
+  const [hasExplicitCharacter, setHasExplicitCharacter] = useState(false);
 
   // Load character from localStorage on mount
   useEffect(() => {
     const savedCharacter = localStorage.getItem("shadowdark_character");
-    if (savedCharacter) {
+    const hasExplicitFlag = localStorage.getItem("shadowdark_has_character");
+
+    if (savedCharacter && hasExplicitFlag === "true") {
       try {
         setCharacter(JSON.parse(savedCharacter));
+        setHasExplicitCharacter(true);
       } catch (error) {
         console.error("Failed to parse saved character:", error);
       }
     }
   }, []);
 
-  // Save character to localStorage when it changes
+  // Save character to localStorage when it changes (only if user has explicitly created one)
   useEffect(() => {
-    localStorage.setItem("shadowdark_character", JSON.stringify(character));
-  }, [character]);
+    if (hasExplicitCharacter) {
+      localStorage.setItem("shadowdark_character", JSON.stringify(character));
+      localStorage.setItem("shadowdark_has_character", "true");
+    }
+  }, [character, hasExplicitCharacter]);
 
   const updateCharacter = (updates: Partial<Character>) => {
     setCharacter((prev) => ({ ...prev, ...updates }));
+    if (!hasExplicitCharacter) {
+      setHasExplicitCharacter(true);
+    }
   };
 
   const updateStats = (stat: keyof Stats, value: number) => {
@@ -276,6 +286,7 @@ export default function CharacterSheet() {
       }
 
       setCharacter(imported);
+      setHasExplicitCharacter(true);
       setShowPasteDialog(false);
       setPastedJson("");
     } catch (error) {
@@ -298,12 +309,8 @@ export default function CharacterSheet() {
     }
   };
 
-  const hasCharacterData =
-    character.name !== "" ||
-    character.ancestry !== "" ||
-    character.class !== "";
-
-  if (!hasCharacterData) {
+  // Show empty state until user explicitly creates or imports a character
+  if (!hasExplicitCharacter) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center space-y-6 max-w-md">
