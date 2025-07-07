@@ -13,8 +13,7 @@ interface AdventureGenerationResult {
   race: string;
   cards: Array<{
     position: string;
-    card: string;
-    orientation: string;
+    card_text: string;
   }>;
 }
 
@@ -77,11 +76,11 @@ export const generateAdventure: RequestHandler = async (req, res) => {
 
     // Step 2: Format data for Claude prompt
     const cardsFormatted = pythonResult.cards
-      .map((card) => `${card.position}: ${card.card} (${card.orientation})`)
+      .map((card) => `${card.position}: ${card.card_text}`)
       .join("\n");
 
     // Step 3: Send to Claude for villain creation
-    const villainPrompt = `You are a narrative design assistant. Your job is to take the goal (first value) 
+    const villainPrompt = `You are a narrative design assistant. Your job is to take the goal (first value)
 and combine and interpret it with the six Tarot card draws into a compelling and
 multidimensional Big Bad Evil Guy (BBEG) for a TTRPG campaign.
 Follow the exact structure and rules below to create the Villain's outline.
@@ -131,7 +130,7 @@ D. Finish with a one-sentence adventure hook the GM can read aloud.`;
         : "Failed to generate villain profile";
 
     // Step 4: Generate villain name
-    const namingPrompt = `You are a fantasy‑naming assistant. Your task is to prepare raw building blocks 
+    const namingPrompt = `You are a fantasy‑naming assistant. Your task is to prepare raw building blocks
 for a compelling villain name that works with the villain's persona.
 
 Follow Steps 1 and 2 exactly.
@@ -163,7 +162,7 @@ Phonetic Palette:
 | ...  | ...        | ...    | ...    |
 
 After you have completed Steps 1 and 2, output them as the example above and then
-proceed to Step 3. Do not wait for user response. 
+proceed to Step 3. Do not wait for user response.
 
 Step 3. Build a phonetic palette
 Use these examples of clusters that could be used to reinforce the mood of the villain:
@@ -176,7 +175,7 @@ Cold / calculating	X, Q, K, T	neutral A, I	"Qitali"
 
 Pick 2–3 consonant clusters and 1–2 vowels.
 
-Step 4. Choose a syllable template 
+Step 4. Choose a syllable template
 Select one that fits the gravitas of the Villain (or create a new one):
 
 [C]V[C]V – elegant, flows (Va‑e‑lor)
@@ -216,7 +215,7 @@ Step 6. QUALITY RULES
 Step 7. CHOOSE ONE
 A. Take the list of candidates.
 B. Check guardrails from Steps 1-2 to consider mood, element, culture, consonant palette, and vowel palette. Eliminate any names that don't meet the standard.
-C. Check each candidate name to pass Quality Rules 
+C. Check each candidate name to pass Quality Rules
 C. Of the remaining, choose the best.
 D. Output
    • "name" – the final spelling, capitalized.
@@ -224,7 +223,7 @@ D. Output
 
 Step 8. CONSIDER TITLE
 
-If the villain has a role or occupation and it makes sense to do so, 
+If the villain has a role or occupation and it makes sense to do so,
 please add the title prior to name. Ensure the role fits with the theme and
 tone of the adventure.
 
@@ -245,12 +244,12 @@ Villain Profile:
 
 Seed ideas:
 - Original goal: ${pythonResult.goal}
-- Seed: ${pythonResult.cards[0].card} (${pythonResult.cards[0].orientation})
-- Virtue: ${pythonResult.cards[1].card} (${pythonResult.cards[1].orientation})
-- Vice: ${pythonResult.cards[2].card} (${pythonResult.cards[2].orientation})
-- Rising Power: ${pythonResult.cards[3].card} (${pythonResult.cards[3].orientation})
-- Breaking Point: ${pythonResult.cards[4].card} (${pythonResult.cards[4].orientation})
-- Fate: ${pythonResult.cards[5].card} (${pythonResult.cards[5].orientation})
+- Seed: ${pythonResult.cards[0].card_text}
+- Virtue: ${pythonResult.cards[1].card_text}
+- Vice: ${pythonResult.cards[2].card_text}
+- Rising Power: ${pythonResult.cards[3].card_text}
+- Breaking Point: ${pythonResult.cards[4].card_text}
+- Fate: ${pythonResult.cards[5].card_text}
 
 Previous villain profile to work with:
 ${villainContent}`;

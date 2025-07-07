@@ -64,24 +64,29 @@ def generate_reading():
         selected_race = random.choices(nimble_races, weights=race_weights, k=1)[0] # Select one race with weights
 
     drawn_cards = []
-    card_positions = ["Seed", "Virtue", "Vice", "Rising Power", "Breaking Point", "Fate"]
-    
-    for i in range(6):
+    for _ in range(6):
         card = random.choice(tarot_cards)
         orientation = "Reversed" if random.random() < 0.33 else "Upright" # ~33% chance of reversed
-        drawn_cards.append({
-            "position": card_positions[i],
-            "card": card,
-            "orientation": orientation
-        })
+        drawn_cards.append(f"{card} ({orientation})")
 
-    return {
-        "goal": selected_goal,
-        "gender": selected_gender,
-        "race": selected_race,
-        "cards": drawn_cards
-    }
+    return selected_goal, selected_gender, selected_race, drawn_cards
 
 if __name__ == "__main__":
-    result = generate_reading()
+    goal, gender, race, cards = generate_reading()
+    card_positions = ["Seed", "Virtue", "Vice", "Rising Power", "Breaking Point", "Fate"]
+
+    # Format cards with positions for output
+    formatted_cards = []
+    for i, card in enumerate(cards):
+        formatted_cards.append({
+            "position": card_positions[i],
+            "card_text": card
+        })
+
+    result = {
+        "goal": goal,
+        "gender": gender,
+        "race": race,
+        "cards": formatted_cards
+    }
     print(json.dumps(result, indent=2))
