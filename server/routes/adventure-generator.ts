@@ -210,6 +210,8 @@ Return one clean JSON object and nothing else.  Keep values concise:
       }
     }
   ],
+  "faction_name": "",
+  "faction_description": "",
   "minions": ""
 }`.trim();
 
