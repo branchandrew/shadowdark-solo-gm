@@ -96,8 +96,10 @@ export const generateAdventure: RequestHandler = async (req, res) => {
       theme = "Dark Fantasy",
       tone = "Mysterious",
       voice = "Atmospheric",
+      session_id,
     } = req.body || {};
     console.log("Adventure generation with style:", { theme, tone, voice });
+    console.log("Session ID:", session_id);
 
     const cardsFormatted = seeds.cards
       .map((c) => `${c.position}: ${c.card_text}`)
