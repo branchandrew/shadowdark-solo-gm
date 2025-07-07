@@ -74,18 +74,15 @@ export default function BTSPanel() {
       console.log("Received data:", data);
 
       if (data.success) {
-        console.log(
-          "Adventure generation succeeded! Villain profile length:",
-          data.villainProfile.length,
-        );
+        console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
 
-        // Use the simplified response data
+        // Use the new response structure
         const newAdventure: AdventureArc = {
           bbeg: {
-            name: data.villainName,
-            description: data.villainProfile,
-            motivation: "See profile for detailed motivation",
-            power: "See profile for powers and abilities",
+            name: data.bbeg_name,
+            description: data.bbeg_detailed_description,
+            motivation: data.bbeg_motivation,
+            power: "See detailed description for powers and abilities",
           },
           secrets: [
             "Secret 1 from generated profile",
@@ -113,17 +110,20 @@ export default function BTSPanel() {
         console.log("Setting new adventure arc...");
         setAdventureArc(newAdventure);
 
+        // Combine all the BBEG information for display
+        const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
+
         console.log("Setting prompt output...");
-        setPromptOutput(data.villainProfile);
+        setPromptOutput(fullProfile);
 
         // Also try setting script output as a backup
         setScriptOutput(
-          `Adventure Generated Successfully!\n\nVillain Profile:\n${data.villainProfile}`,
+          `Adventure Generated Successfully!\n\nBBEG: ${data.bbeg_name}\n\n${fullProfile}`,
         );
 
         // Send the villain profile to the AI chat
         console.log("Sending villain profile to AI chat...");
-        await sendVillainToChat(data.villainProfile);
+        await sendVillainToChat(`**${data.bbeg_name}**\n\n${fullProfile}`);
 
         console.log("Adventure generation complete!");
       } else {
