@@ -2,6 +2,16 @@ import { RequestHandler } from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { spawn } from "child_process";
 import path from "path";
+import { serverDB } from "../lib/database";
+import type {
+  AdventureGenerationRequest,
+  AdventureGenerationResponse,
+  AdventureArc,
+  Thread,
+  CampaignCharacter,
+  Faction,
+  Clue,
+} from "../../shared/types";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
