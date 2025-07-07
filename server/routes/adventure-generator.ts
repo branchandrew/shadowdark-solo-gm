@@ -99,22 +99,22 @@ Tarot Spread:\n${cardsFormatted}
    • Numbers — Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
    • Reversed indicates blockage, secrecy, or excess.
 2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
-3. **Forge a compelling name**
-   • Capture core mood, element/domain, and cultural flavor.  • Build a phonetic palette (2‑3 consonant clusters, 1‑2 vowel sounds) that fits mood.  • Select/construct a syllable template (e.g. CVC‑CVC) and blend morphemes to yield pronounceable candidates.  • Apply quality rules (pronounceability, tone match, distinctiveness).  • Choose the best.
-4. **Write a one‑sentence adventure hook** for the GM to read aloud.
-5. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
+4. **Forge a compelling name** that embodies the style guidance
+   • Capture core mood, element/domain, and cultural flavor within the specified theme.  • Build a phonetic palette (2‑3 consonant clusters, 1‑2 vowel sounds) that fits mood and tone.  ��� Select/construct a syllable template (e.g. CVC‑CVC) and blend morphemes to yield pronounceable candidates.  • Apply quality rules (pronounceability, tone match, distinctiveness).  • Choose the best.
+5. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
+6. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
    • Clues pointing to the BBEG as the source of evil
    • Hints about potential weaknesses or vulnerabilities
    • Information about where the BBEG might be found or operates
    • Evidence of the BBEG's evil doings
-   Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc.
-6. **Create a "High Tower Surprise"** - a major plot twist or revelation about this BBEG that subverts player expectations. This could be:
+   Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc. All clues must reflect the theme, tone, and voice.
+7. **Create a "High Tower Surprise"** - a major plot twist or revelation about this BBEG that subverts player expectations while maintaining the style guidance. This could be:
    • The apparent stronghold is actually a decoy
    • The BBEG's true identity or nature is different than expected
    • An unexpected relationship to a trusted NPC or location
    • A hidden motivation that recontextualizes everything
    • The real threat being something else entirely
-7. **Generate 1-3 Lieutenants** (whatever number makes sense for this BBEG). For each lieutenant:
+8. **Generate 1-3 Lieutenants** (whatever number makes sense for this BBEG and theme). For each lieutenant:
    • Create a name that fits the theme
    • Draw 6 new tarot cards and interpret them to answer these specific questions:
      - Seed: What defines their core nature?

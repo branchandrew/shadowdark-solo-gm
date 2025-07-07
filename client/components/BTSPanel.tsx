@@ -56,6 +56,9 @@ export default function BTSPanel() {
   const [promptOutput, setPromptOutput] = useState("");
   const [isRunningScript, setIsRunningScript] = useState(false);
   const [isRunningPrompt, setIsRunningPrompt] = useState(false);
+  const [theme, setTheme] = useState("");
+  const [tone, setTone] = useState("");
+  const [voice, setVoice] = useState("");
 
   const regenerateAdventure = async () => {
     console.log("Starting regenerate adventure...");
@@ -68,6 +71,11 @@ export default function BTSPanel() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          theme: theme.trim() || "Dark Fantasy",
+          tone: tone.trim() || "Mysterious",
+          voice: voice.trim() || "Atmospheric",
+        }),
       });
 
       console.log("Response status:", response.status);
@@ -226,6 +234,37 @@ This creates interesting moral dilemmas for players who must navigate between of
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Theme, Tone, Voice Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="theme">Theme</Label>
+              <Input
+                id="theme"
+                placeholder="e.g., Gothic Horror, High Fantasy"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tone">Tone</Label>
+              <Input
+                id="tone"
+                placeholder="e.g., Dark, Gritty, Heroic"
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="voice">Voice</Label>
+              <Input
+                id="voice"
+                placeholder="e.g., Mysterious, Direct, Poetic"
+                value={voice}
+                onChange={(e) => setVoice(e.target.value)}
+              />
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <Button
               onClick={regenerateAdventure}
