@@ -2,8 +2,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CharacterSheet from "./CharacterSheet";
 import AdventureLog from "./AdventureLog";
+import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
-import { User, BookOpen, Eye } from "lucide-react";
+import { User, BookOpen, Network, Eye } from "lucide-react";
 
 export default function RightPanel() {
   return (
