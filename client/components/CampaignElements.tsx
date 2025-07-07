@@ -43,12 +43,20 @@ export default function CampaignElements() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [factions, setFactions] = useState<Faction[]>([]);
+  const [clues, setClues] = useState<Clue[]>([]);
 
   const [newThread, setNewThread] = useState("");
   const [newCharacterName, setNewCharacterName] = useState("");
   const [newCharacterDesc, setNewCharacterDesc] = useState("");
   const [newFactionName, setNewFactionName] = useState("");
   const [newFactionDesc, setNewFactionDesc] = useState("");
+  const [newClue, setNewClue] = useState("");
+
+  // Debug visibility toggles
+  const [showHiddenThreads, setShowHiddenThreads] = useState(false);
+  const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
+  const [showHiddenFactions, setShowHiddenFactions] = useState(false);
+  const [showHiddenClues, setShowHiddenClues] = useState(false);
 
   const addThread = () => {
     if (newThread.trim()) {
