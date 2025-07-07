@@ -78,16 +78,33 @@ export const rollFateChart: RequestHandler = async (req, res) => {
 
     console.log("Fate Chart result:", result);
 
-    res.json({
+    // Ensure all required fields are present
+    const response = {
       success: true,
-      ...result,
+      roll: result.roll || 0,
+      threshold: result.threshold || 0,
+      result_success: result.success || false, // Renamed to avoid conflict with API success
+      exceptional: result.exceptional || false,
+      result: result.result || "Unknown",
+      likelihood: result.likelihood || likelihood,
+      chaos_factor: result.chaos_factor || validChaosFactor,
+      likelihood_index: result.likelihood_index || 0,
       timestamp: new Date().toISOString(),
-    });
+    };
+
+    console.log("Sending response:", response);
+    res.json(response);
   } catch (error) {
     console.error("Error rolling Fate Chart:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
+      details: error instanceof Error ? error.stack : undefined,
     });
   }
 };

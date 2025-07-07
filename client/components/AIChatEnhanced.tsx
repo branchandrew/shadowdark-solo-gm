@@ -94,6 +94,11 @@ export default function AIChat() {
   }, []);
 
   const rollFateChart = async () => {
+    console.log("Starting Fate Chart roll with:", {
+      fateLogLikelihood,
+      chaosFactor,
+    });
+
     try {
       // Call the fate chart API - this is separate from AI/Claude
       const response = await fetch("/api/roll-fate", {
@@ -107,18 +112,35 @@ export default function AIChat() {
         }),
       });
 
+      console.log("Fate Chart API response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log("Fate Chart API response data:", data);
 
       if (data.success) {
+        // Validate that we have the required data
+        if (
+          typeof data.roll === "undefined" ||
+          typeof data.threshold === "undefined"
+        ) {
+          throw new Error(
+            `Invalid response data: missing roll (${data.roll}) or threshold (${data.threshold})`,
+          );
+        }
+
         const resultMessage = `🎲 **Fate Chart Roll**
 
-**Question Likelihood:** ${data.likelihood}
-**Chaos Factor:** ${data.chaos_factor}
+**Question Likelihood:** ${data.likelihood || fateLogLikelihood}
+**Chaos Factor:** ${data.chaos_factor || chaosFactor}
 **Roll:** ${data.roll} (needed ≤${data.threshold})
-**Result:** ${data.result}${data.exceptional ? " ✨" : ""}
+**Result:** ${data.result || "Unknown"}${data.exceptional ? " ✨" : ""}
 
 *${
-          data.success
+          data.result_success
             ? data.exceptional
               ? "An exceptional yes - something surprisingly beneficial happens!"
               : "Yes, it happens as expected."
