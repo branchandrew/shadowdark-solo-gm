@@ -130,10 +130,10 @@ Tarot Spread:\n${cardsFormatted}
    • The real threat being something else entirely
 8. **Generate 1-3 Lieutenants** (whatever number makes sense for this BBEG and theme). For each lieutenant:
    • Create a name that fits the theme
-   • Draw 6 new tarot cards and interpret them to answer these specific questions:
-     - Seed: What defines their core nature?
+   • Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
      - Background: What is their origin story?
-     - Location: Where will characters most likely encounter them?
+     - Seed: What defines their core nature?
+     - Ocupation: What is the Lieutenant's occupation?
      - Why Protect: What motivates their loyalty to the BBEG?
      - How Protect: What methods do they use to serve/protect the BBEG?
      - Reward: What do characters gain by defeating them?
