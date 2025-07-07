@@ -69,7 +69,8 @@ export const generateAdventure: RequestHandler = async (_req, res) => {
       .join("\n");
 
     /* ---------- 2. Claude call ---------- */
-    const userPrompt = `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+    const userPrompt =
+      `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
 ### SOURCE DATA
 Goal: ${seeds.goal}
@@ -122,7 +123,40 @@ Return one clean JSON object and nothing else.  Keep values short:
       messages,
     });
 
-    const villain: VillainJson = JSON.parse(ai.content[0].text);
+    console.log("Claude response received");
+    console.log("Content array length:", ai.content?.length);
+    console.log("First content type:", ai.content?.[0]?.type);
+
+    const rawText = ai.content?.[0]?.type === "text" ? ai.content[0].text : "";
+    console.log("Raw response:", rawText.substring(0, 200));
+
+    if (!rawText) {
+      throw new Error("No text content received from Claude");
+    }
+
+    // Clean up the response to extract just the JSON
+    let jsonText = rawText.trim();
+
+    // Find JSON object in the response
+    const jsonStart = jsonText.indexOf("{");
+    const jsonEnd = jsonText.lastIndexOf("}");
+
+    if (jsonStart >= 0 && jsonEnd > jsonStart) {
+      jsonText = jsonText.substring(jsonStart, jsonEnd + 1);
+    }
+
+    console.log("Extracted JSON:", jsonText);
+
+    let villain: VillainJson;
+    try {
+      villain = JSON.parse(jsonText);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      console.error("Raw text that failed to parse:", jsonText);
+      throw new Error(`Failed to parse Claude response as JSON: ${parseError}`);
+    }
+
+    console.log("Parsed villain:", villain);
 
     /* ---------- 3. Response ---------- */
     res.json({ ...villain, success: true });
