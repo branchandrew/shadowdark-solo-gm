@@ -126,20 +126,23 @@ export default function BTSPanel() {
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
 
-      if (!response.ok) {
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (parseError) {
-          console.error("Failed to parse error response:", parseError);
-          // Use the HTTP status as the error message if we can't parse JSON
-          errorMessage = `Server error (${response.status}): ${response.statusText}`;
-        }
-        throw new Error(errorMessage);
+      // Read the response body once and handle both success and error cases
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse response as JSON:", parseError);
+        throw new Error(
+          `Server returned invalid response (${response.status}): ${response.statusText}`,
+        );
       }
 
-      const data = await response.json();
+      if (!response.ok) {
+        const errorMessage =
+          data?.error ||
+          `Server error (${response.status}): ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
       console.log("Received data:", data);
 
       if (data.success) {
