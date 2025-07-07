@@ -146,8 +146,21 @@ export default function CloudSync() {
           </div>
         )}
 
-        {/* Export/Import */}
+        {/* Export/Import/Clear */}
         <div className="flex gap-2">
+          {/* Development Clear Button */}
+          {import.meta.env.DEV && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleClearData}
+              className="text-xs"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear All Data
+            </Button>
+          )}
+
           <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" onClick={handleExport}>
