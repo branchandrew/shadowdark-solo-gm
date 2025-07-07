@@ -66,6 +66,7 @@ export default function CampaignElements() {
           id: Date.now().toString(),
           description: newThread,
           status: "active",
+          hidden: false,
         },
       ]);
       setNewThread("");
@@ -81,6 +82,7 @@ export default function CampaignElements() {
           name: newCharacterName,
           description: newCharacterDesc,
           disposition: "unknown",
+          hidden: false,
         },
       ]);
       setNewCharacterName("");
@@ -98,10 +100,27 @@ export default function CampaignElements() {
           description: newFactionDesc,
           influence: "minor",
           relationship: "unknown",
+          hidden: false,
         },
       ]);
       setNewFactionName("");
       setNewFactionDesc("");
+    }
+  };
+
+  const addClue = () => {
+    if (newClue.trim()) {
+      setClues((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          description: newClue,
+          discovered: false,
+          importance: "minor",
+          hidden: false,
+        },
+      ]);
+      setNewClue("");
     }
   };
 
