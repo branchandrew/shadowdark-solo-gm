@@ -7,27 +7,15 @@ export function useDatabase<T>(key: string, defaultValue: T) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load data on mount and set up real-time subscriptions
+  // During development: start with empty state, no auto-loading
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const result = await db.get<T>(key);
-        if (result !== null) {
-          setData(result);
-        }
-      } catch (err) {
-        console.error(`Failed to load ${key}:`, err);
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    console.log(
+      `useDatabase(${key}): Starting with empty state (development mode)`,
+    );
+    setIsLoading(false); // No loading needed, starting fresh
+    setError(null);
 
-    loadData();
-
-    // Subscribe to real-time changes
+    // Subscribe to real-time changes (for future cloud sync)
     const unsubscribe = db.subscribe("session", (session: any) => {
       // Extract the relevant data for this key from the session update
       const extractedData = extractFieldFromSession(session, key);
