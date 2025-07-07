@@ -180,11 +180,14 @@ export default function CharacterSheet() {
     // No auto-loading during development - always start empty
   }, []);
 
-  // Save character to localStorage when it changes (only if user has explicitly created one)
+  // Development mode: save only for current session
   useEffect(() => {
     if (hasExplicitCharacter) {
       localStorage.setItem("shadowdark_character", JSON.stringify(character));
       localStorage.setItem("shadowdark_has_character", "true");
+      console.log(
+        "CharacterSheet: Saved to localStorage (session-only during development)",
+      );
     }
   }, [character, hasExplicitCharacter]);
 
