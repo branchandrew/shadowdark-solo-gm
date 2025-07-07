@@ -159,6 +159,9 @@ export default function AIChat() {
 
         // Add to local chat display only - no AI/Claude involvement
         setMessages((prev) => [...prev, fateMessage]);
+
+        // Close the popover after successful roll
+        setShowFateControls(false);
       } else {
         console.error("Fate chart roll failed. Full response:", data);
 
@@ -337,15 +340,113 @@ export default function AIChat() {
                   </div>
                 </PopoverContent>
               </Popover>
-              <Button
-                type="button"
-                size="icon"
-                variant="outline"
-                onClick={() => setShowFateControls(!showFateControls)}
-                className={`h-[28px] w-[60px] ${showFateControls ? "bg-accent" : ""}`}
+              <Popover
+                open={showFateControls}
+                onOpenChange={setShowFateControls}
               >
-                🎯
-              </Button>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    className="h-[28px] w-[60px]"
+                  >
+                    🎯
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0" align="end">
+                  <div className="p-4 space-y-3">
+                    {/* Header with title and close button */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        🎯 Mythic Fate Chart
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={() => setShowFateControls(false)}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+
+                    {/* Fate Chart Controls */}
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-xs text-muted-foreground">
+                          Likelihood
+                        </label>
+                        <Select
+                          value={fateLogLikelihood}
+                          onValueChange={setFateLogLikelihood}
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Impossible">
+                              Impossible
+                            </SelectItem>
+                            <SelectItem value="Nearly Impossible">
+                              Nearly Impossible
+                            </SelectItem>
+                            <SelectItem value="Very Unlikely">
+                              Very Unlikely
+                            </SelectItem>
+                            <SelectItem value="Unlikely">Unlikely</SelectItem>
+                            <SelectItem value="50/50">50/50</SelectItem>
+                            <SelectItem value="Likely">Likely</SelectItem>
+                            <SelectItem value="Very Likely">
+                              Very Likely
+                            </SelectItem>
+                            <SelectItem value="Nearly Certain">
+                              Nearly Certain
+                            </SelectItem>
+                            <SelectItem value="Certain">Certain</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs text-muted-foreground">
+                          Chaos Factor
+                        </label>
+                        <Select
+                          value={chaosFactor.toString()}
+                          onValueChange={(v) => setChaosFactor(parseInt(v))}
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                              <SelectItem key={num} value={num.toString()}>
+                                {num}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <Button
+                        onClick={rollFateChart}
+                        className="h-9 w-full"
+                        size="sm"
+                      >
+                        Roll Fate
+                      </Button>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground border-t pt-2">
+                      <Badge variant="outline" className="text-xs">
+                        CF: {chaosFactor}
+                      </Badge>
+                      <span>Ask yes/no questions about story events</span>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
               <Button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
@@ -356,89 +457,6 @@ export default function AIChat() {
               </Button>
             </div>
           </div>
-
-          {/* Fate Chart Controls */}
-          {showFateControls && (
-            <div className="p-3 border rounded bg-muted/20 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                🎯 Mythic Fate Chart
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                <div className="space-y-1">
-                  <label className="text-xs text-muted-foreground">
-                    Likelihood
-                  </label>
-                  <Select
-                    value={fateLogLikelihood}
-                    onValueChange={setFateLogLikelihood}
-                  >
-                    <SelectTrigger className="h-8">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Impossible">Impossible</SelectItem>
-                      <SelectItem value="Nearly Impossible">
-                        Nearly Impossible
-                      </SelectItem>
-                      <SelectItem value="Very Unlikely">
-                        Very Unlikely
-                      </SelectItem>
-                      <SelectItem value="Unlikely">Unlikely</SelectItem>
-                      <SelectItem value="50/50">50/50</SelectItem>
-                      <SelectItem value="Likely">Likely</SelectItem>
-                      <SelectItem value="Very Likely">Very Likely</SelectItem>
-                      <SelectItem value="Nearly Certain">
-                        Nearly Certain
-                      </SelectItem>
-                      <SelectItem value="Certain">Certain</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs text-muted-foreground">
-                    Chaos Factor
-                  </label>
-                  <Select
-                    value={chaosFactor.toString()}
-                    onValueChange={(v) => setChaosFactor(parseInt(v))}
-                  >
-                    <SelectTrigger className="h-8">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs text-muted-foreground">
-                    &nbsp;
-                  </label>
-                  <Button
-                    onClick={rollFateChart}
-                    className="h-8 w-full"
-                    size="sm"
-                  >
-                    Roll Fate
-                  </Button>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Badge variant="outline" className="text-xs">
-                  CF: {chaosFactor}
-                </Badge>
-                <span>Ask yes/no questions about story events</span>
-              </div>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>
