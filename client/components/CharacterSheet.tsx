@@ -174,19 +174,10 @@ export default function CharacterSheet() {
   const [hasExplicitCharacter, setHasExplicitCharacter] = useState(false);
   const [showKillDialog, setShowKillDialog] = useState(false);
 
-  // Load character from localStorage on mount
+  // Development mode: start fresh each time, no auto-loading
   useEffect(() => {
-    const savedCharacter = localStorage.getItem("shadowdark_character");
-    const hasExplicitFlag = localStorage.getItem("shadowdark_has_character");
-
-    if (savedCharacter && hasExplicitFlag === "true") {
-      try {
-        setCharacter(JSON.parse(savedCharacter));
-        setHasExplicitCharacter(true);
-      } catch (error) {
-        console.error("Failed to parse saved character:", error);
-      }
-    }
+    console.log("CharacterSheet: Starting fresh (development mode)");
+    // No auto-loading during development - always start empty
   }, []);
 
   // Save character to localStorage when it changes (only if user has explicitly created one)
