@@ -19,6 +19,18 @@ interface PythonResult {
   cards: TarotCard[];
 }
 
+interface Lieutenant {
+  name: string;
+  tarot_spread: {
+    seed: string;
+    background: string;
+    location: string;
+    why_protect: string;
+    how_protect: string;
+    reward: string;
+  };
+}
+
 interface VillainJson {
   bbeg_name: string;
   bbeg_hook: string;
@@ -26,6 +38,7 @@ interface VillainJson {
   bbeg_detailed_description: string;
   clues: string[];
   high_tower_surprise: string;
+  lieutenants: Lieutenant[];
 }
 
 /**

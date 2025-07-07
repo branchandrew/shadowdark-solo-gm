@@ -31,8 +31,14 @@ interface AdventureArc {
   highTowerSurprise: string;
   lieutenants: Array<{
     name: string;
-    role: string;
-    description: string;
+    tarot_spread: {
+      seed: string;
+      background: string;
+      location: string;
+      why_protect: string;
+      how_protect: string;
+      reward: string;
+    };
   }>;
   minions: Array<{
     type: string;
@@ -88,13 +94,7 @@ export default function BTSPanel() {
           clues: data.clues || [],
           secrets: [],
           highTowerSurprise: data.high_tower_surprise || "",
-          lieutenants: [
-            {
-              name: "Lieutenant from profile",
-              role: "Role from generated content",
-              description: "Details from generated profile",
-            },
-          ],
+          lieutenants: data.lieutenants || [],
           minions: [
             {
               type: "Minions from profile",
@@ -335,25 +335,73 @@ This creates interesting moral dilemmas for players who must navigate between of
             <Separator />
 
             {/* Lieutenants */}
-            <div className="space-y-3">
-              <h4 className="font-semibold flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Lieutenants
-              </h4>
+            {adventureArc.lieutenants.length > 0 && (
               <div className="space-y-3">
-                {adventureArc.lieutenants.map((lieutenant, index) => (
-                  <div key={index} className="p-3 border rounded space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{lieutenant.name}</span>
-                      <Badge variant="secondary">{lieutenant.role}</Badge>
+                <h4 className="font-semibold flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Lieutenants
+                </h4>
+                <div className="space-y-4">
+                  {adventureArc.lieutenants.map((lieutenant, index) => (
+                    <div key={index} className="p-4 border rounded space-y-3">
+                      <h5 className="font-medium text-primary text-lg">
+                        {lieutenant.name}
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Seed
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.seed}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Background
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.background}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Location
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.location}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Why Protect
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.why_protect}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            How Protect
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.how_protect}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Reward
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.tarot_spread.reward}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      {lieutenant.description}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <Separator />
 
