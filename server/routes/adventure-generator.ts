@@ -289,6 +289,70 @@ Return one clean JSON object and nothing else.  Keep values concise:
     console.log("Parsed villain:", villain);
 
     /* ---------- 3. Response ---------- */
+    // Write to database if session_id provided and database is available
+    if (session_id && serverDB.isAvailable()) {
+      console.log("Writing adventure arc to database...");
+
+      const adventureArc: AdventureArc = {
+        bbeg: {
+          name: villain.bbeg_name,
+          description: villain.bbeg_detailed_description,
+          motivation: villain.bbeg_motivation,
+          hook: villain.bbeg_hook,
+        },
+        clues: villain.clues || [],
+        secrets: [],
+        highTowerSurprise: villain.high_tower_surprise || "",
+        lieutenants: villain.lieutenants || [],
+        faction: {
+          name: villain.faction_name || "",
+          description: villain.faction_description || "",
+        },
+        minions: villain.minions || "",
+      };
+
+      await serverDB.writeAdventureArc(session_id, adventureArc);
+
+      // Add hidden campaign elements
+      const hiddenElements = {
+        threads: [],
+        characters: [
+          {
+            id: `char_${Date.now()}_bbeg`,
+            name: villain.bbeg_name,
+            description: `${villain.bbeg_detailed_description}\n\nMotivation: ${villain.bbeg_motivation}`,
+            disposition: "hostile" as const,
+            hidden: true,
+            created_at: new Date().toISOString(),
+          },
+        ],
+        factions: villain.faction_name
+          ? [
+              {
+                id: `faction_${Date.now()}`,
+                name: villain.faction_name,
+                description: villain.faction_description || "",
+                influence: "moderate" as const,
+                relationship: "opposed" as const,
+                hidden: true,
+                created_at: new Date().toISOString(),
+              },
+            ]
+          : [],
+        clues: (villain.clues || []).map((clue, index) => ({
+          id: `clue_${Date.now()}_${index}`,
+          description: clue,
+          discovered: false,
+          importance: "moderate" as const,
+          hidden: true,
+          created_at: new Date().toISOString(),
+        })),
+      };
+
+      await serverDB.addHiddenCampaignElements(session_id, hiddenElements);
+      console.log("Adventure data written to database successfully");
+    }
+
     res.json({ ...villain, success: true });
   } catch (err) {
     console.error("Adventure generation error:", err);
