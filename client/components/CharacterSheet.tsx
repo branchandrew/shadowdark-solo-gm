@@ -8,7 +8,15 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, Download, User } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Plus, Trash2, Clipboard, Download, User, X } from "lucide-react";
 
 interface Stats {
   STR: number;
@@ -153,6 +161,8 @@ export default function CharacterSheet() {
   const [character, setCharacter] = useState<Character>(EMPTY_CHARACTER);
   const [newGearName, setNewGearName] = useState("");
   const [newAttack, setNewAttack] = useState("");
+  const [showPasteDialog, setShowPasteDialog] = useState(false);
+  const [pastedJson, setPastedJson] = useState("");
 
   // Load character from localStorage on mount
   useEffect(() => {
@@ -249,20 +259,42 @@ export default function CharacterSheet() {
     URL.revokeObjectURL(url);
   };
 
-  const importCharacter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const imported = JSON.parse(e.target?.result as string);
-          setCharacter(imported);
-        } catch (error) {
-          console.error("Failed to import character:", error);
-          alert("Invalid character file");
-        }
-      };
-      reader.readAsText(file);
+  const importFromPaste = () => {
+    if (!pastedJson.trim()) {
+      alert("Please paste some JSON first");
+      return;
+    }
+
+    try {
+      const imported = JSON.parse(pastedJson);
+
+      // Basic validation - check if it looks like a Shadowdark character
+      if (!imported.name && !imported.stats && !imported.ancestry) {
+        throw new Error(
+          "This doesn't appear to be a valid Shadowdark character JSON",
+        );
+      }
+
+      setCharacter(imported);
+      setShowPasteDialog(false);
+      setPastedJson("");
+    } catch (error) {
+      console.error("Failed to import character:", error);
+      alert(
+        error instanceof Error
+          ? `Invalid JSON: ${error.message}`
+          : "Invalid character JSON. Please check the format and try again.",
+      );
+    }
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setPastedJson(text);
+    } catch (error) {
+      console.error("Failed to read clipboard:", error);
+      alert("Could not read from clipboard. Please paste manually.");
     }
   };
 
@@ -294,25 +326,72 @@ export default function CharacterSheet() {
                   <Plus className="h-4 w-4" />
                   Create Character
                 </Button>
-                <div>
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={importCharacter}
-                    className="hidden"
-                    id="import-character"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      document.getElementById("import-character")?.click()
-                    }
-                    className="flex items-center gap-2"
-                  >
-                    <Upload className="h-4 w-4" />
-                    Import Character
-                  </Button>
-                </div>
+
+                <Dialog
+                  open={showPasteDialog}
+                  onOpenChange={setShowPasteDialog}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <Clipboard className="h-4 w-4" />
+                      Paste from Shadowdarklings.net
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>
+                        Import Character from Shadowdarklings.net
+                      </DialogTitle>
+                      <DialogDescription>
+                        Copy the JSON export from Shadowdarklings.net and paste
+                        it below, then click Import.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <Label>Character JSON</Label>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handlePasteFromClipboard}
+                            className="text-xs"
+                          >
+                            <Clipboard className="h-3 w-3 mr-1" />
+                            Paste from Clipboard
+                          </Button>
+                        </div>
+                        <Textarea
+                          placeholder="Paste your Shadowdarklings.net JSON export here..."
+                          value={pastedJson}
+                          onChange={(e) => setPastedJson(e.target.value)}
+                          rows={12}
+                          className="font-mono text-sm"
+                        />
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setShowPasteDialog(false);
+                            setPastedJson("");
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={importFromPaste}
+                          disabled={!pastedJson.trim()}
+                        >
+                          Import Character
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </CardContent>
@@ -332,24 +411,65 @@ export default function CharacterSheet() {
               Character Sheet
             </CardTitle>
             <div className="flex gap-2">
-              <div>
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={importCharacter}
-                  className="hidden"
-                  id="import-character"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    document.getElementById("import-character")?.click()
-                  }
-                >
-                  <Upload className="h-4 w-4" />
-                </Button>
-              </div>
+              <Dialog open={showPasteDialog} onOpenChange={setShowPasteDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Clipboard className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Import Character from Shadowdarklings.net
+                    </DialogTitle>
+                    <DialogDescription>
+                      Copy the JSON export from Shadowdarklings.net and paste it
+                      below, then click Import.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <Label>Character JSON</Label>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handlePasteFromClipboard}
+                          className="text-xs"
+                        >
+                          <Clipboard className="h-3 w-3 mr-1" />
+                          Paste from Clipboard
+                        </Button>
+                      </div>
+                      <Textarea
+                        placeholder="Paste your Shadowdarklings.net JSON export here..."
+                        value={pastedJson}
+                        onChange={(e) => setPastedJson(e.target.value)}
+                        rows={12}
+                        className="font-mono text-sm"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowPasteDialog(false);
+                          setPastedJson("");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={importFromPaste}
+                        disabled={!pastedJson.trim()}
+                      >
+                        Import Character
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               <Button variant="outline" size="sm" onClick={exportCharacter}>
                 <Download className="h-4 w-4" />
               </Button>
