@@ -1,4 +1,4 @@
-import AIChat from "@/components/AIChat";
+import AIChat from "@/components/AIChatEnhanced";
 import RightPanel from "@/components/RightPanel";
 import ThemeToggle from "@/components/ThemeToggle";
 import {

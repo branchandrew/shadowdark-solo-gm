@@ -3,6 +3,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAIChat } from "./routes/ai-chat";
 import { generateAdventure } from "./routes/adventure-generator";
+import { rollFateChart } from "./routes/mythic-fate";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
@@ -29,6 +30,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/ai-chat", handleAIChat);
   app.post("/api/generate-adventure", generateAdventure);
+  app.post("/api/roll-fate", rollFateChart);
 
   return app;
 }
