@@ -95,56 +95,49 @@ export interface Character {
   edits: Edit[];
 }
 
-export interface Thread {
+// === RELATIONAL DATABASE ENTITIES ===
+
+// Global monster catalog (shared across all sessions)
+export interface Monster {
   id: string;
+  name: string;
   description: string;
-  status: "active" | "resolved" | "dormant";
-  hidden: boolean;
-  created_at?: string;
-  updated_at?: string;
+  armor_class: number;
+  hit_points: string; // e.g., "2d6+2"
+  speed: string;
+  abilities: Stats;
+  attacks: string[];
+  special_abilities: string[];
+  challenge_rating: number;
+  source: "shadowdark_core" | "custom";
+  created_at: string;
+  updated_at: string;
 }
 
-export interface CampaignCharacter {
+// Session-specific monster instances
+export interface SessionMonster {
   id: string;
+  session_id: string;
+  monster_id: string; // FK to Monster
+  name: string; // Can override monster name
+  current_hit_points?: number;
+  status: "alive" | "dead" | "fled" | "unknown";
+  notes?: string;
+  hidden: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// NPCs (includes lieutenants and other characters)
+export interface NPC {
+  id: string;
+  session_id: string;
+  adventure_arc_id?: string; // FK to AdventureArc (for lieutenants)
   name: string;
   description: string;
   disposition: "friendly" | "neutral" | "hostile" | "unknown";
-  hidden: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface Faction {
-  id: string;
-  name: string;
-  description: string;
-  influence: "minor" | "moderate" | "major";
-  relationship: "allied" | "neutral" | "opposed" | "unknown";
-  hidden: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface Clue {
-  id: string;
-  description: string;
-  discovered: boolean;
-  importance: "minor" | "moderate" | "major";
-  hidden: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface CampaignElements {
-  threads: Thread[];
-  characters: CampaignCharacter[];
-  factions: Faction[];
-  clues: Clue[];
-}
-
-export interface Lieutenant {
-  name: string;
-  tarot_spread: {
+  role: "bbeg" | "lieutenant" | "ally" | "neutral" | "enemy" | "other";
+  tarot_spread?: {
     seed: string;
     background: string;
     location: string;
@@ -152,24 +145,62 @@ export interface Lieutenant {
     how_protect: string;
     reward: string;
   };
+  hidden: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
+// Separate factions table with FK to adventure arc
+export interface Faction {
+  id: string;
+  session_id: string;
+  adventure_arc_id?: string; // FK to AdventureArc
+  name: string;
+  description: string;
+  influence: "minor" | "moderate" | "major";
+  relationship: "allied" | "neutral" | "opposed" | "unknown";
+  hidden: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Plot threads
+export interface Thread {
+  id: string;
+  session_id: string;
+  adventure_arc_id?: string; // FK to AdventureArc (if related to main story)
+  description: string;
+  status: "active" | "resolved" | "dormant";
+  hidden: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Clues
+export interface Clue {
+  id: string;
+  session_id: string;
+  adventure_arc_id?: string; // FK to AdventureArc (if related to BBEG)
+  description: string;
+  discovered: boolean;
+  importance: "minor" | "moderate" | "major";
+  hidden: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Adventure Arc (BBEG and main story)
 export interface AdventureArc {
-  bbeg: {
-    name: string;
-    description: string;
-    motivation: string;
-    hook: string;
-  };
-  clues: string[];
-  secrets: string[];
-  highTowerSurprise: string;
-  lieutenants: Lieutenant[];
-  faction: {
-    name: string;
-    description: string;
-  };
-  minions: string;
+  id: string;
+  session_id: string;
+  bbeg_name: string;
+  bbeg_description: string;
+  bbeg_motivation: string;
+  bbeg_hook: string;
+  high_tower_surprise: string;
+  minion_monster_id?: string; // FK to Monster (for BBEG's minions)
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AdventureLogEntry {
