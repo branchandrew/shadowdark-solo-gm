@@ -93,7 +93,7 @@ export const generateAdventure: RequestHandler = async (req, res) => {
 
     /* ---------- 2. Claude call ---------- */
     const userPrompt =
-      `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+      `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
 ### STYLE GUIDANCE
 Theme: ${theme}
@@ -129,16 +129,19 @@ Tarot Spread:\n${cardsFormatted}
    • An unexpected relationship to a trusted NPC or location
    • A hidden motivation that recontextualizes everything
    • The real threat being something else entirely
-8. **Generate 1-3 Lieutenants** (whatever number makes sense for this BBEG and theme). For each lieutenant:
-   • Create a name that fits the theme
-   • Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
-     - Background: What is their origin story?
-     - Seed: What defines their core nature?
-     - Ocupation: What is the Lieutenant's occupation?
-     - Why Protect: What motivates their loyalty to the BBEG?
-     - How Protect: What methods do they use to serve/protect the BBEG?
-     - Reward: What do characters gain by defeating them?
-   • Keep each tarot interpretation to 1-2 sentences
+8. **Generate exactly 2 Lieutenants** with the following requirements:
+   • **First Lieutenant**: Must be a massive contrast to the BBEG - an unlikely ally who serves them despite being fundamentally different in nature, methods, or motivation
+   • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
+   • For each lieutenant:
+     - Create a name that fits the theme
+     - Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
+       * Background: What is their origin story?
+       * Seed: What defines their core nature?
+       * Ocupation: What is the Lieutenant's occupation?
+       * Why Protect: What motivates their loyalty to the BBEG?
+       * How Protect: What methods do they use to serve/protect the BBEG?
+       * Reward: What do characters gain by defeating them?
+     - Keep each tarot interpretation to 1-2 sentences
 9. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
    • A creature type that fits thematically with the BBEG and theme
    • Common enough to be encountered frequently
