@@ -132,12 +132,27 @@ D. Finish with a one-sentence adventure hook the GM can read aloud.`;
       ),
     ])) as any;
 
+    console.log("Claude villain response received");
     const villainContent =
       villainResponse.content[0].type === "text"
         ? villainResponse.content[0].text
         : "Failed to generate villain profile";
 
-    // Step 4: Generate villain name
+    console.log("Villain content length:", villainContent.length);
+
+    // For now, let's just return the villain profile without the naming step
+    const response: AdventureResponse = {
+      villainProfile: villainContent,
+      adventureHook: "Adventure hook extracted from villain profile",
+      seedData: pythonResult,
+      success: true,
+    };
+
+    console.log("Sending response to client");
+    res.json(response);
+    return;
+
+    // Step 4: Generate villain name (temporarily disabled for debugging)
     const namingPrompt = `You are a fantasy‑naming assistant. Your task is to prepare raw building blocks
 for a compelling villain name that works with the villain's persona.
 
@@ -150,7 +165,7 @@ Step 1. Extract three short keyword phrases from the villain profile:
     • Cultural flavor – one or two words suggesting linguistic or regional tone (Nordic, Latin, Abyssal)
 
 Step 2. Build a phonetic palette table using the mood word from Step 1:
-    • Choose 2‑3 strong consonant clusters that fit the mood
+    • Choose 2���3 strong consonant clusters that fit the mood
     • Choose 1‑2 vowel sounds that match the same mood
     • Present the results in a table like this:
 
