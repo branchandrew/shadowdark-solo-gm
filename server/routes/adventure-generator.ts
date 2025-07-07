@@ -135,9 +135,9 @@ Tarot Spread:\n${cardsFormatted}
    • For each lieutenant:
      - Create a name that fits the theme
      - Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
-       * Background: What is their origin story?
        * Seed: What defines their core nature?
-       * Ocupation: What is the Lieutenant's occupation?
+       * Background: What is their origin story?
+       * Location (Occupation): What is the Lieutenant's occupation?
        * Why Protect: What motivates their loyalty to the BBEG?
        * How Protect: What methods do they use to serve/protect the BBEG?
        * Reward: What do characters gain by defeating them?
