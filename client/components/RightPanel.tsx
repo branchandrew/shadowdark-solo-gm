@@ -51,6 +51,12 @@ export default function RightPanel() {
         </ScrollArea>
       </TabsContent>
 
+      <TabsContent value="map" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+          <Map />
+        </ScrollArea>
+      </TabsContent>
+
       <TabsContent value="bts" className="flex-1 mt-4 overflow-hidden">
         <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <BTSPanel />
