@@ -175,9 +175,10 @@ export default function BTSPanel() {
         console.log("Adventure generation complete!");
       } else {
         console.error("Adventure generation failed:", data.error);
-        setPromptOutput(`Error: ${data.error || "Unknown error occurred"}`);
-        setScriptOutput(
-          `Adventure generation failed: ${data.error || "Unknown error"}`,
+
+        // Show user-friendly error message
+        alert(
+          `Adventure generation failed: ${data.error || "Unknown error occurred"}`,
         );
       }
     } catch (error) {
