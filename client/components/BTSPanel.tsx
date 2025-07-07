@@ -12,7 +12,9 @@ import CloudSync from "./CloudSync";
 import type { AdventureArcDisplay } from "../../shared/types";
 
 export default function BTSPanel() {
-  const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
+  const [adventureArc, setAdventureArc] = useState<AdventureArcDisplay | null>(
+    null,
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [theme, setTheme] = useState("");
   const [tone, setTone] = useState("");
