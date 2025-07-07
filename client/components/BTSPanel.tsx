@@ -39,7 +39,6 @@ interface AdventureArc {
 
 export default function BTSPanel() {
   const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
-  const [rawAdventureData, setRawAdventureData] = useState<any>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [theme, setTheme] = useState("");
   const [tone, setTone] = useState("");
