@@ -68,7 +68,7 @@ const runPython = (scriptPath: string): Promise<PythonResult> =>
 /**
  * Express handler: creates a concise BBEG JSON object.
  */
-export const generateAdventure: RequestHandler = async (_req, res) => {
+export const generateAdventure: RequestHandler = async (req, res) => {
   try {
     /* ---------- 1. Seed data from Python ---------- */
     const pythonPath = path.join(
@@ -86,6 +86,13 @@ export const generateAdventure: RequestHandler = async (_req, res) => {
     /* ---------- 2. Claude call ---------- */
     const userPrompt =
       `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+
+### STYLE GUIDANCE
+Theme: ${theme}
+Tone: ${tone}
+Voice: ${voice}
+
+**IMPORTANT: All content must reflect the specified theme, tone, and voice. Let these guide every aspect of the BBEG's design, from their motivation to their methods to their presentation.**
 
 ### SOURCE DATA
 Goal: ${seeds.goal}
