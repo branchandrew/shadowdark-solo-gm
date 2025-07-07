@@ -119,7 +119,8 @@ export default function BTSPanel() {
         console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
 
         // Create single adventure arc object (no duplication)
-        const newAdventure: AdventureArc = {
+        const newAdventure: AdventureArcDisplay = {
+          id: `arc_${Date.now()}`,
           bbeg: {
             name: data.bbeg_name,
             description: data.bbeg_detailed_description,
@@ -127,7 +128,6 @@ export default function BTSPanel() {
             hook: data.bbeg_hook,
           },
           clues: data.clues || [],
-          secrets: [],
           highTowerSurprise: data.high_tower_surprise || "",
           lieutenants: data.lieutenants || [],
           faction: {
