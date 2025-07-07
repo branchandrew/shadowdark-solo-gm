@@ -26,6 +26,7 @@ interface AdventureArc {
     motivation: string;
     hook: string;
   };
+  clues: string[];
   secrets: string[];
   highTowerSurprise: string;
   lieutenants: Array<{
@@ -84,6 +85,7 @@ export default function BTSPanel() {
             motivation: data.bbeg_motivation,
             hook: data.bbeg_hook,
           },
+          clues: data.clues || [],
           secrets: [
             "Secret 1 from generated profile",
             "Secret 2 from generated profile",
@@ -300,6 +302,26 @@ This creates interesting moral dilemmas for players who must navigate between of
                     </p>
                   </ScrollArea>
                 </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Clues */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                Clues about the BBEG
+              </h4>
+              <div className="space-y-2">
+                {adventureArc.clues.map((clue, index) => (
+                  <div key={index} className="p-3 border rounded space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">Clue {index + 1}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{clue}</p>
+                  </div>
+                ))}
               </div>
             </div>
 

@@ -24,6 +24,7 @@ interface VillainJson {
   bbeg_hook: string;
   bbeg_motivation: string;
   bbeg_detailed_description: string;
+  clues: string[];
 }
 
 /**
