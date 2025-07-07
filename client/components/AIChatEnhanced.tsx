@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Send, Brain, Wand2, Dices } from "lucide-react";
+import { Send, Brain, Wand2, Dices, Target } from "lucide-react";
 import { AIChatRequest, AIChatResponse } from "@shared/api";
 import DiceRoller from "./DiceRoller";
 
@@ -351,7 +351,7 @@ export default function AIChat() {
                     variant="outline"
                     className="h-[28px] w-[60px]"
                   >
-                    🎯
+                    <Target className="h-4 w-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80 p-0" align="end">
@@ -359,7 +359,8 @@ export default function AIChat() {
                     {/* Header with title and close button */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-sm font-medium">
-                        🎯 Mythic Fate Chart
+                        <Target className="h-4 w-4" />
+                        Mythic Fate Chart
                       </div>
                       <Button
                         variant="ghost"
