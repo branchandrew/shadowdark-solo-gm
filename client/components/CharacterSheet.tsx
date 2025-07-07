@@ -172,6 +172,7 @@ export default function CharacterSheet() {
   const [showPasteDialog, setShowPasteDialog] = useState(false);
   const [pastedJson, setPastedJson] = useState("");
   const [hasExplicitCharacter, setHasExplicitCharacter] = useState(false);
+  const [showKillDialog, setShowKillDialog] = useState(false);
 
   // Load character from localStorage on mount
   useEffect(() => {
