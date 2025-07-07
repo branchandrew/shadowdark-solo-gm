@@ -86,13 +86,8 @@ export default function BTSPanel() {
             hook: data.bbeg_hook,
           },
           clues: data.clues || [],
-          secrets: [
-            "Secret 1 from generated profile",
-            "Secret 2 from generated profile",
-            "Secret 3 from generated profile",
-            "Secret 4 from generated profile",
-          ],
-          highTowerSurprise: "High tower surprise from generated profile",
+          secrets: [],
+          highTowerSurprise: data.high_tower_surprise || "",
           lieutenants: [
             {
               name: "Lieutenant from profile",
@@ -327,28 +322,13 @@ This creates interesting moral dilemmas for players who must navigate between of
 
             <Separator />
 
-            {/* Secrets & Rumors */}
-            <div className="space-y-3">
-              <h4 className="font-semibold flex items-center gap-2">
-                <Eye className="h-4 w-4" />
-                Secrets & Rumors
-              </h4>
-              <div className="space-y-2">
-                {adventureArc.secrets.map((secret, index) => (
-                  <div key={index} className="p-2 bg-muted/50 rounded text-sm">
-                    {secret}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
             {/* High Tower Surprise */}
             <div className="space-y-3">
               <h4 className="font-semibold">High Tower Surprise</h4>
               <div className="p-3 border rounded bg-accent/10">
-                <p className="text-sm">{adventureArc.highTowerSurprise}</p>
+                <p className="text-sm whitespace-pre-wrap">
+                  {adventureArc.highTowerSurprise}
+                </p>
               </div>
             </div>
 
