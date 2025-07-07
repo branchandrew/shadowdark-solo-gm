@@ -143,7 +143,7 @@ Tarot Spread:\n${cardsFormatted}
 Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_name" – the chosen name (title optional)
 • "bbeg_hook" – the single sentence hook
-��� "bbeg_motivation" – one concise sentence
+• "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" – the major plot twist (2-3 sentences)
