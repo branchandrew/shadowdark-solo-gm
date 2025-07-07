@@ -164,6 +164,10 @@ export default function BTSPanel() {
           `Adventure Generated Successfully!\n\nVillain Profile:\n${data.villainProfile}`,
         );
 
+        // Send the villain profile to the AI chat
+        console.log("Sending villain profile to AI chat...");
+        await sendVillainToChat(data.villainProfile);
+
         console.log("Adventure generation complete!");
       } else {
         console.error("Adventure generation failed:", data.error);
@@ -181,6 +185,27 @@ export default function BTSPanel() {
     } finally {
       console.log("Setting isGenerating to false");
       setIsGenerating(false);
+    }
+  };
+
+  const sendVillainToChat = async (villainProfile: string) => {
+    try {
+      console.log("Making request to add villain to chat...");
+
+      // We'll create a custom message that gets added directly to the chat
+      // by dispatching a custom event that the AIChat component can listen for
+      const event = new CustomEvent("addChatMessage", {
+        detail: {
+          type: "gm",
+          content: `🎭 **New Adventure Arc Generated!**\n\n${villainProfile}`,
+          timestamp: new Date(),
+        },
+      });
+
+      window.dispatchEvent(event);
+      console.log("Dispatched chat message event");
+    } catch (error) {
+      console.error("Error sending villain to chat:", error);
     }
   };
 

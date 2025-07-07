@@ -39,6 +39,32 @@ export default function AIChat() {
     }
   }, [messages]);
 
+  // Listen for external messages (like from BTS panel)
+  useEffect(() => {
+    const handleExternalMessage = (event: CustomEvent) => {
+      const { type, content, timestamp } = event.detail;
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        type,
+        content,
+        timestamp: timestamp || new Date(),
+      };
+      setMessages((prev) => [...prev, newMessage]);
+    };
+
+    window.addEventListener(
+      "addChatMessage",
+      handleExternalMessage as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "addChatMessage",
+        handleExternalMessage as EventListener,
+      );
+    };
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
