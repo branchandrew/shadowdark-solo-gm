@@ -283,14 +283,19 @@ ${villainContent}`;
 
     console.log("Final result with name:", finalResult.substring(0, 200));
 
-    // Extract name from the final result
-    const nameMatch = finalResult.match(/(?:Name:|^)([^\n]+)/i);
+    // Extract name from the final result (look for the final name output)
+    const nameMatch =
+      finalResult.match(/(?:Name:|^)([^\n]+)/i) ||
+      finalResult.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
     const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
     const cleanName = extractedName.replace(/^(Name:|Title:)\s*/i, "");
 
+    // Combine the original villain profile with the final naming output
+    const completeProfile = `${villainContent}\n\n--- NAMING PROCESS ---\n${finalResult}`;
+
     const finalResponse: AdventureResponse = {
       villainName: cleanName,
-      villainProfile: finalResult,
+      villainProfile: completeProfile,
       success: true,
     };
 
