@@ -203,49 +203,86 @@ export interface AdventureArc {
   updated_at: string;
 }
 
+// Adventure log entries
 export interface AdventureLogEntry {
   id: string;
+  session_id: string;
   scene_number: number;
   content: string;
   timestamp: string;
   chaos_factor?: number;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
+// Chat messages
 export interface ChatMessage {
   id: string;
+  session_id: string;
   type: "user" | "assistant" | "gm" | "system";
   content: string;
   timestamp: string;
-  session_id?: string;
-  created_at?: string;
+  created_at: string;
 }
 
-// Main database entity
+// Main game session
 export interface GameSession {
   id: string;
   user_id?: string;
 
   // Core game data
   character_data: Character | null;
-  adventure_arc: AdventureArc | null;
-  campaign_elements: CampaignElements;
-  adventure_log: AdventureLogEntry[];
-  chat_messages: ChatMessage[];
 
   // Game state
   chaos_factor: number;
   scene_counter: number;
 
-  // Adventure generation settings
-  theme: string;
-  tone: string;
-  voice: string;
+  // Adventure generation settings (consolidated)
+  shadowdark_theme: string;
+  shadowdark_tone: string;
+  shadowdark_voice: string;
 
   // Metadata
   created_at: string;
   updated_at: string;
+}
+
+// View models for frontend (aggregated data)
+export interface CampaignElements {
+  threads: Thread[];
+  npcs: NPC[];
+  factions: Faction[];
+  clues: Clue[];
+  monsters: SessionMonster[];
+}
+
+// Legacy interface for backward compatibility (will be phased out)
+export interface LegacyAdventureArc {
+  bbeg: {
+    name: string;
+    description: string;
+    motivation: string;
+    hook: string;
+  };
+  clues: string[];
+  secrets: string[];
+  highTowerSurprise: string;
+  lieutenants: Array<{
+    name: string;
+    tarot_spread: {
+      seed: string;
+      background: string;
+      location: string;
+      why_protect: string;
+      how_protect: string;
+      reward: string;
+    };
+  }>;
+  faction: {
+    name: string;
+    description: string;
+  };
+  minions: string;
 }
 
 // API Response types
