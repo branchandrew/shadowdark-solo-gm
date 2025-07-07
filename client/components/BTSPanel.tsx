@@ -50,15 +50,11 @@ export default function BTSPanel() {
     // No auto-loading during development - always start empty
   }, []);
 
-  // Save data to localStorage whenever it changes
-  const saveToLocalStorage = (adventureData: AdventureArc, rawData: any) => {
+  // Save adventure arc to localStorage (no duplication)
+  const saveAdventureToLocalStorage = (adventureData: AdventureArc) => {
     localStorage.setItem(
       "shadowdark_adventure_arc",
       JSON.stringify(adventureData),
-    );
-    localStorage.setItem(
-      "shadowdark_raw_adventure_data",
-      JSON.stringify(rawData),
     );
   };
 
