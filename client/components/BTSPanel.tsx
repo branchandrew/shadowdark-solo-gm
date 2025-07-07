@@ -41,49 +41,7 @@ interface AdventureArc {
 }
 
 export default function BTSPanel() {
-  const [adventureArc, setAdventureArc] = useState<AdventureArc>({
-    bbeg: {
-      name: "Malachar the Shadow Weaver",
-      description:
-        "An ancient necromancer who seeks to merge the Material Plane with the Shadowfell",
-      motivation:
-        "Believes death is the only truth and seeks to end all suffering by ending all life",
-      power: "Can manipulate shadows, raise undead, and corrupt living beings",
-    },
-    secrets: [
-      "The local temple's high priest is secretly working for Malachar",
-      "The missing villagers are being turned into shadow thralls",
-      "A hidden portal to the Shadowfell lies beneath the old oak tree",
-      "Malachar's power wanes during the new moon",
-    ],
-    highTowerSurprise:
-      "The tower that appears to be Malachar's stronghold is actually a decoy - his real lair is in the village crypt",
-    lieutenants: [
-      {
-        name: "Brother Thaddeus",
-        role: "Corrupted Priest",
-        description:
-          "Once holy, now serves shadow. Provides information and recruits from within the village",
-      },
-      {
-        name: "Shade Captain Korth",
-        role: "Undead Commander",
-        description: "A fallen paladin now commanding Malachar's undead forces",
-      },
-    ],
-    minions: [
-      {
-        type: "Shadow Thralls",
-        count: 12,
-        description: "Corrupted villagers with shadowy tendrils",
-      },
-      {
-        type: "Skeleton Warriors",
-        count: 8,
-        description: "Armed with rusty weapons and dark magic",
-      },
-    ],
-  });
+  const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [scriptInput, setScriptInput] = useState("");
   const [promptInput, setPromptInput] = useState("");
@@ -116,25 +74,27 @@ export default function BTSPanel() {
       console.log("Received data:", data);
 
       if (data.success) {
-        console.log("Adventure generation succeeded! Villain profile length:", data.villainProfile.length);
+        console.log(
+          "Adventure generation succeeded! Villain profile length:",
+          data.villainProfile.length,
+        );
 
         // Parse the villain profile to extract structured information
         const profile = data.villainProfile;
 
         // Extract name from the profile (look for patterns like "Name:" or just grab the first line)
         const nameMatch = profile.match(/(?:Name:|^)([^\n]+)/i);
-        const extractedName = nameMatch ? nameMatch[1].trim() : "Generated Villain";
-
-        // Extract sections for better organization
-        const sections = profile.split(/\n\s*\n/);
+        const extractedName = nameMatch
+          ? nameMatch[1].trim()
+          : "Generated Villain";
 
         // Update the adventure arc display with parsed data
         const newAdventure: AdventureArc = {
           bbeg: {
-            name: extractedName.replace(/^(Name:|Title:)\s*/i, ''),
+            name: extractedName.replace(/^(Name:|Title:)\s*/i, ""),
             description: profile.substring(0, 300) + "...",
             motivation: data.seedData.goal,
-            power: `${data.seedData.race} ${data.seedData.gender} with powers derived from ${data.seedData.cards[3]?.card_text || 'mystical forces'}`,
+            power: `${data.seedData.race} ${data.seedData.gender} with powers derived from ${data.seedData.cards[3]?.card_text || "mystical forces"}`,
           },
           secrets: [
             `Seed influence: ${data.seedData.cards[0]?.card_text}`,
@@ -162,12 +122,13 @@ export default function BTSPanel() {
         console.log("Setting new adventure arc...");
         setAdventureArc(newAdventure);
 
-        // Set the villain profile as output in the prompt testing area
         console.log("Setting prompt output...");
         setPromptOutput(data.villainProfile);
 
         // Also try setting script output as a backup
-        setScriptOutput(`Adventure Generated Successfully!\n\nVillain Profile:\n${data.villainProfile}`);
+        setScriptOutput(
+          `Adventure Generated Successfully!\n\nVillain Profile:\n${data.villainProfile}`,
+        );
 
         // Send the villain profile to the AI chat
         console.log("Sending villain profile to AI chat...");
@@ -177,11 +138,14 @@ export default function BTSPanel() {
       } else {
         console.error("Adventure generation failed:", data.error);
         setPromptOutput(`Error: ${data.error || "Unknown error occurred"}`);
-        setScriptOutput(`Adventure generation failed: ${data.error || "Unknown error"}`);
+        setScriptOutput(
+          `Adventure generation failed: ${data.error || "Unknown error"}`,
+        );
       }
     } catch (error) {
       console.error("Error generating adventure:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       setPromptOutput(`Fetch Error: ${errorMessage}`);
       setScriptOutput(`Network error occurred: ${errorMessage}`);
     } finally {
@@ -196,12 +160,12 @@ export default function BTSPanel() {
 
       // We'll create a custom message that gets added directly to the chat
       // by dispatching a custom event that the AIChat component can listen for
-      const event = new CustomEvent('addChatMessage', {
+      const event = new CustomEvent("addChatMessage", {
         detail: {
-          type: 'gm',
+          type: "gm",
           content: `🎭 **New Adventure Arc Generated!**\n\n${villainProfile}`,
-          timestamp: new Date()
-        }
+          timestamp: new Date(),
+        },
       });
 
       window.dispatchEvent(event);
@@ -297,116 +261,140 @@ This creates interesting moral dilemmas for players who must navigate between of
         </CardContent>
       </Card>
 
-      {/* Current Adventure Arc */}
+      {/* Adventure Arc Display */}
       {adventureArc ? (
         <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Skull className="h-5 w-5 text-destructive" />
-            Current Adventure Arc
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* BBEG */}
-          <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2">
-              <Crown className="h-4 w-4" />
-              Big Bad Evil Guy (BBEG)
-            </h4>
-            <div className="p-3 border rounded space-y-2">
-              <h5 className="font-medium text-primary">
-                {adventureArc.bbeg.name}
-              </h5>
-              <p className="text-sm text-muted-foreground">
-                {adventureArc.bbeg.description}
-              </p>
-              <div className="space-y-1">
-                <p className="text-sm">
-                  <span className="font-medium">Motivation:</span>{" "}
-                  {adventureArc.bbeg.motivation}
-                </p>
-                <p className="text-sm">
-                  <span className="font-medium">Power:</span>{" "}
-                  {adventureArc.bbeg.power}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Secrets & Rumors */}
-          <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              Secrets & Rumors
-            </h4>
-            <div className="space-y-2">
-              {adventureArc.secrets.map((secret, index) => (
-                <div key={index} className="p-2 bg-muted/50 rounded text-sm">
-                  {secret}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* High Tower Surprise */}
-          <div className="space-y-3">
-            <h4 className="font-semibold">High Tower Surprise</h4>
-            <div className="p-3 border rounded bg-accent/10">
-              <p className="text-sm">{adventureArc.highTowerSurprise}</p>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Lieutenants */}
-          <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Lieutenants
-            </h4>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Skull className="h-5 w-5 text-destructive" />
+              Current Adventure Arc
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* BBEG */}
             <div className="space-y-3">
-              {adventureArc.lieutenants.map((lieutenant, index) => (
-                <div key={index} className="p-3 border rounded space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{lieutenant.name}</span>
-                    <Badge variant="secondary">{lieutenant.role}</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {lieutenant.description}
+              <h4 className="font-semibold flex items-center gap-2">
+                <Crown className="h-4 w-4" />
+                Big Bad Evil Guy (BBEG)
+              </h4>
+              <div className="p-3 border rounded space-y-2">
+                <h5 className="font-medium text-primary">
+                  {adventureArc.bbeg.name}
+                </h5>
+                <p className="text-sm text-muted-foreground">
+                  {adventureArc.bbeg.description}
+                </p>
+                <div className="space-y-1">
+                  <p className="text-sm">
+                    <span className="font-medium">Motivation:</span>{" "}
+                    {adventureArc.bbeg.motivation}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">Power:</span>{" "}
+                    {adventureArc.bbeg.power}
                   </p>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
 
-          <Separator />
+            <Separator />
 
-          {/* Minions */}
-          <div className="space-y-3">
-            <h4 className="font-semibold">Minions</h4>
-            <div className="space-y-2">
-              {adventureArc.minions.map((minion, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-2 border rounded"
-                >
-                  <div>
-                    <span className="font-medium">{minion.type}</span>
+            {/* Secrets & Rumors */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                Secrets & Rumors
+              </h4>
+              <div className="space-y-2">
+                {adventureArc.secrets.map((secret, index) => (
+                  <div key={index} className="p-2 bg-muted/50 rounded text-sm">
+                    {secret}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* High Tower Surprise */}
+            <div className="space-y-3">
+              <h4 className="font-semibold">High Tower Surprise</h4>
+              <div className="p-3 border rounded bg-accent/10">
+                <p className="text-sm">{adventureArc.highTowerSurprise}</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Lieutenants */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Lieutenants
+              </h4>
+              <div className="space-y-3">
+                {adventureArc.lieutenants.map((lieutenant, index) => (
+                  <div key={index} className="p-3 border rounded space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{lieutenant.name}</span>
+                      <Badge variant="secondary">{lieutenant.role}</Badge>
+                    </div>
                     <p className="text-sm text-muted-foreground">
-                      {minion.description}
+                      {lieutenant.description}
                     </p>
                   </div>
-                  <Badge>{minion.count}</Badge>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+
+            <Separator />
+
+            {/* Minions */}
+            <div className="space-y-3">
+              <h4 className="font-semibold">Minions</h4>
+              <div className="space-y-2">
+                {adventureArc.minions.map((minion, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 border rounded"
+                  >
+                    <div>
+                      <span className="font-medium">{minion.type}</span>
+                      <p className="text-sm text-muted-foreground">
+                        {minion.description}
+                      </p>
+                    </div>
+                    <Badge>{minion.count}</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-muted-foreground" />
+              Adventure Arc
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8">
+              <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <Skull className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
+                No Adventure Generated
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Click "Regenerate Adventure Arc" to generate a new BBEG, plot
+                threads, and adventure details using AI and tarot cards.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Script Testing */}
       <Card>
