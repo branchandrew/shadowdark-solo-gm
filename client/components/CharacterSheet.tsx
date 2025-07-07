@@ -305,97 +305,87 @@ export default function CharacterSheet() {
 
   if (!hasCharacterData) {
     return (
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-center py-8">
-              <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <User className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">
-                No Character Created
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Create a new character or import one from Shadowdarklings.net
-              </p>
-              <div className="flex gap-2 justify-center">
-                <Button
-                  onClick={() => updateCharacter({ name: "New Character" })}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="h-4 w-4" />
-                  Create Character
-                </Button>
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+            <User className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">No Character Created</h3>
+            <p className="text-muted-foreground text-sm">
+              Create a new character or import one from Shadowdarklings.net
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button
+              onClick={() => updateCharacter({ name: "New Character" })}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Create Character
+            </Button>
 
-                <Dialog
-                  open={showPasteDialog}
-                  onOpenChange={setShowPasteDialog}
-                >
-                  <DialogTrigger asChild>
+            <Dialog open={showPasteDialog} onOpenChange={setShowPasteDialog}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Clipboard className="h-4 w-4" />
+                  Paste from Shadowdarklings.net
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>
+                    Import Character from Shadowdarklings.net
+                  </DialogTitle>
+                  <DialogDescription>
+                    Copy the JSON export from Shadowdarklings.net and paste it
+                    below, then click Import.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <Label>Character JSON</Label>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePasteFromClipboard}
+                        className="text-xs"
+                      >
+                        <Clipboard className="h-3 w-3 mr-1" />
+                        Paste from Clipboard
+                      </Button>
+                    </div>
+                    <Textarea
+                      placeholder="Paste your Shadowdarklings.net JSON export here..."
+                      value={pastedJson}
+                      onChange={(e) => setPastedJson(e.target.value)}
+                      rows={12}
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
                     <Button
                       variant="outline"
-                      className="flex items-center gap-2"
+                      onClick={() => {
+                        setShowPasteDialog(false);
+                        setPastedJson("");
+                      }}
                     >
-                      <Clipboard className="h-4 w-4" />
-                      Paste from Shadowdarklings.net
+                      Cancel
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>
-                        Import Character from Shadowdarklings.net
-                      </DialogTitle>
-                      <DialogDescription>
-                        Copy the JSON export from Shadowdarklings.net and paste
-                        it below, then click Import.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <Label>Character JSON</Label>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handlePasteFromClipboard}
-                            className="text-xs"
-                          >
-                            <Clipboard className="h-3 w-3 mr-1" />
-                            Paste from Clipboard
-                          </Button>
-                        </div>
-                        <Textarea
-                          placeholder="Paste your Shadowdarklings.net JSON export here..."
-                          value={pastedJson}
-                          onChange={(e) => setPastedJson(e.target.value)}
-                          rows={12}
-                          className="font-mono text-sm"
-                        />
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setShowPasteDialog(false);
-                            setPastedJson("");
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={importFromPaste}
-                          disabled={!pastedJson.trim()}
-                        >
-                          Import Character
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                    <Button
+                      onClick={importFromPaste}
+                      disabled={!pastedJson.trim()}
+                    >
+                      Import Character
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
       </div>
     );
   }
