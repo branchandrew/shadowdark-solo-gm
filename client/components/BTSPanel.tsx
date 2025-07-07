@@ -440,7 +440,7 @@ ${adventureArc.lieutenants
                         </div>
                         <div className="space-y-1">
                           <Badge variant="outline" className="text-xs">
-                            Location
+                            Occupation
                           </Badge>
                           <p className="text-sm text-muted-foreground">
                             {lieutenant.tarot_spread.location}
