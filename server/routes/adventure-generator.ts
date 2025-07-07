@@ -289,67 +289,99 @@ Return one clean JSON object and nothing else.  Keep values concise:
 
     /* ---------- 3. Response ---------- */
     // Write to database if session_id provided and database is available
-    if (session_id && serverDB.isAvailable()) {
+    if (session_id && relationalDB.isAvailable()) {
       console.log("Writing adventure arc to database...");
 
-      const adventureArc: AdventureArc = {
-        bbeg: {
+      // Create adventure arc
+      const adventureArcId = await relationalDB.writeAdventureArc(session_id, {
+        bbeg_name: villain.bbeg_name,
+        bbeg_description: villain.bbeg_detailed_description,
+        bbeg_motivation: villain.bbeg_motivation,
+        bbeg_hook: villain.bbeg_hook,
+        high_tower_surprise: villain.high_tower_surprise || "",
+        // TODO: Link to minion monster when monster system is implemented
+      });
+
+      if (adventureArcId) {
+        // Create hidden campaign elements
+        const hiddenElements: {
+          npcs: Omit<NPC, "session_id">[];
+          factions: Omit<Faction, "session_id">[];
+          threads: Omit<Thread, "session_id">[];
+          clues: Omit<Clue, "session_id">[];
+        } = {
+          npcs: [],
+          factions: [],
+          threads: [],
+          clues: [],
+        };
+
+        // Add BBEG as hidden NPC
+        hiddenElements.npcs.push({
+          id: `npc_${Date.now()}_bbeg`,
+          adventure_arc_id: adventureArcId,
           name: villain.bbeg_name,
-          description: villain.bbeg_detailed_description,
-          motivation: villain.bbeg_motivation,
-          hook: villain.bbeg_hook,
-        },
-        clues: villain.clues || [],
-        secrets: [],
-        highTowerSurprise: villain.high_tower_surprise || "",
-        lieutenants: villain.lieutenants || [],
-        faction: {
-          name: villain.faction_name || "",
-          description: villain.faction_description || "",
-        },
-        minions: villain.minions || "",
-      };
-
-      await serverDB.writeAdventureArc(session_id, adventureArc);
-
-      // Add hidden campaign elements
-      const hiddenElements = {
-        threads: [],
-        characters: [
-          {
-            id: `char_${Date.now()}_bbeg`,
-            name: villain.bbeg_name,
-            description: `${villain.bbeg_detailed_description}\n\nMotivation: ${villain.bbeg_motivation}`,
-            disposition: "hostile" as const,
-            hidden: true,
-            created_at: new Date().toISOString(),
-          },
-        ],
-        factions: villain.faction_name
-          ? [
-              {
-                id: `faction_${Date.now()}`,
-                name: villain.faction_name,
-                description: villain.faction_description || "",
-                influence: "moderate" as const,
-                relationship: "opposed" as const,
-                hidden: true,
-                created_at: new Date().toISOString(),
-              },
-            ]
-          : [],
-        clues: (villain.clues || []).map((clue, index) => ({
-          id: `clue_${Date.now()}_${index}`,
-          description: clue,
-          discovered: false,
-          importance: "moderate" as const,
+          description: `${villain.bbeg_detailed_description}\n\nMotivation: ${villain.bbeg_motivation}`,
+          disposition: "hostile",
+          role: "bbeg",
           hidden: true,
           created_at: new Date().toISOString(),
-        })),
-      };
+          updated_at: new Date().toISOString(),
+        });
 
-      await serverDB.addHiddenCampaignElements(session_id, hiddenElements);
-      console.log("Adventure data written to database successfully");
+        // Add lieutenants as hidden NPCs
+        villain.lieutenants?.forEach((lieutenant, index) => {
+          hiddenElements.npcs.push({
+            id: `npc_${Date.now()}_lt_${index}`,
+            adventure_arc_id: adventureArcId,
+            name: lieutenant.name,
+            description: `Lieutenant of ${villain.bbeg_name}. ${lieutenant.tarot_spread.background}`,
+            disposition: "hostile",
+            role: "lieutenant",
+            tarot_spread: lieutenant.tarot_spread,
+            hidden: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        });
+
+        // Add faction as hidden faction
+        if (villain.faction_name) {
+          hiddenElements.factions.push({
+            id: `faction_${Date.now()}`,
+            adventure_arc_id: adventureArcId,
+            name: villain.faction_name,
+            description: villain.faction_description || "",
+            influence: "moderate",
+            relationship: "opposed",
+            hidden: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        }
+
+        // Add clues as hidden clues
+        villain.clues?.forEach((clue, index) => {
+          hiddenElements.clues.push({
+            id: `clue_${Date.now()}_${index}`,
+            adventure_arc_id: adventureArcId,
+            description: clue,
+            discovered: false,
+            importance: "moderate",
+            hidden: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        });
+
+        // Write all hidden elements to database
+        await relationalDB.addHiddenCampaignElements(
+          session_id,
+          adventureArcId,
+          hiddenElements,
+        );
+        console.log("Adventure data written to database successfully");
+      }
     }
 
     res.json({ ...villain, success: true });
