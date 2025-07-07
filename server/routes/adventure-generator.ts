@@ -168,7 +168,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
     const ai = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       system: "Return only the JSON object requested.",
-      max_tokens: 600,
+      max_tokens: 1200,
       temperature: 0.5,
       messages,
     });
