@@ -9,33 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Eye, Crown, Skull, Users, RefreshCw } from "lucide-react";
 import CloudSync from "./CloudSync";
 
-interface AdventureArc {
-  bbeg: {
-    name: string;
-    description: string;
-    motivation: string;
-    hook: string;
-  };
-  clues: string[];
-  secrets: string[];
-  highTowerSurprise: string;
-  lieutenants: Array<{
-    name: string;
-    tarot_spread: {
-      seed: string;
-      background: string;
-      location: string;
-      why_protect: string;
-      how_protect: string;
-      reward: string;
-    };
-  }>;
-  faction: {
-    name: string;
-    description: string;
-  };
-  minions: string;
-}
+import type { AdventureArcDisplay } from "../../shared/types";
 
 export default function BTSPanel() {
   const [adventureArc, setAdventureArc] = useState<AdventureArc | null>(null);
