@@ -5,7 +5,6 @@ export function clearAllShadowdarkData() {
     "shadowdark_character",
     "shadowdark_has_character",
     "shadowdark_adventure_arc",
-    "shadowdark_raw_adventure_data",
     "shadowdark_chaos_factor",
     "shadowdark_theme",
     "shadowdark_tone",
