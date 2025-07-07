@@ -54,12 +54,10 @@ class HybridDatabase {
     }
   }
 
-  private getOrCreateSessionId(): string {
-    let sessionId = localStorage.getItem("shadowdark_session_id");
-    if (!sessionId) {
-      sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem("shadowdark_session_id", sessionId);
-    }
+  private generateSessionId(): string {
+    // Generate fresh session ID each time - no persistence during development
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    console.log("Generated fresh session ID:", sessionId);
     return sessionId;
   }
 
