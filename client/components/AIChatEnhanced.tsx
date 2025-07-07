@@ -54,12 +54,12 @@ export default function AIChat() {
     }
   }, [messages]);
 
-  // Load chaos factor from localStorage on mount
+  // Development mode: start fresh each time, no auto-loading
   useEffect(() => {
-    const savedChaosFactor = localStorage.getItem("shadowdark_chaos_factor");
-    if (savedChaosFactor) {
-      setChaosFactor(parseInt(savedChaosFactor) || 5);
-    }
+    console.log(
+      "AIChatEnhanced: Starting fresh with chaos factor 5 (development mode)",
+    );
+    // No auto-loading during development - always start with default
   }, []);
 
   // Save chaos factor to localStorage when it changes
