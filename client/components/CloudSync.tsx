@@ -58,6 +58,17 @@ export default function CloudSync() {
     }
   };
 
+  const handleClearData = () => {
+    if (
+      confirm(
+        "Clear all localStorage data? This will reset everything for development.",
+      )
+    ) {
+      clearAllShadowdarkData();
+      alert("All data cleared! Refresh the page for a fresh start.");
+    }
+  };
+
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(exportedData);
