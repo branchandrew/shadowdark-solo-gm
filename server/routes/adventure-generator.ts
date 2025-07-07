@@ -165,7 +165,7 @@ Step 1. Extract three short keyword phrases from the villain profile:
     • Cultural flavor – one or two words suggesting linguistic or regional tone (Nordic, Latin, Abyssal)
 
 Step 2. Build a phonetic palette table using the mood word from Step 1:
-    • Choose 2���3 strong consonant clusters that fit the mood
+    • Choose 2‑3 strong consonant clusters that fit the mood
     • Choose 1‑2 vowel sounds that match the same mood
     • Present the results in a table like this:
 
@@ -294,18 +294,18 @@ ${villainContent}`;
         ? nameResponse.content[0].text
         : "Failed to generate villain name and final output";
 
-    const response: AdventureResponse = {
+    const finalResponse: AdventureResponse = {
       villainProfile: finalResult,
       adventureHook: "Adventure hook will be extracted from final result",
       seedData: pythonResult,
       success: true,
     };
 
-    res.json(response);
+    res.json(finalResponse);
   } catch (error) {
     console.error("Adventure generation error:", error);
 
-    const response: AdventureResponse = {
+    const errorResponse: AdventureResponse = {
       villainProfile: "Failed to generate adventure",
       adventureHook: "Error occurred during generation",
       seedData: {} as any,
@@ -313,6 +313,6 @@ ${villainContent}`;
       error: error instanceof Error ? error.message : "Unknown error",
     };
 
-    res.status(500).json(response);
+    res.status(500).json(errorResponse);
   }
 };
