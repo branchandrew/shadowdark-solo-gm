@@ -105,10 +105,6 @@ export default function BTSPanel() {
       }
     } catch (error) {
       console.error("Error generating adventure:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      setPromptOutput(`Fetch Error: ${errorMessage}`);
-      setScriptOutput(`Network error occurred: ${errorMessage}`);
     } finally {
       console.log("Setting isGenerating to false");
       setIsGenerating(false);
