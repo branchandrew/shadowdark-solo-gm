@@ -176,7 +176,8 @@ Return one clean JSON object and nothing else.  Keep values concise:
         "reward": ""
       }
     }
-  ]
+  ],
+  "minions": ""
 }`.trim();
 
     const messages = [{ role: "user" as const, content: userPrompt }];
