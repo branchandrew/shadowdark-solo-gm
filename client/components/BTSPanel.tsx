@@ -125,16 +125,36 @@ export default function BTSPanel() {
 
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
+      console.log(
+        "Response content-type:",
+        response.headers.get("content-type"),
+      );
 
       // Read the response body once and handle both success and error cases
       let data;
-      try {
-        data = await response.json();
-      } catch (parseError) {
-        console.error("Failed to parse response as JSON:", parseError);
-        throw new Error(
-          `Server returned invalid response (${response.status}): ${response.statusText}`,
-        );
+      const contentType = response.headers.get("content-type");
+
+      if (contentType?.includes("application/json")) {
+        try {
+          data = await response.json();
+        } catch (parseError) {
+          console.error("Failed to parse JSON response:", parseError);
+          throw new Error(
+            `Server returned malformed JSON (${response.status}): ${response.statusText}`,
+          );
+        }
+      } else {
+        // Handle non-JSON responses (like HTML error pages)
+        try {
+          const textResponse = await response.text();
+          console.log("Non-JSON response:", textResponse.substring(0, 200));
+          data = { error: `Server error: ${response.statusText}` };
+        } catch (textError) {
+          console.error("Failed to read response text:", textError);
+          throw new Error(
+            `Unable to read server response (${response.status}): ${response.statusText}`,
+          );
+        }
       }
 
       if (!response.ok) {
