@@ -232,6 +232,29 @@ export default function CampaignElements() {
     }
   };
 
+  const getImportanceColor = (importance: string) => {
+    switch (importance) {
+      case "major":
+        return "bg-red-600";
+      case "moderate":
+        return "bg-yellow-600";
+      case "minor":
+        return "bg-blue-600";
+      default:
+        return "bg-muted";
+    }
+  };
+
+  // Filter functions to show/hide items based on debug toggles
+  const getVisibleThreads = () =>
+    threads.filter((thread) => !thread.hidden || showHiddenThreads);
+  const getVisibleCharacters = () =>
+    characters.filter((char) => !char.hidden || showHiddenCharacters);
+  const getVisibleFactions = () =>
+    factions.filter((faction) => !faction.hidden || showHiddenFactions);
+  const getVisibleClues = () =>
+    clues.filter((clue) => !clue.hidden || showHiddenClues);
+
   return (
     <div className="space-y-6">
       {/* Plot Threads */}
