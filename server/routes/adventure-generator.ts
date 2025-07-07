@@ -80,6 +80,8 @@ export const generateAdventure: RequestHandler = async (req, res) => {
       .join("\n");
 
     // Step 3: Send to Claude for villain creation
+    console.log("Sending villain prompt to Claude...");
+
     const villainPrompt = `You are a narrative design assistant. Your job is to take the goal (first value)
 and combine and interpret it with the six Tarot card draws into a compelling and
 multidimensional Big Bad Evil Guy (BBEG) for a TTRPG campaign.
@@ -112,17 +114,23 @@ B. Using the six interpretations, write a cohesive villain profile using the Ton
 
 D. Finish with a one-sentence adventure hook the GM can read aloud.`;
 
-    const villainResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 1000,
-      temperature: 0.7,
-      messages: [
-        {
-          role: "user",
-          content: villainPrompt,
-        },
-      ],
-    });
+    console.log("Making Claude API call for villain...");
+    const villainResponse = (await Promise.race([
+      anthropic.messages.create({
+        model: "claude-3-5-sonnet-20241022",
+        max_tokens: 1000,
+        temperature: 0.7,
+        messages: [
+          {
+            role: "user",
+            content: villainPrompt,
+          },
+        ],
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Claude API timeout")), 30000),
+      ),
+    ])) as any;
 
     const villainContent =
       villainResponse.content[0].type === "text"
