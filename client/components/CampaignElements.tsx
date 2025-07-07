@@ -456,13 +456,28 @@ export default function CampaignElements() {
       {/* Factions */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5" />
-            Factions
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Crown className="h-5 w-5" />
+              Factions
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHiddenFactions(!showHiddenFactions)}
+              className="text-xs"
+            >
+              {showHiddenFactions ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+              Debug
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {factions.length === 0 ? (
+          {getVisibleFactions().length === 0 ? (
             <div className="text-center py-6">
               <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                 <Crown className="h-6 w-6 text-muted-foreground" />
@@ -475,10 +490,12 @@ export default function CampaignElements() {
           ) : (
             <ScrollArea className="h-48">
               <div className="space-y-3">
-                {factions.map((faction) => (
+                {getVisibleFactions().map((faction) => (
                   <div
                     key={faction.id}
-                    className="p-3 border rounded space-y-2"
+                    className={`p-3 border rounded space-y-2 ${
+                      faction.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -486,6 +503,11 @@ export default function CampaignElements() {
                         <Badge className={getInfluenceColor(faction.influence)}>
                           {faction.influence}
                         </Badge>
+                        {faction.hidden && (
+                          <Badge variant="outline" className="text-xs">
+                            Hidden
+                          </Badge>
+                        )}
                       </div>
                       <div className="flex gap-1">
                         {(
@@ -539,6 +561,117 @@ export default function CampaignElements() {
               }
               rows={2}
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Clues */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              Clues
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHiddenClues(!showHiddenClues)}
+              className="text-xs"
+            >
+              {showHiddenClues ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+              Debug
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {getVisibleClues().length === 0 ? (
+            <div className="text-center py-6">
+              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                <Search className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                No clues yet. Track important information and discoveries.
+              </p>
+            </div>
+          ) : (
+            <ScrollArea className="h-48">
+              <div className="space-y-3">
+                {getVisibleClues().map((clue) => (
+                  <div
+                    key={clue.id}
+                    className={`p-3 border rounded space-y-2 ${
+                      clue.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-1">
+                          <button
+                            onClick={() =>
+                              updateClueDiscovered(clue.id, !clue.discovered)
+                            }
+                            className={`px-2 py-1 text-xs rounded ${
+                              clue.discovered
+                                ? "bg-green-600 text-white"
+                                : "bg-muted text-muted-foreground hover:bg-accent"
+                            }`}
+                          >
+                            {clue.discovered ? "Discovered" : "Hidden"}
+                          </button>
+                        </div>
+                        <Badge className={getImportanceColor(clue.importance)}>
+                          {clue.importance}
+                        </Badge>
+                        {clue.hidden && (
+                          <Badge variant="outline" className="text-xs">
+                            Hidden
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex gap-1">
+                        {(["minor", "moderate", "major"] as const).map(
+                          (importance) => (
+                            <button
+                              key={importance}
+                              onClick={() =>
+                                updateClueImportance(clue.id, importance)
+                              }
+                              className={`px-2 py-1 text-xs rounded ${
+                                clue.importance === importance
+                                  ? getImportanceColor(importance) +
+                                    " text-white"
+                                  : "bg-muted text-muted-foreground hover:bg-accent"
+                              }`}
+                            >
+                              {importance}
+                            </button>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {clue.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+          <div className="flex gap-2">
+            <Input
+              placeholder="New clue..."
+              value={newClue}
+              onChange={(e) => setNewClue(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && addClue()}
+            />
+            <Button onClick={addClue} size="icon">
+              <Plus className="h-4 w-4" />
+            </Button>
           </div>
         </CardContent>
       </Card>
