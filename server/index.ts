@@ -4,7 +4,6 @@ import { handleDemo } from "./routes/demo";
 import { handleAIChat } from "./routes/ai-chat";
 import { generateAdventure } from "./routes/adventure-generator";
 import { rollFateChart } from "./routes/mythic-fate";
-import { testFateChart } from "./routes/test-fate";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
@@ -32,7 +31,6 @@ export function createServer() {
   app.post("/api/ai-chat", handleAIChat);
   app.post("/api/generate-adventure", generateAdventure);
   app.post("/api/roll-fate", rollFateChart);
-  app.get("/api/test-fate", testFateChart);
 
   return app;
 }

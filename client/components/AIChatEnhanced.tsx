@@ -160,25 +160,27 @@ export default function AIChat() {
         // Add to local chat display only - no AI/Claude involvement
         setMessages((prev) => [...prev, fateMessage]);
       } else {
-        console.error("Fate chart roll failed:", data.error);
+        console.error("Fate chart roll failed. Full response:", data);
 
-        // Show error message locally
+        // Show error message locally with details
         const errorMessage: Message = {
           id: Date.now().toString(),
           type: "fate",
-          content: "❌ Fate Chart roll failed. Please try again.",
+          content: `❌ Fate Chart roll failed: ${data.error || "Unknown error"}`,
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error("Error rolling fate chart:", error);
+      console.error("Error type:", typeof error);
+      console.error("Error details:", error);
 
       // Show error message locally
       const errorMessage: Message = {
         id: Date.now().toString(),
         type: "fate",
-        content: "❌ Unable to roll Fate Chart. Please check your connection.",
+        content: `❌ Unable to roll Fate Chart: ${error instanceof Error ? error.message : String(error)}`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
