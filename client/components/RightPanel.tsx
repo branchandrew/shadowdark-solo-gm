@@ -20,7 +20,7 @@ export default function RightPanel() {
         </TabsTrigger>
         <TabsTrigger value="elements" className="flex items-center gap-2">
           <Network className="h-4 w-4" />
-          Plots & NPCs
+          Threads & NPCs
         </TabsTrigger>
         <TabsTrigger value="bts" className="flex items-center gap-2">
           <Eye className="h-4 w-4" />
