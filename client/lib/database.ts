@@ -203,17 +203,10 @@ class HybridDatabase {
     );
   }
 
-  // Remove data
+  // Remove data - localStorage only during development
   async remove(key: string): Promise<void> {
     localStorage.removeItem(`shadowdark_${key}`);
-
-    if (this.isCloudSyncEnabled() && this.supabase) {
-      try {
-        await this.saveToCloud(key, null);
-      } catch (error) {
-        console.error("Failed to remove from cloud:", error);
-      }
-    }
+    console.log(`Removed ${key} from localStorage`);
   }
 
   private extractFieldFromSession(session: GameSession, key: string): any {
