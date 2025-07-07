@@ -488,6 +488,39 @@ export default function CharacterSheet() {
               <Button variant="outline" size="sm" onClick={exportCharacter}>
                 <Download className="h-4 w-4" />
               </Button>
+
+              <Dialog open={showKillDialog} onOpenChange={setShowKillDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="sm">
+                    <Skull className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Kill Character</DialogTitle>
+                    <DialogDescription>
+                      Are you sure your character is dead?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-xs text-muted-foreground">
+                      Note: All dead or otherwise characters you have played
+                      with can be found in your Account dropdown.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowKillDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button variant="destructive" onClick={killCharacter}>
+                        Yes, Kill Character
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </CardHeader>
