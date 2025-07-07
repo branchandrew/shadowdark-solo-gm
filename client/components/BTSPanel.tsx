@@ -240,6 +240,9 @@ ${adventureArc.lieutenants
   )
   .join("\n")}
 
+**Faction:** ${adventureArc.faction.name}
+${adventureArc.faction.description}
+
 **Minions:** ${adventureArc.minions}`;
 
       const event = new CustomEvent("addChatMessage", {
