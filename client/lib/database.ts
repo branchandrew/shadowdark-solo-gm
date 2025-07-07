@@ -185,50 +185,12 @@ class HybridDatabase {
     return stored === "true" && this.supabase !== null;
   }
 
-  // Generic get method that checks both localStorage and cloud
+  // Generic get method - starts empty during development, no auto-loading
   async get<T>(key: string): Promise<T | null> {
-    // Always try localStorage first (faster)
-    const localData = localStorage.getItem(`shadowdark_${key}`);
-
-    if (localData) {
-      try {
-        return JSON.parse(localData);
-      } catch (error) {
-        console.error(`Failed to parse localStorage data for ${key}:`, error);
-      }
-    }
-
-    // If cloud sync is enabled and no local data, try cloud
-    if (this.isCloudSyncEnabled() && this.supabase) {
-      try {
-        const { data, error } = await this.supabase
-          .from("game_sessions")
-          .select("*")
-          .eq("id", this.currentSessionId)
-          .single();
-
-        if (error && error.code !== "PGRST116") {
-          // PGRST116 = no rows returned
-          console.error("Supabase fetch error:", error);
-          return null;
-        }
-
-        if (data) {
-          // Extract the specific field and cache locally
-          const fieldValue = this.extractFieldFromSession(data, key);
-          if (fieldValue !== null) {
-            localStorage.setItem(
-              `shadowdark_${key}`,
-              JSON.stringify(fieldValue),
-            );
-            return fieldValue;
-          }
-        }
-      } catch (error) {
-        console.error("Cloud fetch error:", error);
-      }
-    }
-
+    // During development, always start empty - no auto-loading from localStorage
+    console.log(
+      `Getting ${key}: starting fresh (no auto-load during development)`,
+    );
     return null;
   }
 
