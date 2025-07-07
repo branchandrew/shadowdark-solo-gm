@@ -108,14 +108,16 @@ Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_hook" – the single sentence hook
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
-• "clues" – array of exactly 6 strings, each a different type of clue
+• "clues" – array of exactly 8 strings, each a different type of clue
+• "high_tower_surprise" – the major plot twist (2-3 sentences)
 
 {
   "bbeg_name": "",
   "bbeg_hook": "",
   "bbeg_motivation": "",
   "bbeg_detailed_description": "",
-  "clues": ["", "", "", "", "", "", "", ""]
+  "clues": ["", "", "", "", "", "", "", ""],
+  "high_tower_surprise": ""
 }`.trim();
 
     const messages = [{ role: "user" as const, content: userPrompt }];
