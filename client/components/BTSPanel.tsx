@@ -27,7 +27,7 @@ export default function BTSPanel() {
   }, []);
 
   // Save adventure arc to localStorage (no duplication)
-  const saveAdventureToLocalStorage = (adventureData: AdventureArc) => {
+  const saveAdventureToLocalStorage = (adventureData: AdventureArcDisplay) => {
     localStorage.setItem(
       "shadowdark_adventure_arc",
       JSON.stringify(adventureData),
