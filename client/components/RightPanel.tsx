@@ -4,7 +4,8 @@ import CharacterSheet from "./CharacterSheet";
 import AdventureLog from "./AdventureLog";
 import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
-import { User, BookOpen, Network, Eye } from "lucide-react";
+import Map from "./Map";
+import { User, BookOpen, Network, Eye, MapPin } from "lucide-react";
 
 export default function RightPanel() {
   return (
