@@ -133,6 +133,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" – the major plot twist (2-3 sentences)
+• "lieutenants" – array of 1-3 lieutenant objects, each with name and tarot_spread
 
 {
   "bbeg_name": "",
@@ -140,7 +141,20 @@ Return one clean JSON object and nothing else.  Keep values concise:
   "bbeg_motivation": "",
   "bbeg_detailed_description": "",
   "clues": ["", "", "", "", "", "", "", ""],
-  "high_tower_surprise": ""
+  "high_tower_surprise": "",
+  "lieutenants": [
+    {
+      "name": "",
+      "tarot_spread": {
+        "seed": "",
+        "background": "",
+        "location": "",
+        "why_protect": "",
+        "how_protect": "",
+        "reward": ""
+      }
+    }
+  ]
 }`.trim();
 
     const messages = [{ role: "user" as const, content: userPrompt }];
