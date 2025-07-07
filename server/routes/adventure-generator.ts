@@ -70,7 +70,7 @@ export const generateAdventure: RequestHandler = async (_req, res) => {
 
     /* ---------- 2. Claude call ---------- */
     const userPrompt =
-      `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+      `You are a narrative‑design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
 ### SOURCE DATA
 Goal: ${seeds.goal}
@@ -102,18 +102,7 @@ Return one clean JSON object and nothing else.  Keep values short:
   "bbeg_detailed_description": ""
 }`.trim();
 
-    const messages = [
-      { role: "user" as const, content: userPrompt },
-      {
-        role: "assistant" as const,
-        content: `{
-  "bbeg_name": "",
-  "bbeg_hook": "",
-  "bbeg_motivation": "",
-  "bbeg_detailed_description": ""
-}`,
-      },
-    ];
+    const messages = [{ role: "user" as const, content: userPrompt }];
 
     console.log("Making Claude API call with messages:", messages.length);
     console.log(
