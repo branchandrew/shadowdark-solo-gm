@@ -22,7 +22,9 @@ import {
   Info,
   Copy,
   Check,
+  Trash2,
 } from "lucide-react";
+import { clearAllShadowdarkData } from "@/utils/dev-helpers";
 
 export default function CloudSync() {
   const { isEnabled, sessionInfo, toggleCloudSync, exportData, importData } =
