@@ -24,7 +24,7 @@ interface AdventureArc {
     name: string;
     description: string;
     motivation: string;
-    power: string;
+    hook: string;
   };
   secrets: string[];
   highTowerSurprise: string;
@@ -82,7 +82,7 @@ export default function BTSPanel() {
             name: data.bbeg_name,
             description: data.bbeg_detailed_description,
             motivation: data.bbeg_motivation,
-            power: "See detailed description for powers and abilities",
+            hook: data.bbeg_hook,
           },
           secrets: [
             "Secret 1 from generated profile",
@@ -268,32 +268,38 @@ This creates interesting moral dilemmas for players who must navigate between of
                 <Crown className="h-4 w-4" />
                 Big Bad Evil Guy (BBEG)
               </h4>
-              <div className="p-4 border rounded space-y-3">
-                <h5 className="font-medium text-primary text-lg">
-                  {adventureArc.bbeg.name}
-                </h5>
-                <ScrollArea className="h-40 w-full">
-                  <div className="space-y-3 pr-2">
-                    <div>
-                      <span className="font-medium text-sm">Profile:</span>
-                      <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
-                        {adventureArc.bbeg.description}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="font-medium text-sm">Motivation:</span>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {adventureArc.bbeg.motivation}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="font-medium text-sm">Power:</span>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {adventureArc.bbeg.power}
-                      </p>
-                    </div>
-                  </div>
-                </ScrollArea>
+              <div className="p-4 border rounded space-y-4">
+                <div>
+                  <span className="font-medium text-sm">Name:</span>
+                  <h5 className="font-medium text-primary text-lg mt-1">
+                    {adventureArc.bbeg.name}
+                  </h5>
+                </div>
+
+                <div>
+                  <span className="font-medium text-sm">Hook:</span>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {adventureArc.bbeg.hook}
+                  </p>
+                </div>
+
+                <div>
+                  <span className="font-medium text-sm">Motivation:</span>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {adventureArc.bbeg.motivation}
+                  </p>
+                </div>
+
+                <div>
+                  <span className="font-medium text-sm">
+                    Detailed Description:
+                  </span>
+                  <ScrollArea className="h-32 w-full mt-1">
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap pr-2">
+                      {adventureArc.bbeg.description}
+                    </p>
+                  </ScrollArea>
+                </div>
               </div>
             </div>
 
