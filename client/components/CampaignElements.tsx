@@ -348,13 +348,28 @@ export default function CampaignElements() {
       {/* NPCs & Characters */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            NPCs & Characters
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              NPCs & Characters
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHiddenCharacters(!showHiddenCharacters)}
+              className="text-xs"
+            >
+              {showHiddenCharacters ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+              Debug
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {characters.length === 0 ? (
+          {getVisibleCharacters().length === 0 ? (
             <div className="text-center py-6">
               <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                 <Users className="h-6 w-6 text-muted-foreground" />
@@ -366,13 +381,22 @@ export default function CampaignElements() {
           ) : (
             <ScrollArea className="h-48">
               <div className="space-y-3">
-                {characters.map((character) => (
+                {getVisibleCharacters().map((character) => (
                   <div
                     key={character.id}
-                    className="p-3 border rounded space-y-2"
+                    className={`p-3 border rounded space-y-2 ${
+                      character.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{character.name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{character.name}</span>
+                        {character.hidden && (
+                          <Badge variant="outline" className="text-xs">
+                            Hidden
+                          </Badge>
+                        )}
+                      </div>
                       <div className="flex gap-1">
                         {(
                           ["friendly", "neutral", "hostile", "unknown"] as const
