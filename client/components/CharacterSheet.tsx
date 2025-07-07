@@ -318,6 +318,15 @@ export default function CharacterSheet() {
     }
   };
 
+  const killCharacter = () => {
+    // Clear character data and reset to empty state
+    setCharacter(EMPTY_CHARACTER);
+    setHasExplicitCharacter(false);
+    localStorage.removeItem("shadowdark_character");
+    localStorage.removeItem("shadowdark_has_character");
+    setShowKillDialog(false);
+  };
+
   // Show empty state until user explicitly creates or imports a character
   if (!hasExplicitCharacter) {
     return (
