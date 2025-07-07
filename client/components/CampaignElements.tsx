@@ -260,13 +260,28 @@ export default function CampaignElements() {
       {/* Plot Threads */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Network className="h-5 w-5" />
-            Plot Threads
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Network className="h-5 w-5" />
+              Plot Threads
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHiddenThreads(!showHiddenThreads)}
+              className="text-xs"
+            >
+              {showHiddenThreads ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+              Debug
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {threads.length === 0 ? (
+          {getVisibleThreads().length === 0 ? (
             <div className="text-center py-6">
               <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                 <Network className="h-6 w-6 text-muted-foreground" />
@@ -279,10 +294,12 @@ export default function CampaignElements() {
           ) : (
             <ScrollArea className="h-40">
               <div className="space-y-2">
-                {threads.map((thread) => (
+                {getVisibleThreads().map((thread) => (
                   <div
                     key={thread.id}
-                    className="flex items-center gap-2 p-3 border rounded"
+                    className={`flex items-center gap-2 p-3 border rounded ${
+                      thread.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
                   >
                     <div className="flex gap-1">
                       {(["active", "dormant", "resolved"] as const).map(
@@ -304,6 +321,11 @@ export default function CampaignElements() {
                       )}
                     </div>
                     <span className="flex-1 text-sm">{thread.description}</span>
+                    {thread.hidden && (
+                      <Badge variant="outline" className="text-xs">
+                        Hidden
+                      </Badge>
+                    )}
                   </div>
                 ))}
               </div>
