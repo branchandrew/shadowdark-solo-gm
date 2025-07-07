@@ -155,7 +155,19 @@ export default function AIChat() {
 
 🎲 **Random Event Triggered!**
 **Event Roll:** ${data.random_event.event_roll} (${data.random_event.event_range})
-**Event Type:** ${data.random_event.event_type}
+**Event Type:** ${data.random_event.event_type}`;
+
+          // Add meaning table if it was automatically rolled
+          if (data.random_event.meaning_table) {
+            resultMessage += `
+
+📖 **Auto-Generated Meaning**
+**Action:** ${data.random_event.meaning_table.verb} (rolled ${data.random_event.meaning_table.verb_roll})
+**Subject:** ${data.random_event.meaning_table.subject} (rolled ${data.random_event.meaning_table.subject_roll})
+**Combined:** ${data.random_event.meaning_table.meaning}`;
+          }
+
+          resultMessage += `
 
 *A random event occurs! Consider how this event type manifests in your current scene.*`;
         }

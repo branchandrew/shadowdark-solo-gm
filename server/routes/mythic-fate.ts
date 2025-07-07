@@ -2,10 +2,21 @@ import { RequestHandler } from "express";
 import { spawn } from "child_process";
 import path from "path";
 
+interface MeaningTableResult {
+  verb_roll: number;
+  verb: string;
+  verb_index: number;
+  subject_roll: number;
+  subject: string;
+  subject_index: number;
+  meaning: string;
+}
+
 interface RandomEvent {
   event_roll: number;
   event_type: string;
   event_range: string;
+  meaning_table?: MeaningTableResult;
 }
 
 interface FateRollResult {

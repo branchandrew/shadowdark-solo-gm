@@ -59,24 +59,116 @@ RANDOM_EVENT_FOCUS_TABLE = [
     (86, 100, "Current Context")
 ]
 
+# Import the meaning table functions from the other script
+import os
+import sys
+
+# Add the scripts directory to path so we can import from mythic_meaning_table
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(script_dir)
+
+def roll_meaning_table_local():
+    """Local implementation of meaning table roll to avoid circular imports"""
+    # ACTION_VERB and ACTION_SUBJECT from mythic_meaning_table.py
+    ACTION_VERB = [
+        "Abandon","Accompany","Activate","Agree","Ambush","Arrive","Assist","Attack",
+        "Attain","Bargain","Befriend","Bestow","Betray","Block","Break","Carry",
+        "Celebrate","Change","Close","Combine","Communicate","Conceal","Continue",
+        "Control","Create","Deceive","Decrease","Defend","Delay","Deny","Depart",
+        "Deposit","Destroy","Dispute","Disrupt","Distrust","Divide","Drop","Easy",
+        "Energize","Escape","Expose","Fail","Fight","Flee","Free","Guide","Harm",
+        "Heal","Hinder","Imitate","Imprison","Increase","Indulge","Inform","Inquire",
+        "Inspect","Invade","Leave","Lure","Misuse","Move","Neglect","Observe","Open",
+        "Oppose","Overthrow","Praise","Proceed","Protect","Punish","Pursue","Recruit",
+        "Refuse","Release","Relinquish","Repair","Repulse","Return","Reward",
+        "Representative","Riches","Safety","Strength","Success","Suffering","Surprise",
+        "Tactic","Technology","Tension","Time","Trial","Value","Vehicle","Victory",
+        "Vulnerability","Weapon","Weather","Work","Wound"
+    ]
+
+    ACTION_SUBJECT = [
+        "Advantage","Adversity","Agreement","Animal","Attention","Balance","Battle",
+        "Benefits","Building","Burden","Bureaucracy","Business","Chaos","Comfort",
+        "Completion","Conflict","Cooperation","Danger","Defense","Depletion",
+        "Disadvantage","Distraction","Elements","Emotion","Enemy","Energy",
+        "Environment","Expectation","Exterior","Extravagance","Failure","Fame","Fear",
+        "Freedom","Friend","Goal","Group","Health","Hindrance","Home","Hope","Idea",
+        "Illness","Illusion","Individual","Information","Innocent","Intellect",
+        "Interior","Investment","Leadership","Legal","Location","Military",
+        "Misfortune","Mundane","Nature","Needs","News","Normal","Object","Obscurity",
+        "Official","Opposition","Outside","Pain","Path","Peace","People","Personal",
+        "Physical","Plot","Portal","Possessions","Poverty","Power","Prison","Project",
+        "Protection","Reassurance","Ruin","Separate","Start","Stop","Strange",
+        "Struggle","Succeed","Support","Suppress","Take","Threaten","Transform",
+        "Trap","Travel","Triumph","Truce","Trust","Use","Usurp","Waste"
+    ]
+
+    # Roll 2d100 for verb and subject
+    verb_roll = random.randint(1, 100)
+    subject_roll = random.randint(1, 100)
+
+    # Get verb and subject (1-indexed, so subtract 1 for array access)
+    verb_index = min(verb_roll - 1, len(ACTION_VERB) - 1)
+    verb = ACTION_VERB[verb_index]
+
+    subject_index = min(subject_roll - 1, len(ACTION_SUBJECT) - 1)
+    subject = ACTION_SUBJECT[subject_index]
+
+    return {
+        "verb_roll": verb_roll,
+        "verb": verb,
+        "verb_index": verb_index + 1,
+        "subject_roll": subject_roll,
+        "subject": subject,
+        "subject_index": subject_index + 1,
+        "meaning": f"{verb} {subject}"
+    }
+
 def roll_random_event():
     """Roll on the Random Event Focus Table"""
     roll = random.randint(1, 100)
 
     for min_val, max_val, event_type in RANDOM_EVENT_FOCUS_TABLE:
         if min_val <= roll <= max_val:
-            return {
+            event_data = {
                 "event_roll": roll,
                 "event_type": event_type,
                 "event_range": f"{min_val}-{max_val}"
             }
 
+            # Check if this event type should trigger a meaning table roll
+            if should_trigger_meaning_table(event_type):
+                event_data["meaning_table"] = roll_meaning_table_local()
+
+            return event_data
+
     # Fallback (shouldn't happen)
-    return {
+    fallback_data = {
         "event_roll": roll,
         "event_type": "Current Context",
         "event_range": "86-100"
     }
+
+    if should_trigger_meaning_table("Current Context"):
+        fallback_data["meaning_table"] = roll_meaning_table_local()
+
+    return fallback_data
+
+def should_trigger_meaning_table(event_type):
+    """Determine if an event type should trigger an automatic meaning table roll"""
+    # These event types benefit from additional meaning interpretation
+    meaning_trigger_events = {
+        "Move Toward A Thread",
+        "Move Away From A Thread",
+        "Close A Thread",
+        "New NPC",
+        "NPC Action",
+        "Remote Event",
+        "Ambiguous Event",
+        "Current Context"
+    }
+
+    return event_type in meaning_trigger_events
 
 def has_doubles(roll):
     """Check if a roll has doubles (same digit in tens and ones place)"""
