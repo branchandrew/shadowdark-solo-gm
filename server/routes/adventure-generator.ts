@@ -2,14 +2,13 @@ import { RequestHandler } from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { spawn } from "child_process";
 import path from "path";
-import { serverDB } from "../lib/database";
+import { relationalDB } from "../lib/relational-database";
 import type {
   AdventureGenerationRequest,
   AdventureGenerationResponse,
-  AdventureArc,
-  Thread,
-  CampaignCharacter,
+  NPC,
   Faction,
+  Thread,
   Clue,
 } from "../../shared/types";
 
