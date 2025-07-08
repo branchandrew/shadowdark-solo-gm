@@ -16,12 +16,10 @@ import {
 import type {
   GameSession,
   AdventureArc,
-  NPC,
+  Creature,
   Faction,
   Thread,
   Clue,
-  Monster,
-  SessionMonster,
   AdventureLogEntry,
   ChatMessage,
   Character,
