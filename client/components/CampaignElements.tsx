@@ -345,24 +345,9 @@ export default function CampaignElements() {
       {/* Plot Threads */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Network className="h-5 w-5" />
-              Plot Threads
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHiddenThreads(!showHiddenThreads)}
-              className="text-xs"
-            >
-              {showHiddenThreads ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-              Debug
-            </Button>
+          <CardTitle className="flex items-center gap-2">
+            <Network className="h-5 w-5" />
+            Plot Threads
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -433,24 +418,9 @@ export default function CampaignElements() {
       {/* NPCs & Characters */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              NPCs & Characters
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHiddenCharacters(!showHiddenCharacters)}
-              className="text-xs"
-            >
-              {showHiddenCharacters ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-              Debug
-            </Button>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            NPCs & Characters
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
