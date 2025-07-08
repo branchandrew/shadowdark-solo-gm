@@ -42,10 +42,26 @@ interface Clue {
 }
 
 export default function CampaignElements() {
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [factions, setFactions] = useState<Faction[]>([]);
-  const [clues, setClues] = useState<Clue[]>([]);
+  // Use database hooks instead of local state
+  const {
+    data: campaignData,
+    updateData: updateCampaignData,
+    isLoading,
+  } = useCampaignElements();
+
+  // Extract data arrays (with fallbacks)
+  const threads = campaignData?.threads || [];
+  const creatures = campaignData?.creatures || [];
+  const factions = campaignData?.factions || [];
+  const clues = campaignData?.clues || [];
+
+  // Filter creatures by type for display
+  const characters = creatures.filter(
+    (c) =>
+      c.creature_type === "npc" ||
+      c.creature_type === "bbeg" ||
+      c.creature_type === "lieutenant",
+  );
 
   const [newThread, setNewThread] = useState("");
   const [newCharacterName, setNewCharacterName] = useState("");
