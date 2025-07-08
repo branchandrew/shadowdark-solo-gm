@@ -319,8 +319,10 @@ export default function CampaignElements() {
 
   return (
     <div className="space-y-6">
-      {/* Plot Threads */}
-      <Card>
+      {/* Horizontal Grid Layout */}
+      <div className="grid grid-cols-3 gap-6">
+        {/* Plot Threads */}
+        <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Network className="h-5 w-5" />
@@ -390,10 +392,10 @@ export default function CampaignElements() {
             </Button>
           </div>
         </CardContent>
-      </Card>
+        </Card>
 
-      {/* NPCs & Characters */}
-      <Card>
+        {/* NPCs & Characters */}
+        <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -498,10 +500,10 @@ export default function CampaignElements() {
             />
           </div>
         </CardContent>
-      </Card>
+        </Card>
 
-      {/* Factions */}
-      <Card>
+        {/* Factions */}
+        <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Crown className="h-5 w-5" />
