@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSessionState } from "../hooks/useSessionState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,10 +44,19 @@ interface Scene {
 }
 
 export default function SceneManager() {
-  const [currentScene, setCurrentScene] = useState<Scene | null>(null);
+  const [currentScene, setCurrentScene] = useSessionState<Scene | null>(
+    "current_scene",
+    null,
+  );
   const [isGenerating, setIsGenerating] = useState(false);
-  const [playerIntentions, setPlayerIntentions] = useState("");
-  const [chaosFactor, setChaosFactor] = useState(5);
+  const [playerIntentions, setPlayerIntentions] = useSessionState(
+    "scene_player_intentions",
+    "",
+  );
+  const [chaosFactor, setChaosFactor] = useSessionState(
+    "scene_chaos_factor",
+    5,
+  );
 
   const generateNewScene = async () => {
     setIsGenerating(true);
@@ -261,19 +271,6 @@ export default function SceneManager() {
                 Scene Goal
               </h4>
               <p className="text-sm mb-3">{currentScene.scene_goal}</p>
-
-              <h5 className="font-medium text-sm mb-2">Success Conditions:</h5>
-              <ul className="space-y-1">
-                {currentScene.success_conditions.map((condition, index) => (
-                  <li
-                    key={index}
-                    className="text-sm text-muted-foreground flex items-center gap-2"
-                  >
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full" />
-                    {condition}
-                  </li>
-                ))}
-              </ul>
             </div>
 
             {/* Random Event */}

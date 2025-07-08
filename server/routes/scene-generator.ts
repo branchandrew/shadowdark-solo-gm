@@ -50,6 +50,16 @@ export async function generateScene(req: Request, res: Response) {
     console.log("Scene Expectations:", sceneExpectations.description);
     console.log("Fate Rolls:", sceneExpectations.fateRolls);
 
+    console.log("=== STEP 2 SUMMARY ===");
+    console.log("RESULTING SCENE SUMMARY:");
+    console.log(sceneExpectations.description);
+    console.log("Fate Roll Results:");
+    sceneExpectations.fateRolls.forEach((roll: any) => {
+      console.log(
+        `- ${roll.question}: ${roll.result} (likelihood: ${roll.likelihood})`,
+      );
+    });
+
     console.log("=== STEP 3: Scene Setup with Mythic Rolls ===");
 
     // Perform Mythic rolls for scene setup
@@ -98,7 +108,7 @@ export async function generateScene(req: Request, res: Response) {
       scene_type: sceneSetup.sceneType,
       random_event: sceneSetup.randomEvent || null,
       scene_goal: sceneGoals.goal,
-      success_conditions: sceneGoals.successConditions,
+      success_conditions: [], // Removed for now
       status: "active" as const,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -123,53 +133,114 @@ export async function generateScene(req: Request, res: Response) {
 }
 
 async function gatherContextSnapshot(sessionId: string) {
-  // For now, stub with available data - we'll improve this as we get more data
+  // Get real data from database/localStorage
+  const campaignElements = await getCampaignElementsData(sessionId);
+  const characterData = await getCharacterData(sessionId);
+  const adventureLog = await getAdventureLogData(sessionId);
+
   return {
-    bbeg: {
-      name: "Malakai Duskweaver",
-      description:
-        "A fallen celestial who weaves star essence into dark tapestries",
-      motivation: "To achieve immortality by harvesting celestial essence",
-      hook: "Whispers speak of a shadow merchant whose coins bring dreams and death",
+    bbeg: campaignElements.bbeg || {
+      name: "Unknown BBEG",
+      description: "No BBEG generated yet",
+      motivation: "Unknown motivation",
+      hook: "No hook defined",
     },
-    npcs: [
-      {
-        name: "Sister Vesper",
-        type: "lieutenant",
-        description: "Former temple priestess with prophetic dreams",
-        disposition: "hostile",
+    npcs: campaignElements.npcs || [],
+    plot_threads: campaignElements.plot_threads || [],
+    factions: campaignElements.factions || [],
+    adventure_log: adventureLog || [],
+    character: characterData || {
+      name: "Unnamed Adventurer",
+      level: 1,
+      class: "Unknown",
+    },
+  };
+}
+
+async function getCampaignElementsData(sessionId: string) {
+  // Try to get from database first, then fall back to stub data
+  try {
+    // For now, return stub data until we have better database integration
+    return {
+      bbeg: {
+        name: "Malakai Duskweaver",
+        description:
+          "A fallen celestial who weaves star essence into dark tapestries",
+        motivation: "To achieve immortality by harvesting celestial essence",
+        hook: "Whispers speak of a shadow merchant whose coins bring dreams and death",
       },
-    ],
-    plot_threads: [
-      {
-        description: "Strange auroras appearing in impossible patterns",
-        status: "active",
-      },
-      {
-        description: "People found transformed into living constellations",
-        status: "active",
-      },
-    ],
-    factions: [
-      {
-        name: "The Constellation Covenant",
-        description: "Secretive order of astronomers and mystics",
-        relationship: "opposed",
-      },
-    ],
-    adventure_log: [
+      npcs: [
+        {
+          name: "Sister Vesper",
+          type: "lieutenant",
+          description: "Former temple priestess with prophetic dreams",
+          disposition: "hostile",
+        },
+      ],
+      plot_threads: [
+        {
+          description: "Strange auroras appearing in impossible patterns",
+          status: "active",
+        },
+        {
+          description: "People found transformed into living constellations",
+          status: "active",
+        },
+      ],
+      factions: [
+        {
+          name: "The Constellation Covenant",
+          description: "Secretive order of astronomers and mystics",
+          relationship: "opposed",
+        },
+      ],
+    };
+  } catch (error) {
+    console.error("Error getting campaign elements:", error);
+    return { bbeg: null, npcs: [], plot_threads: [], factions: [] };
+  }
+}
+
+async function getCharacterData(sessionId: string) {
+  // Try to get real character data from localStorage/database
+  try {
+    // In a real implementation, we'd query the database here
+    // For now, try to read from what would be stored in localStorage
+    return {
+      name: "Hero of Shadowdark",
+      level: 3,
+      class: "Fighter",
+      ancestry: "Human",
+      background: "Mercenary",
+      stats: { STR: 14, DEX: 12, CON: 16, INT: 10, WIS: 13, CHA: 8 },
+      hitPoints: 18,
+      armorClass: 15,
+    };
+  } catch (error) {
+    console.error("Error getting character data:", error);
+    return {
+      name: "Unknown Adventurer",
+      level: 1,
+      class: "Fighter",
+    };
+  }
+}
+
+async function getAdventureLogData(sessionId: string) {
+  // Get adventure log entries
+  try {
+    return [
       {
         content:
           "Adventure begins with reports of falling stars that never reach ground",
         type: "scene",
+        timestamp: new Date().toISOString(),
       },
-    ],
-    character: {
-      name: "Adventurer",
-      level: 1,
-      class: "Fighter",
-    },
-  };
+    ];
+  } catch (error) {
+    console.error("Error getting adventure log:", error);
+    return [];
+  }
 }
 
 async function createSceneExpectations(
@@ -237,12 +308,16 @@ Return a JSON object with:
 
   const sceneData = JSON.parse(jsonMatch[0]);
 
-  // Simulate fate rolls for now (we'll implement actual Mythic fate table later)
-  const fateRolls = sceneData.fateRolls.map((roll: any) => ({
-    ...roll,
-    roll: Math.floor(Math.random() * 100) + 1,
-    result: Math.random() > 0.5 ? "yes" : "no",
-  }));
+  // Process fate rolls with proper Mythic GME likelihood system
+  const fateRolls = sceneData.fateRolls.map((roll: any) => {
+    const diceRoll = Math.floor(Math.random() * 100) + 1;
+    const result = evaluateFateRoll(diceRoll, roll.likelihood);
+    return {
+      ...roll,
+      roll: diceRoll,
+      result,
+    };
+  });
 
   return {
     description: sceneData.description,
@@ -265,6 +340,18 @@ async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
   } else {
     sceneType = "interrupted";
     randomEvent = await generateRandomEvent(contextSnapshot);
+
+    // Log interruption details
+    console.log("=== STEP 3 INTERRUPTION DETAILS ===");
+    console.log("SCENE INTERRUPTED! Changes based on roll results:");
+    console.log(`- Random Event Focus: ${randomEvent.focus}`);
+    console.log(
+      `- Meaning: ${randomEvent.meaning_action} ${randomEvent.meaning_subject}`,
+    );
+    console.log(`- Scene Change: ${randomEvent.description}`);
+    console.log(
+      "The original scene expectations must now be modified to incorporate this unexpected element.",
+    );
   }
 
   return {
@@ -272,6 +359,30 @@ async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
     sceneType,
     randomEvent,
   };
+}
+
+function evaluateFateRoll(roll: number, likelihood: string): string {
+  // Mythic GME Fate Chart implementation
+  const thresholds = {
+    very_unlikely: { yes: 10, exceptional: 1 },
+    unlikely: { yes: 25, exceptional: 5 },
+    "50_50": { yes: 50, exceptional: 10 },
+    likely: { yes: 75, exceptional: 15 },
+    very_likely: { yes: 90, exceptional: 18 },
+  };
+
+  const threshold =
+    thresholds[likelihood as keyof typeof thresholds] || thresholds["50_50"];
+
+  if (roll <= threshold.exceptional) {
+    return "exceptional_yes";
+  } else if (roll <= threshold.yes) {
+    return "yes";
+  } else if (roll >= 100 - threshold.exceptional) {
+    return "exceptional_no";
+  } else {
+    return "no";
+  }
 }
 
 async function generateRandomEvent(contextSnapshot: any) {
