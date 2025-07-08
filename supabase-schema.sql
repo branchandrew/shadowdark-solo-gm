@@ -3,10 +3,11 @@
 
 -- === GLOBAL TABLES (shared across all sessions) ===
 
--- Global monster catalog
-CREATE TABLE IF NOT EXISTS monsters (
+-- Global creature templates (mainly for official Shadowdark monsters)
+CREATE TABLE IF NOT EXISTS creature_templates (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
+    race_species TEXT,
     description TEXT,
     armor_class INTEGER,
     hit_points TEXT, -- e.g., "2d6+2"
