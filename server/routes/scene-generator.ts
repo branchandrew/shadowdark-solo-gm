@@ -96,8 +96,9 @@ export async function generateScene(req: Request, res: Response) {
     const sceneNumber = await getNextSceneNumber(session_id);
 
     // Create scene record
+    const sceneIdResult = await runSceneIdGenerator();
     const scene = {
-      id: `scene_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: sceneIdResult.scene_id,
       session_id,
       scene_number: sceneNumber,
       title: sceneGoals.title,
@@ -365,38 +366,27 @@ Return a JSON object with:
 }
 
 async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
-  // Step 3: Chaos roll and scene determination
-  const chaosRoll = Math.floor(Math.random() * 10) + 1;
+  // Step 3: Chaos roll and scene determination using Python script
+  const sceneSetup = await runSceneSetup(chaosFactor);
 
-  let sceneType: "expected" | "altered" | "interrupted";
-  let randomEvent = null;
-
-  if (chaosRoll > chaosFactor) {
-    sceneType = "expected";
-  } else if (chaosRoll < chaosFactor) {
-    sceneType = "altered";
-    randomEvent = await generateRandomEvent(contextSnapshot);
-  } else {
-    sceneType = "interrupted";
-    randomEvent = await generateRandomEvent(contextSnapshot);
-
-    // Log interruption details
+  // Log interruption details if scene is interrupted
+  if (sceneSetup.scene_type === "interrupted" && sceneSetup.random_event) {
     console.log("=== STEP 3 INTERRUPTION DETAILS ===");
     console.log("SCENE INTERRUPTED! Changes based on roll results:");
-    console.log(`- Random Event Focus: ${randomEvent.focus}`);
+    console.log(`- Random Event Focus: ${sceneSetup.random_event.focus}`);
     console.log(
-      `- Meaning: ${randomEvent.meaning_action} ${randomEvent.meaning_subject}`,
+      `- Meaning: ${sceneSetup.random_event.meaning_action} ${sceneSetup.random_event.meaning_subject}`,
     );
-    console.log(`- Scene Change: ${randomEvent.description}`);
+    console.log(`- Scene Change: ${sceneSetup.random_event.description}`);
     console.log(
       "The original scene expectations must now be modified to incorporate this unexpected element.",
     );
   }
 
   return {
-    chaosRoll,
-    sceneType,
-    randomEvent,
+    chaosRoll: sceneSetup.chaos_roll,
+    sceneType: sceneSetup.scene_type,
+    randomEvent: sceneSetup.random_event,
   };
 }
 
@@ -473,22 +463,75 @@ const runMeaningTable = (): Promise<any> =>
     });
   });
 
-async function generateRandomEvent(contextSnapshot: any) {
-  // Use actual Mythic Meaning Table
-  const meaningResult = await runMeaningTable();
+/**
+ * Executes the Scene Generator Python script for scene setup
+ */
+const runSceneSetup = (chaosFactor: number = 5): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "scene_generator.py",
+    );
+    const proc = spawn("python3", [
+      scriptPath,
+      "scene_setup",
+      chaosFactor.toString(),
+    ]);
 
-  // For now, use a simple focus selection - could be enhanced with the Random Event Focus Table from Python
-  const focusOptions = ["NPC", "Faction", "Plot Thread", "PC", "Environment"];
-  const focus = focusOptions[Math.floor(Math.random() * focusOptions.length)];
+    let stdout = "";
+    let stderr = "";
 
-  return {
-    focus,
-    meaning_action: meaningResult.verb,
-    meaning_subject: meaningResult.subject,
-    meaning_result: meaningResult,
-    description: `Random event involves ${focus}: ${meaningResult.meaning}`,
-  };
-}
+    proc.stdout.on("data", (data) => (stdout += data));
+    proc.stderr.on("data", (data) => (stderr += data));
+
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        return reject(
+          new Error(stderr || `Python script exited with code ${code}`),
+        );
+      }
+      try {
+        resolve(JSON.parse(stdout.trim()));
+      } catch (error) {
+        reject(new Error("Invalid JSON from Scene Generator script"));
+      }
+    });
+  });
+
+/**
+ * Executes the Scene Generator Python script for scene ID generation
+ */
+const runSceneIdGenerator = (): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "scene_generator.py",
+    );
+    const proc = spawn("python3", [scriptPath, "scene_id"]);
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (data) => (stdout += data));
+    proc.stderr.on("data", (data) => (stderr += data));
+
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        return reject(
+          new Error(stderr || `Python script exited with code ${code}`),
+        );
+      }
+      try {
+        resolve(JSON.parse(stdout.trim()));
+      } catch (error) {
+        reject(new Error("Invalid JSON from Scene Generator script"));
+      }
+    });
+  });
 
 async function establishSceneGoals(
   sceneExpectations: any,
