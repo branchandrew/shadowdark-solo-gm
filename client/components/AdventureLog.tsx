@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, BookOpen, Zap, Calendar } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, BookOpen, Zap, Calendar, Play } from "lucide-react";
 import { useSessionState } from "../hooks/useSessionState";
+import SceneManager from "./SceneManager";
 
 interface Thread {
   id: string;
@@ -31,20 +33,11 @@ interface Scene {
 }
 
 export default function AdventureLog() {
-  const [chaosFactor, setChaosFactor] = useSessionState(
-    "adventure_chaos_factor",
-    5,
-  );
+  const [chaosFactor, setChaosFactor] = useSessionState("adventure_chaos_factor", 5);
   const [scenes, setScenes] = useSessionState<Scene[]>("adventure_scenes", []);
 
-  const [newSceneTitle, setNewSceneTitle] = useSessionState(
-    "adventure_new_scene_title",
-    "",
-  );
-  const [newSceneDesc, setNewSceneDesc] = useSessionState(
-    "adventure_new_scene_desc",
-    "",
-  );
+  const [newSceneTitle, setNewSceneTitle] = useSessionState("adventure_new_scene_title", "");
+  const [newSceneDesc, setNewSceneDesc] = useSessionState("adventure_new_scene_desc", "");
 
   const addScene = () => {
     if (newSceneTitle.trim() && newSceneDesc.trim()) {
@@ -170,6 +163,8 @@ export default function AdventureLog() {
           </div>
         </CardContent>
       </Card>
-    </div>
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 }

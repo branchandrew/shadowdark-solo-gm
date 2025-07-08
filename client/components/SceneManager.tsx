@@ -1,0 +1,308 @@
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  ChevronRight,
+  Dice6,
+  Eye,
+  Target,
+  Clock,
+} from "lucide-react";
+
+interface Scene {
+  id: string;
+  scene_number: number;
+  title: string;
+  description: string;
+  player_intentions?: string;
+  scene_expectations: string;
+  chaos_factor: number;
+  chaos_roll: number;
+  scene_type: "expected" | "altered" | "interrupted";
+  random_event?: {
+    focus: string;
+    meaning_action: string;
+    meaning_subject: string;
+    description: string;
+  };
+  scene_goal: string;
+  success_conditions: string[];
+  status: "pending" | "active" | "completed";
+  fate_rolls: Array<{
+    question: string;
+    roll: number;
+    result: "yes" | "no" | "exceptional_yes" | "exceptional_no";
+  }>;
+}
+
+export default function SceneManager() {
+  const [currentScene, setCurrentScene] = useState<Scene | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [playerIntentions, setPlayerIntentions] = useState("");
+  const [chaosFactor, setChaosFactor] = useState(5);
+
+  const generateNewScene = async () => {
+    setIsGenerating(true);
+
+    try {
+      const requestBody = {
+        session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        player_intentions: playerIntentions.trim() || undefined,
+        chaos_factor: chaosFactor,
+      };
+
+      console.log("Generating new scene with data:", requestBody);
+
+      const response = await fetch("/api/generate-scene", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setCurrentScene(data.scene);
+        setPlayerIntentions(""); // Clear intentions after use
+        console.log("Scene generated successfully:", data.scene);
+      } else {
+        console.error("Scene generation failed:", data.error);
+        alert(`Scene generation failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error generating scene:", error);
+      alert(
+        `Error generating scene: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const getSceneTypeColor = (type: string) => {
+    switch (type) {
+      case "expected":
+        return "bg-green-600";
+      case "altered":
+        return "bg-yellow-600";
+      case "interrupted":
+        return "bg-red-600";
+      default:
+        return "bg-gray-600";
+    }
+  };
+
+  const getFateResultColor = (result: string) => {
+    switch (result) {
+      case "yes":
+      case "exceptional_yes":
+        return "bg-green-600";
+      case "no":
+      case "exceptional_no":
+        return "bg-red-600";
+      default:
+        return "bg-gray-600";
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Scene Generation Controls */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Play className="h-5 w-5" />
+            Scene Generation
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">
+              Player Intentions (from previous scene)
+            </label>
+            <Textarea
+              placeholder="What does the player character intend to do in this scene?"
+              value={playerIntentions}
+              onChange={(e) => setPlayerIntentions(e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Chaos Factor:</label>
+              <Input
+                type="number"
+                min="1"
+                max="10"
+                value={chaosFactor}
+                onChange={(e) => setChaosFactor(parseInt(e.target.value) || 5)}
+                className="w-20"
+              />
+            </div>
+
+            <Button
+              onClick={generateNewScene}
+              disabled={isGenerating}
+              className="flex-1"
+            >
+              {isGenerating ? (
+                <>
+                  <RotateCcw className="h-4 w-4 mr-2 animate-spin" />
+                  Generating Scene...
+                </>
+              ) : (
+                <>
+                  <ChevronRight className="h-4 w-4 mr-2" />
+                  Generate New Scene
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Current Scene Display */}
+      {currentScene && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Scene {currentScene.scene_number}: {currentScene.title}
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className={getSceneTypeColor(currentScene.scene_type)}>
+                  {currentScene.scene_type}
+                </Badge>
+                <Badge variant="outline">
+                  Chaos: {currentScene.chaos_roll}/{currentScene.chaos_factor}
+                </Badge>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Scene Description */}
+            <div>
+              <h4 className="font-medium mb-2 flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                Scene Description
+              </h4>
+              <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded">
+                {currentScene.description}
+              </p>
+            </div>
+
+            {/* Player Intentions */}
+            {currentScene.player_intentions && (
+              <div>
+                <h4 className="font-medium mb-2">Player Intentions</h4>
+                <p className="text-sm text-muted-foreground">
+                  {currentScene.player_intentions}
+                </p>
+              </div>
+            )}
+
+            {/* Scene Goal & Success Conditions */}
+            <div>
+              <h4 className="font-medium mb-2 flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Scene Goal
+              </h4>
+              <p className="text-sm mb-3">{currentScene.scene_goal}</p>
+
+              <h5 className="font-medium text-sm mb-2">Success Conditions:</h5>
+              <ul className="space-y-1">
+                {currentScene.success_conditions.map((condition, index) => (
+                  <li
+                    key={index}
+                    className="text-sm text-muted-foreground flex items-center gap-2"
+                  >
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+                    {condition}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Random Event */}
+            {currentScene.random_event && (
+              <div>
+                <h4 className="font-medium mb-2 flex items-center gap-2">
+                  <Dice6 className="h-4 w-4" />
+                  Random Event
+                </h4>
+                <div className="bg-yellow-50 dark:bg-yellow-950/20 p-3 rounded border">
+                  <p className="text-sm font-medium">
+                    {currentScene.random_event.description}
+                  </p>
+                  <div className="flex gap-2 mt-2">
+                    <Badge variant="outline">
+                      Focus: {currentScene.random_event.focus}
+                    </Badge>
+                    <Badge variant="outline">
+                      {currentScene.random_event.meaning_action}{" "}
+                      {currentScene.random_event.meaning_subject}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fate Rolls */}
+            {currentScene.fate_rolls.length > 0 && (
+              <div>
+                <h4 className="font-medium mb-2 flex items-center gap-2">
+                  <Dice6 className="h-4 w-4" />
+                  Fate Rolls
+                </h4>
+                <ScrollArea className="h-32">
+                  <div className="space-y-2">
+                    {currentScene.fate_rolls.map((roll, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-muted/50 rounded text-sm"
+                      >
+                        <span>{roll.question}</span>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline">Roll: {roll.roll}</Badge>
+                          <Badge className={getFateResultColor(roll.result)}>
+                            {roll.result}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Empty State */}
+      {!currentScene && !isGenerating && (
+        <Card>
+          <CardContent className="text-center py-8">
+            <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Play className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">No Active Scene</h3>
+            <p className="text-muted-foreground mb-4">
+              Generate a new scene to begin the Scene Loop process.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
