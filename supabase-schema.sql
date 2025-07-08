@@ -143,19 +143,7 @@ CREATE TABLE IF NOT EXISTS clues (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Session-specific monster instances
-CREATE TABLE IF NOT EXISTS session_monsters (
-    id TEXT PRIMARY KEY,
-    session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    monster_id TEXT NOT NULL REFERENCES monsters(id),
-    name TEXT, -- Can override monster name
-    current_hit_points INTEGER,
-    status TEXT DEFAULT 'alive' CHECK (status IN ('alive', 'dead', 'fled', 'unknown')),
-    notes TEXT,
-    hidden BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- Note: session_monsters table removed - now part of unified creatures table
 
 -- Adventure log entries
 CREATE TABLE IF NOT EXISTS adventure_log (
