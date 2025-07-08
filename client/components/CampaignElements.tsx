@@ -49,21 +49,19 @@ export default function CampaignElements() {
     isLoading,
   } = useCampaignElements();
 
-  // DEBUG: Log campaign data
-  console.log("CampaignElements: campaignData =", campaignData);
-  console.log("CampaignElements: isLoading =", isLoading);
-
   // Extract data arrays (with fallbacks)
   const threads = campaignData?.threads || [];
   const creatures = campaignData?.creatures || [];
   const factions = campaignData?.factions || [];
   const clues = campaignData?.clues || [];
 
-  // DEBUG: Log extracted arrays
-  console.log("CampaignElements: threads =", threads);
-  console.log("CampaignElements: creatures =", creatures);
-  console.log("CampaignElements: factions =", factions);
-  console.log("CampaignElements: clues =", clues);
+  // Simple debugging
+  console.log("CampaignElements data:", {
+    threads: threads.length,
+    creatures: creatures.length,
+    factions: factions.length,
+    clues: clues.length,
+  });
 
   // Filter creatures by type for display
   const characters = creatures.filter(
