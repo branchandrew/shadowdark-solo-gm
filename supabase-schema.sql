@@ -203,10 +203,10 @@ CREATE POLICY "Users can access their session data" ON adventure_arcs
         AND (gs.user_id = auth.uid() OR gs.user_id IS NULL)
     ));
 
-CREATE POLICY "Users can access their session npcs" ON npcs
+CREATE POLICY "Users can access their session creatures" ON creatures
     FOR ALL USING (EXISTS (
         SELECT 1 FROM game_sessions gs
-        WHERE gs.id = npcs.session_id
+        WHERE gs.id = creatures.session_id
         AND (gs.user_id = auth.uid() OR gs.user_id IS NULL)
     ));
 
@@ -228,13 +228,6 @@ CREATE POLICY "Users can access their session clues" ON clues
     FOR ALL USING (EXISTS (
         SELECT 1 FROM game_sessions gs
         WHERE gs.id = clues.session_id
-        AND (gs.user_id = auth.uid() OR gs.user_id IS NULL)
-    ));
-
-CREATE POLICY "Users can access their session monsters" ON session_monsters
-    FOR ALL USING (EXISTS (
-        SELECT 1 FROM game_sessions gs
-        WHERE gs.id = session_monsters.session_id
         AND (gs.user_id = auth.uid() OR gs.user_id IS NULL)
     ));
 
