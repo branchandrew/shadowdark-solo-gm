@@ -256,7 +256,7 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-full">
+              <ScrollArea className="flex-1">
                 <div className="space-y-2 pr-4">
                   {getVisibleThreads().map((thread) => (
                     <div
@@ -412,7 +412,7 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-full">
+              <ScrollArea className="flex-1">
                 <div className="space-y-3 pr-4">
                   {getVisibleFactions().map((faction) => (
                     <div

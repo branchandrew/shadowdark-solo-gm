@@ -37,7 +37,7 @@ export default function Index() {
 
       {/* Main Content */}
       <main className="h-[calc(100vh-5rem)] overflow-hidden">
-        <div className="container mx-auto px-4 py-4 h-full">
+        <div className="w-full px-4 py-4 h-full">
           <ResizablePanelGroup direction="horizontal" className="h-full">
             {/* Left Panel - AI Chat */}
             <ResizablePanel defaultSize={33} minSize={20} maxSize={50}>
