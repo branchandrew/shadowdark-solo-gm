@@ -109,8 +109,9 @@ const schemaDefinition: TableInfo[] = [
     ],
   },
   {
-    name: "adventure_arcs",
-    description: "BBEG and main story arc information",
+    name: "creatures",
+    description:
+      "Unified table for all lifeforms: BBEG, Lieutenants, Monsters, NPCs",
     scope: "session",
     icon: <Table className="h-4 w-4" />,
     fields: [
@@ -121,68 +122,134 @@ const schemaDefinition: TableInfo[] = [
         required: true,
         isForeignKey: true,
         referencesTable: "game_sessions",
-      },
-      { name: "bbeg_name", type: "string", required: true },
-      { name: "bbeg_description", type: "string", required: false },
-      { name: "bbeg_motivation", type: "string", required: false },
-      { name: "bbeg_hook", type: "string", required: false },
-      { name: "high_tower_surprise", type: "string", required: false },
-      {
-        name: "minion_monster_id",
-        type: "string",
-        required: false,
-        isForeignKey: true,
-        referencesTable: "monsters",
-      },
-      { name: "created_at", type: "string", required: true },
-      { name: "updated_at", type: "string", required: true },
-    ],
-    relationships: ["npcs", "factions", "threads", "clues"],
-  },
-  {
-    name: "npcs",
-    description: "Non-player characters including BBEG and lieutenants",
-    scope: "session",
-    icon: <Table className="h-4 w-4" />,
-    fields: [
-      { name: "id", type: "string", required: true, isPrimaryKey: true },
-      {
-        name: "session_id",
-        type: "string",
-        required: true,
-        isForeignKey: true,
-        referencesTable: "game_sessions",
-      },
-      {
-        name: "adventure_arc_id",
-        type: "string",
-        required: false,
-        isForeignKey: true,
-        referencesTable: "adventure_arcs",
       },
       { name: "name", type: "string", required: true },
-      { name: "description", type: "string", required: false },
       {
-        name: "disposition",
-        type: "'friendly' | 'neutral' | 'hostile' | 'unknown'",
-        required: true,
-      },
-      {
-        name: "role",
-        type: "'bbeg' | 'lieutenant' | 'ally' | 'neutral' | 'enemy' | 'other'",
-        required: true,
-      },
-      {
-        name: "tarot_spread",
-        type: "TarotSpread",
+        name: "race_species",
+        type: "string",
         required: false,
-        description: "For lieutenants",
+        description: "e.g., Human, Orc, Skeleton",
+      },
+      { name: "description", type: "string", required: false },
+      { name: "armor_class", type: "number", required: true },
+      {
+        name: "hit_points",
+        type: "string",
+        required: false,
+        description: "e.g., '2d6+2'",
+      },
+      { name: "current_hit_points", type: "number", required: false },
+      { name: "speed", type: "string", required: true },
+      {
+        name: "abilities",
+        type: "Stats",
+        required: false,
+        description: "STR, DEX, CON, INT, WIS, CHA",
+      },
+      { name: "attacks", type: "string[]", required: true },
+      { name: "special_abilities", type: "string[]", required: true },
+      { name: "challenge_rating", type: "number", required: false },
+      {
+        name: "creature_type",
+        type: "'bbeg' | 'lieutenant' | 'monster' | 'npc'",
+        required: true,
+      },
+      {
+        name: "status",
+        type: "'alive' | 'dead' | 'fled' | 'unknown'",
+        required: true,
       },
       { name: "hidden", type: "boolean", required: true },
+
+      // BBEG-specific fields
+      {
+        name: "bbeg_motivation",
+        type: "string",
+        required: false,
+        description: "Only for BBEG creatures",
+      },
+      {
+        name: "bbeg_hook",
+        type: "string",
+        required: false,
+        description: "Only for BBEG creatures",
+      },
+      {
+        name: "bbeg_minion_creature_id",
+        type: "string",
+        required: false,
+        isForeignKey: true,
+        referencesTable: "creatures",
+        description: "FK to minion creature",
+      },
+
+      // Lieutenant-specific fields
+      {
+        name: "lieutenant_seed",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+      {
+        name: "lieutenant_occupation",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+      {
+        name: "lieutenant_background",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+      {
+        name: "lieutenant_why_protect",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+      {
+        name: "lieutenant_how_protect",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+      {
+        name: "lieutenant_reward",
+        type: "string",
+        required: false,
+        description: "Tarot result",
+      },
+
+      // Monster-specific fields
+      { name: "is_minion_of_bbeg", type: "boolean", required: false },
+      { name: "source", type: "'shadowdark_core' | 'custom'", required: false },
+
+      // NPC-specific fields
+      {
+        name: "npc_disposition",
+        type: "'friendly' | 'neutral' | 'hostile' | 'unknown'",
+        required: false,
+      },
+      {
+        name: "npc_role",
+        type: "'ally' | 'neutral' | 'enemy' | 'merchant' | 'guard' | 'villager' | 'other'",
+        required: false,
+      },
+
+      // Common optional fields
+      {
+        name: "faction_id",
+        type: "string",
+        required: false,
+        isForeignKey: true,
+        referencesTable: "factions",
+      },
+      { name: "notes", type: "string", required: false },
       { name: "created_at", type: "string", required: true },
       { name: "updated_at", type: "string", required: true },
     ],
-    relationships: [],
+    relationships: ["factions"],
   },
   {
     name: "factions",
