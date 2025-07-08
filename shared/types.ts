@@ -241,6 +241,9 @@ export interface GameSession {
   shadowdark_tone: string;
   shadowdark_voice: string;
 
+  // Story elements
+  high_tower_surprise?: string; // Major plot twist for final confrontation
+
   // Metadata
   created_at: string;
   updated_at: string;
