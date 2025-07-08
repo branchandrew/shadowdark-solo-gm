@@ -320,7 +320,6 @@ export default function CampaignElements() {
     }
   };
 
-  // Filter functions to show/hide items based on debug toggles
   // Show all elements regardless of hidden status
   const getVisibleThreads = () => threads;
   const getVisibleCharacters = () => characters;
