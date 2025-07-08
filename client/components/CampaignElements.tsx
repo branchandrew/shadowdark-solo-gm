@@ -315,75 +315,68 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-48">
-                <div className="space-y-3">
-                  {getVisibleCharacters().map((character) => (
-                    <div
-                      key={character.id}
-                      className={`p-3 border rounded space-y-2 ${
-                        character.hidden ? "bg-muted/50 border-dashed" : ""
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{character.name}</span>
-                          {character.creature_type === "bbeg" && (
-                            <Badge variant="destructive" className="text-xs">
-                              BBEG
-                            </Badge>
-                          )}
-                          {character.creature_type === "lieutenant" && (
-                            <Badge variant="secondary" className="text-xs">
-                              Lieutenant
-                            </Badge>
-                          )}
-                          {character.hidden && (
-                            <Badge variant="outline" className="text-xs">
-                              Hidden
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex gap-1">
-                          {(
-                            [
-                              "friendly",
-                              "neutral",
-                              "hostile",
-                              "unknown",
-                            ] as const
-                          ).map((disposition) => (
-                            <button
-                              key={disposition}
-                              onClick={() =>
-                                updateCharacterDisposition(
-                                  character.id,
-                                  disposition,
-                                )
-                              }
-                              className={`px-2 py-1 text-xs rounded ${
-                                character.npc_disposition === disposition
-                                  ? getDispositionColor(disposition) +
-                                    " text-white"
-                                  : "bg-muted text-muted-foreground hover:bg-accent"
-                              }`}
-                            >
-                              {disposition}
-                            </button>
-                          ))}
-                        </div>
+              <div className="space-y-3">
+                {getVisibleCharacters().map((character) => (
+                  <div
+                    key={character.id}
+                    className={`p-3 border rounded space-y-2 ${
+                      character.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{character.name}</span>
+                        {character.creature_type === "bbeg" && (
+                          <Badge variant="destructive" className="text-xs">
+                            BBEG
+                          </Badge>
+                        )}
+                        {character.creature_type === "lieutenant" && (
+                          <Badge variant="secondary" className="text-xs">
+                            Lieutenant
+                          </Badge>
+                        )}
+                        {character.hidden && (
+                          <Badge variant="outline" className="text-xs">
+                            Hidden
+                          </Badge>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {character.description}
-                      </p>
-                      {character.race_species && (
-                        <p className="text-xs text-muted-foreground">
-                          Race: {character.race_species}
-                        </p>
-                      )}
+                      <div className="flex gap-1">
+                        {(
+                          ["friendly", "neutral", "hostile", "unknown"] as const
+                        ).map((disposition) => (
+                          <button
+                            key={disposition}
+                            onClick={() =>
+                              updateCharacterDisposition(
+                                character.id,
+                                disposition,
+                              )
+                            }
+                            className={`px-2 py-1 text-xs rounded ${
+                              character.npc_disposition === disposition
+                                ? getDispositionColor(disposition) +
+                                  " text-white"
+                                : "bg-muted text-muted-foreground hover:bg-accent"
+                            }`}
+                          >
+                            {disposition}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <p className="text-sm text-muted-foreground">
+                      {character.description}
+                    </p>
+                    {character.race_species && (
+                      <p className="text-xs text-muted-foreground">
+                        Race: {character.race_species}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
