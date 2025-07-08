@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Network, Users, Crown, Search } from "lucide-react";
+import { Plus, Network, Users, Crown } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
@@ -76,7 +76,6 @@ export default function CampaignElements() {
   const [newCharacterDesc, setNewCharacterDesc] = useState("");
   const [newFactionName, setNewFactionName] = useState("");
   const [newFactionDesc, setNewFactionDesc] = useState("");
-  const [newClue, setNewClue] = useState("");
 
   const addThread = async () => {
     if (newThread.trim()) {
@@ -227,35 +226,6 @@ export default function CampaignElements() {
     await updateCampaignData({
       ...campaignData,
       factions: updatedFactions,
-    });
-  };
-
-  const updateClueDiscovered = async (clueId: string, discovered: boolean) => {
-    const updatedClues = clues.map((clue) =>
-      clue.id === clueId
-        ? { ...clue, discovered, updated_at: new Date().toISOString() }
-        : clue,
-    );
-
-    await updateCampaignData({
-      ...campaignData,
-      clues: updatedClues,
-    });
-  };
-
-  const updateClueImportance = async (
-    clueId: string,
-    importance: Clue["importance"],
-  ) => {
-    const updatedClues = clues.map((clue) =>
-      clue.id === clueId
-        ? { ...clue, importance, updated_at: new Date().toISOString() }
-        : clue,
-    );
-
-    await updateCampaignData({
-      ...campaignData,
-      clues: updatedClues,
     });
   };
 
