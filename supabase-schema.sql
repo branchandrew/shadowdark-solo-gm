@@ -114,7 +114,6 @@ CREATE TABLE IF NOT EXISTS factions (
 CREATE TABLE IF NOT EXISTS threads (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    adventure_arc_id TEXT REFERENCES adventure_arcs(id) ON DELETE SET NULL,
     description TEXT NOT NULL,
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'resolved', 'dormant')),
     hidden BOOLEAN DEFAULT FALSE,
