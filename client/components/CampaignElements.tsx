@@ -468,27 +468,6 @@ export default function CampaignElements() {
                 </div>
               </ScrollArea>
             )}
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Character name..."
-                  value={newCharacterName}
-                  onChange={(e) => setNewCharacterName(e.target.value)}
-                />
-                <Button onClick={addCharacter} size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <Textarea
-                placeholder="Character description..."
-                value={newCharacterDesc}
-                onChange={(e) => setNewCharacterDesc(e.target.value)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" && !e.shiftKey && addCharacter()
-                }
-                rows={2}
-              />
-            </div>
           </CardContent>
         </Card>
 
@@ -566,27 +545,6 @@ export default function CampaignElements() {
                 </div>
               </ScrollArea>
             )}
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Faction name..."
-                  value={newFactionName}
-                  onChange={(e) => setNewFactionName(e.target.value)}
-                />
-                <Button onClick={addFaction} size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <Textarea
-                placeholder="Faction description..."
-                value={newFactionDesc}
-                onChange={(e) => setNewFactionDesc(e.target.value)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" && !e.shiftKey && addFaction()
-                }
-                rows={2}
-              />
-            </div>
           </CardContent>
         </Card>
       </div>
