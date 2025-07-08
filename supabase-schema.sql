@@ -288,10 +288,10 @@ CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session
 
 -- === SAMPLE DATA ===
 
--- Insert core Shadowdark monsters
-INSERT INTO monsters (id, name, description, armor_class, hit_points, speed, abilities, attacks, special_abilities, challenge_rating, source) VALUES
-('shadowdark_goblin', 'Goblin', 'Small, cunning humanoids with sharp teeth and pointed ears.', 12, '1d6', '30 ft', '{"STR": 8, "DEX": 14, "CON": 10, "INT": 10, "WIS": 8, "CHA": 8}', ARRAY['Shortsword: +4 (N), 1d6+2'], ARRAY['Darkvision 60 ft'], 1, 'shadowdark_core'),
-('shadowdark_orc', 'Orc', 'Brutal humanoids with tusks and a love of violence.', 13, '2d6+2', '30 ft', '{"STR": 16, "DEX": 12, "CON": 14, "INT": 8, "WIS": 11, "CHA": 10}', ARRAY['Greataxe: +5 (N), 1d12+3'], ARRAY['Darkvision 60 ft'], 2, 'shadowdark_core'),
-('shadowdark_skeleton', 'Skeleton', 'Animated bones held together by dark magic.', 13, '2d6', '30 ft', '{"STR": 10, "DEX": 14, "CON": 10, "INT": 6, "WIS": 8, "CHA": 5}', ARRAY['Shortsword: +4 (N), 1d6+2'], ARRAY['Immune to exhaustion, poison'], 1, 'shadowdark_core'),
-('shadowdark_zombie', 'Zombie', 'Shambling undead with rotting flesh.', 8, '3d6+3', '20 ft', '{"STR": 13, "DEX": 6, "CON": 16, "INT": 3, "WIS": 6, "CHA": 5}', ARRAY['Slam: +3 (N), 1d6+1'], ARRAY['Immune to exhaustion, poison'], 1, 'shadowdark_core')
+-- Insert core Shadowdark creature templates
+INSERT INTO creature_templates (id, name, race_species, description, armor_class, hit_points, speed, abilities, attacks, special_abilities, challenge_rating, source) VALUES
+('shadowdark_goblin', 'Goblin', 'Goblin', 'Small, cunning humanoids with sharp teeth and pointed ears.', 12, '1d6', '30 ft', '{"STR": 8, "DEX": 14, "CON": 10, "INT": 10, "WIS": 8, "CHA": 8}', ARRAY['Shortsword: +4 (N), 1d6+2'], ARRAY['Darkvision 60 ft'], 1, 'shadowdark_core'),
+('shadowdark_orc', 'Orc', 'Orc', 'Brutal humanoids with tusks and a love of violence.', 13, '2d6+2', '30 ft', '{"STR": 16, "DEX": 12, "CON": 14, "INT": 8, "WIS": 11, "CHA": 10}', ARRAY['Greataxe: +5 (N), 1d12+3'], ARRAY['Darkvision 60 ft'], 2, 'shadowdark_core'),
+('shadowdark_skeleton', 'Skeleton', 'Undead', 'Animated bones held together by dark magic.', 13, '2d6', '30 ft', '{"STR": 10, "DEX": 14, "CON": 10, "INT": 6, "WIS": 8, "CHA": 5}', ARRAY['Shortsword: +4 (N), 1d6+2'], ARRAY['Immune to exhaustion, poison'], 1, 'shadowdark_core'),
+('shadowdark_zombie', 'Zombie', 'Undead', 'Shambling undead with rotting flesh.', 8, '3d6+3', '20 ft', '{"STR": 13, "DEX": 6, "CON": 16, "INT": 3, "WIS": 6, "CHA": 5}', ARRAY['Slam: +3 (N), 1d6+1'], ARRAY['Immune to exhaustion, poison'], 1, 'shadowdark_core')
 ON CONFLICT (id) DO NOTHING;
