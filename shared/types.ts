@@ -161,11 +161,10 @@ export interface Creature {
   updated_at: string;
 }
 
-// Separate factions table with FK to adventure arc
+// Factions table (no longer linked to adventure arc)
 export interface Faction {
   id: string;
   session_id: string;
-  adventure_arc_id?: string; // FK to AdventureArc
   name: string;
   description: string;
   influence: "minor" | "moderate" | "major";
@@ -179,7 +178,6 @@ export interface Faction {
 export interface Thread {
   id: string;
   session_id: string;
-  adventure_arc_id?: string; // FK to AdventureArc (if related to main story)
   description: string;
   status: "active" | "resolved" | "dormant";
   hidden: boolean;
@@ -191,7 +189,6 @@ export interface Thread {
 export interface Clue {
   id: string;
   session_id: string;
-  adventure_arc_id?: string; // FK to AdventureArc (if related to BBEG)
   description: string;
   discovered: boolean;
   importance: "minor" | "moderate" | "major";
