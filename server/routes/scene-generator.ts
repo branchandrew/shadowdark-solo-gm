@@ -389,12 +389,17 @@ async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
 
 function evaluateFateRoll(roll: number, likelihood: string): string {
   // Mythic GME Fate Chart implementation - thresholds based on chaos factor 5
+  // Format: [exceptional_yes_threshold, yes_threshold, no_threshold]
+  // Roll <= exceptional_yes = Exceptional Yes
+  // Roll <= yes = Yes
+  // Roll <= no = No
+  // Roll > no = Exceptional No
   const thresholds = {
-    very_unlikely: { exceptional_yes: 1, yes: 5, exceptional_no: 96 },
-    unlikely: { exceptional_yes: 2, yes: 10, exceptional_no: 91 },
-    "50_50": { exceptional_yes: 3, yes: 15, exceptional_no: 86 },
-    likely: { exceptional_yes: 5, yes: 25, exceptional_no: 75 },
-    very_likely: { exceptional_yes: 7, yes: 35, exceptional_no: 66 },
+    very_unlikely: { exceptional_yes: 3, yes: 15, no: 84 },
+    unlikely: { exceptional_yes: 5, yes: 25, no: 86 },
+    "50_50": { exceptional_yes: 10, yes: 50, no: 91 },
+    likely: { exceptional_yes: 13, yes: 65, no: 94 },
+    very_likely: { exceptional_yes: 15, yes: 75, no: 96 },
   };
 
   const threshold =
@@ -404,10 +409,10 @@ function evaluateFateRoll(roll: number, likelihood: string): string {
     return "exceptional_yes";
   } else if (roll <= threshold.yes) {
     return "yes";
-  } else if (roll >= threshold.exceptional_no) {
-    return "exceptional_no";
-  } else {
+  } else if (roll <= threshold.no) {
     return "no";
+  } else {
+    return "exceptional_no";
   }
 }
 
