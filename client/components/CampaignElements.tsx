@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Network, Users, Crown, Search, Eye, EyeOff } from "lucide-react";
+import { useCampaignElements } from "@/hooks/useDatabase";
+import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
 interface Thread {
   id: string;
