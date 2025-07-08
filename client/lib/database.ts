@@ -185,12 +185,21 @@ class HybridDatabase {
     return stored === "true" && this.supabase !== null;
   }
 
-  // Generic get method - starts empty during development, no auto-loading
+  // Generic get method - reads from localStorage during current session
   async get<T>(key: string): Promise<T | null> {
-    // During development, always start empty - no auto-loading from localStorage
-    console.log(
-      `Getting ${key}: starting fresh (no auto-load during development)`,
-    );
+    try {
+      // Read from localStorage (this preserves data during tab switches)
+      const stored = localStorage.getItem(`shadowdark_${key}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        console.log(`Retrieved ${key} from localStorage:`, parsed);
+        return parsed;
+      }
+    } catch (error) {
+      console.warn(`Failed to read ${key} from localStorage:`, error);
+    }
+
+    console.log(`No data found for ${key}, returning null`);
     return null;
   }
 
