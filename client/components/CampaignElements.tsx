@@ -205,25 +205,27 @@ export default function CampaignElements() {
                 {getVisibleThreads().map((thread) => (
                   <div
                     key={thread.id}
-                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      thread.hidden ? "bg-muted/50 border-dashed" : ""
+                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                      thread.hidden ? "bg-muted/50" : ""
                     }`}
                     onClick={() => setSelectedThread(thread)}
                   >
-                    <Badge
-                      className={getStatusColor(thread.status)}
-                      variant="outline"
-                    >
-                      {thread.status}
-                    </Badge>
-                    <span className="flex-1 text-sm truncate">
+                    <div className="text-sm font-medium mb-2">
                       {thread.description}
-                    </span>
-                    {thread.hidden && (
-                      <Badge variant="outline" className="text-xs">
-                        Hidden
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        className={getStatusColor(thread.status)}
+                        variant="outline"
+                      >
+                        {thread.status}
                       </Badge>
-                    )}
+                      {thread.hidden && (
+                        <Badge variant="outline" className="text-xs">
+                          Hidden
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -254,35 +256,39 @@ export default function CampaignElements() {
                 {getVisibleCharacters().map((character) => (
                   <div
                     key={character.id}
-                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      character.hidden ? "bg-muted/50 border-dashed" : ""
+                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                      character.hidden ? "bg-muted/50" : ""
                     }`}
                     onClick={() => setSelectedCharacter(character)}
                   >
-                    <span className="font-medium">{character.name}</span>
-                    {character.creature_type === "bbeg" && (
-                      <Badge variant="destructive" className="text-xs">
-                        BBEG
-                      </Badge>
-                    )}
-                    {character.creature_type === "lieutenant" && (
-                      <Badge variant="secondary" className="text-xs">
-                        Lieutenant
-                      </Badge>
-                    )}
-                    <Badge
-                      className={getDispositionColor(
-                        character.npc_disposition || "unknown",
+                    <div className="text-sm font-medium mb-2">
+                      {character.name}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {character.creature_type === "bbeg" && (
+                        <Badge variant="destructive" className="text-xs">
+                          BBEG
+                        </Badge>
                       )}
-                      variant="outline"
-                    >
-                      {character.npc_disposition || "unknown"}
-                    </Badge>
-                    {character.hidden && (
-                      <Badge variant="outline" className="text-xs">
-                        Hidden
+                      {character.creature_type === "lieutenant" && (
+                        <Badge variant="secondary" className="text-xs">
+                          Lieutenant
+                        </Badge>
+                      )}
+                      <Badge
+                        className={getDispositionColor(
+                          character.npc_disposition || "unknown",
+                        )}
+                        variant="outline"
+                      >
+                        {character.npc_disposition || "unknown"}
                       </Badge>
-                    )}
+                      {character.hidden && (
+                        <Badge variant="outline" className="text-xs">
+                          Hidden
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -313,29 +319,33 @@ export default function CampaignElements() {
                 {getVisibleFactions().map((faction) => (
                   <div
                     key={faction.id}
-                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      faction.hidden ? "bg-muted/50 border-dashed" : ""
+                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                      faction.hidden ? "bg-muted/50" : ""
                     }`}
                     onClick={() => setSelectedFaction(faction)}
                   >
-                    <span className="font-medium">{faction.name}</span>
-                    <Badge
-                      className={getInfluenceColor(faction.influence)}
-                      variant="outline"
-                    >
-                      {faction.influence}
-                    </Badge>
-                    <Badge
-                      className={getRelationshipColor(faction.relationship)}
-                      variant="outline"
-                    >
-                      {faction.relationship}
-                    </Badge>
-                    {faction.hidden && (
-                      <Badge variant="outline" className="text-xs">
-                        Hidden
+                    <div className="text-sm font-medium mb-2">
+                      {faction.name}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        className={getInfluenceColor(faction.influence)}
+                        variant="outline"
+                      >
+                        {faction.influence}
                       </Badge>
-                    )}
+                      <Badge
+                        className={getRelationshipColor(faction.relationship)}
+                        variant="outline"
+                      >
+                        {faction.relationship}
+                      </Badge>
+                      {faction.hidden && (
+                        <Badge variant="outline" className="text-xs">
+                          Hidden
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
