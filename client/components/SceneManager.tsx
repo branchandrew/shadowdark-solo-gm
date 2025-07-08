@@ -66,9 +66,51 @@ export default function SceneManager() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
+      }).catch((networkError) => {
+        console.error("Network error:", networkError);
+        throw new Error(
+          `Network error: Unable to connect to server. Please check your connection.`,
+        );
       });
 
-      const data = await response.json();
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
+      // Read the response body once and handle both success and error cases
+      let data;
+      const contentType = response.headers.get("content-type");
+
+      if (contentType?.includes("application/json")) {
+        try {
+          data = await response.json();
+        } catch (parseError) {
+          console.error("Failed to parse JSON response:", parseError);
+          throw new Error(
+            `Server returned malformed JSON (${response.status}): ${response.statusText}`,
+          );
+        }
+      } else {
+        // Handle non-JSON responses (like HTML error pages)
+        try {
+          const textResponse = await response.text();
+          console.log("Non-JSON response:", textResponse.substring(0, 200));
+          data = { error: `Server error: ${response.statusText}` };
+        } catch (textError) {
+          console.error("Failed to read response text:", textError);
+          throw new Error(
+            `Unable to read server response (${response.status}): ${response.statusText}`,
+          );
+        }
+      }
+
+      if (!response.ok) {
+        const errorMessage =
+          data?.error ||
+          `Server error (${response.status}): ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+
+      console.log("Received data:", data);
 
       if (data.success) {
         setCurrentScene(data.scene);
@@ -76,7 +118,9 @@ export default function SceneManager() {
         console.log("Scene generated successfully:", data.scene);
       } else {
         console.error("Scene generation failed:", data.error);
-        alert(`Scene generation failed: ${data.error}`);
+        alert(
+          `Scene generation failed: ${data.error || "Unknown error occurred"}`,
+        );
       }
     } catch (error) {
       console.error("Error generating scene:", error);
