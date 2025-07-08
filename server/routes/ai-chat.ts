@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 import Anthropic from "@anthropic-ai/sdk";
+import { spawn } from "child_process";
+import path from "path";
 import { AIChatRequest, AIChatResponse } from "@shared/api";
 
 const anthropic = new Anthropic({
@@ -101,27 +103,23 @@ Respond as the GM would, describing what happens and asking for any necessary ro
   } catch (error) {
     console.error("Claude API Error:", error);
 
-    // Fallback response if Claude API fails
-    const fallbackResponses = [
-      "The shadows shift mysteriously around you. What do you do next?",
-      "Your torch flickers as you sense something watching from the darkness.",
-      "The ancient stones seem to whisper forgotten secrets. Roll a d20 for perception.",
-      "A chill wind carries the scent of danger. How do you proceed?",
-    ];
-
-    const fallbackResponse =
-      fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-
-    const response: AIChatResponse = {
-      response: `${fallbackResponse} (AI temporarily unavailable - using fallback response)`,
-      suggestions: [
-        "Roll d20",
-        "Ask oracle question",
-        "Search area",
-        "Listen carefully",
-      ],
-    };
-
-    res.json(response);
+    // Get fallback response from Python script
+    try {
+      const fallbackData = await runAIFallback();
+      const response: AIChatResponse = {
+        response: `${fallbackData.response} (AI temporarily unavailable - using fallback response)`,
+        suggestions: fallbackData.suggestions,
+      };
+      res.json(response);
+    } catch (fallbackError) {
+      // Ultimate fallback if even the Python script fails
+      const response: AIChatResponse = {
+        response:
+          "The GM pauses to consider the situation... (AI temporarily unavailable)",
+        suggestions: ["Roll d20", "Ask oracle question"],
+      };
+      res.json(response);
+    }
+    return;
   }
 };
