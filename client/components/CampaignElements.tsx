@@ -227,14 +227,18 @@ export default function CampaignElements() {
                 {getVisibleThreads().map((thread) => (
                   <div
                     key={thread.id}
-                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                    className={`p-3 border rounded transition-colors ${
                       thread.hidden && !showHiddenThreads
-                        ? "bg-muted/50 blur-sm"
+                        ? "bg-muted/50 blur-sm pointer-events-none"
                         : thread.hidden
-                          ? "bg-muted/50"
-                          : ""
+                          ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
+                          : "cursor-pointer hover:bg-accent/50"
                     }`}
-                    onClick={() => setSelectedThread(thread)}
+                    onClick={
+                      thread.hidden && !showHiddenThreads
+                        ? undefined
+                        : () => setSelectedThread(thread)
+                    }
                   >
                     <div className="text-sm font-medium mb-2">
                       {thread.description}
@@ -294,14 +298,18 @@ export default function CampaignElements() {
                 {getVisibleCharacters().map((character) => (
                   <div
                     key={character.id}
-                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                    className={`p-3 border rounded transition-colors ${
                       character.hidden && !showHiddenCharacters
-                        ? "bg-muted/50 blur-sm"
+                        ? "bg-muted/50 blur-sm pointer-events-none"
                         : character.hidden
-                          ? "bg-muted/50"
-                          : ""
+                          ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
+                          : "cursor-pointer hover:bg-accent/50"
                     }`}
-                    onClick={() => setSelectedCharacter(character)}
+                    onClick={
+                      character.hidden && !showHiddenCharacters
+                        ? undefined
+                        : () => setSelectedCharacter(character)
+                    }
                   >
                     <div className="text-sm font-medium mb-2">
                       {character.name}
@@ -373,14 +381,18 @@ export default function CampaignElements() {
                 {getVisibleFactions().map((faction) => (
                   <div
                     key={faction.id}
-                    className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
+                    className={`p-3 border rounded transition-colors ${
                       faction.hidden && !showHiddenFactions
-                        ? "bg-muted/50 blur-sm"
+                        ? "bg-muted/50 blur-sm pointer-events-none"
                         : faction.hidden
-                          ? "bg-muted/50"
-                          : ""
+                          ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
+                          : "cursor-pointer hover:bg-accent/50"
                     }`}
-                    onClick={() => setSelectedFaction(faction)}
+                    onClick={
+                      faction.hidden && !showHiddenFactions
+                        ? undefined
+                        : () => setSelectedFaction(faction)
+                    }
                   >
                     <div className="text-sm font-medium mb-2">
                       {faction.name}
