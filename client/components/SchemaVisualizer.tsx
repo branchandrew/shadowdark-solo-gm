@@ -265,13 +265,6 @@ const schemaDefinition: TableInfo[] = [
         isForeignKey: true,
         referencesTable: "game_sessions",
       },
-      {
-        name: "adventure_arc_id",
-        type: "string",
-        required: false,
-        isForeignKey: true,
-        referencesTable: "adventure_arcs",
-      },
       { name: "name", type: "string", required: true },
       { name: "description", type: "string", required: false },
       {
@@ -288,7 +281,7 @@ const schemaDefinition: TableInfo[] = [
       { name: "created_at", type: "string", required: true },
       { name: "updated_at", type: "string", required: true },
     ],
-    relationships: [],
+    relationships: ["creatures"],
   },
   {
     name: "threads",
