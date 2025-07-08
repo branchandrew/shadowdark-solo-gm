@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS game_sessions (
     shadowdark_theme TEXT DEFAULT 'Dark Fantasy',
     shadowdark_tone TEXT DEFAULT 'Mysterious',
     shadowdark_voice TEXT DEFAULT 'Atmospheric',
+    high_tower_surprise TEXT, -- Major plot twist for final confrontation
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
