@@ -161,8 +161,8 @@ export default function AdventureLog() {
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
         </div>
       </TabsContent>
     </Tabs>

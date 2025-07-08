@@ -31,6 +31,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/ai-chat", handleAIChat);
   app.post("/api/generate-adventure", generateAdventure);
+  app.post("/api/generate-scene", generateScene);
   app.post("/api/roll-fate", rollFateChart);
   app.post("/api/roll-meaning", rollMeaningTable);
 
