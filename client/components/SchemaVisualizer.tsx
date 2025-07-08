@@ -411,10 +411,14 @@ const frontendTypes: TableInfo[] = [
     icon: <FileType className="h-4 w-4" />,
     fields: [
       { name: "threads", type: "Thread[]", required: true },
-      { name: "npcs", type: "NPC[]", required: true },
+      {
+        name: "creatures",
+        type: "Creature[]",
+        required: true,
+        description: "All creatures: BBEG, Lieutenants, Monsters, NPCs",
+      },
       { name: "factions", type: "Faction[]", required: true },
       { name: "clues", type: "Clue[]", required: true },
-      { name: "monsters", type: "SessionMonster[]", required: true },
     ],
     relationships: [],
   },
