@@ -70,12 +70,6 @@ export default function CampaignElements() {
   const [newFactionDesc, setNewFactionDesc] = useState("");
   const [newClue, setNewClue] = useState("");
 
-  // Debug visibility toggles
-  const [showHiddenThreads, setShowHiddenThreads] = useState(false);
-  const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
-  const [showHiddenFactions, setShowHiddenFactions] = useState(false);
-  const [showHiddenClues, setShowHiddenClues] = useState(false);
-
   const addThread = async () => {
     if (newThread.trim()) {
       const newThreadObj: Thread = {
@@ -327,14 +321,11 @@ export default function CampaignElements() {
   };
 
   // Filter functions to show/hide items based on debug toggles
-  const getVisibleThreads = () =>
-    threads.filter((thread) => !thread.hidden || showHiddenThreads);
-  const getVisibleCharacters = () =>
-    characters.filter((char) => !char.hidden || showHiddenCharacters);
-  const getVisibleFactions = () =>
-    factions.filter((faction) => !faction.hidden || showHiddenFactions);
-  const getVisibleClues = () =>
-    clues.filter((clue) => !clue.hidden || showHiddenClues);
+  // Show all elements regardless of hidden status
+  const getVisibleThreads = () => threads;
+  const getVisibleCharacters = () => characters;
+  const getVisibleFactions = () => factions;
+  const getVisibleClues = () => clues;
 
   if (isLoading) {
     return (
