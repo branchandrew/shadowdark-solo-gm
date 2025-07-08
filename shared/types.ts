@@ -257,10 +257,9 @@ export interface GameSession {
 // View models for frontend (aggregated data)
 export interface CampaignElements {
   threads: Thread[];
-  npcs: NPC[];
+  creatures: Creature[]; // Unified creatures (BBEG, Lieutenants, Monsters, NPCs)
   factions: Faction[];
   clues: Clue[];
-  monsters: SessionMonster[];
 }
 
 // Adventure Arc for frontend display (consolidates data from relational tables)
