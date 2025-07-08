@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Network, Users, Crown } from "lucide-react";
+import { Network, Users, Crown } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
@@ -70,12 +70,6 @@ export default function CampaignElements() {
       c.creature_type === "bbeg" ||
       c.creature_type === "lieutenant",
   );
-
-  const [newThread, setNewThread] = useState("");
-  const [newCharacterName, setNewCharacterName] = useState("");
-  const [newCharacterDesc, setNewCharacterDesc] = useState("");
-  const [newFactionName, setNewFactionName] = useState("");
-  const [newFactionDesc, setNewFactionDesc] = useState("");
 
   const addThread = async () => {
     if (newThread.trim()) {
@@ -318,31 +312,30 @@ export default function CampaignElements() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="h-full">
       {/* Horizontal Grid Layout */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-4 h-full">
         {/* Plot Threads */}
-        <Card>
-          <CardHeader>
+        <Card className="flex flex-col h-full">
+          <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Network className="h-5 w-5" />
               Plot Threads
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
             {getVisibleThreads().length === 0 ? (
               <div className="text-center py-6">
                 <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                   <Network className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  No plot threads yet. Add one below to start tracking story
-                  elements.
+                  No plot threads yet.
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-40">
-                <div className="space-y-2">
+              <ScrollArea className="h-full">
+                <div className="space-y-2 pr-4">
                   {getVisibleThreads().map((thread) => (
                     <div
                       key={thread.id}
@@ -382,17 +375,6 @@ export default function CampaignElements() {
                 </div>
               </ScrollArea>
             )}
-            <div className="flex gap-2">
-              <Input
-                placeholder="New plot thread..."
-                value={newThread}
-                onChange={(e) => setNewThread(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && addThread()}
-              />
-              <Button onClick={addThread} size="icon">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
           </CardContent>
         </Card>
 
@@ -511,27 +493,26 @@ export default function CampaignElements() {
         </Card>
 
         {/* Factions */}
-        <Card>
-          <CardHeader>
+        <Card className="flex flex-col h-full">
+          <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Crown className="h-5 w-5" />
               Factions
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
             {getVisibleFactions().length === 0 ? (
               <div className="text-center py-6">
                 <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                   <Crown className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  No factions yet. Track organizations and groups that influence
-                  your story.
+                  No factions yet.
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-48">
-                <div className="space-y-3">
+              <ScrollArea className="h-full">
+                <div className="space-y-3 pr-4">
                   {getVisibleFactions().map((faction) => (
                     <div
                       key={faction.id}
