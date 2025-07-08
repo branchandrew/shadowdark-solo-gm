@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS game_sessions (
 CREATE TABLE IF NOT EXISTS creatures (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    adventure_arc_id TEXT REFERENCES adventure_arcs(id) ON DELETE SET NULL,
 
     -- Common creature attributes
     name TEXT NOT NULL,
@@ -71,6 +70,7 @@ CREATE TABLE IF NOT EXISTS creatures (
     -- BBEG-specific fields
     bbeg_motivation TEXT,
     bbeg_hook TEXT,
+    bbeg_minion_creature_id TEXT REFERENCES creatures(id) ON DELETE SET NULL, -- FK to minion creature
 
     -- Lieutenant-specific fields (tarot spread results, not the spread itself)
     lieutenant_seed TEXT,
