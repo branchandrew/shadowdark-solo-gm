@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Network, Users, Crown } from "lucide-react";
+import { Network, Users, Crown, Eye, EyeOff } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
@@ -39,6 +39,11 @@ export default function CampaignElements() {
     null,
   );
   const [selectedFaction, setSelectedFaction] = useState<Faction | null>(null);
+
+  // Visibility toggles for hidden elements
+  const [showHiddenThreads, setShowHiddenThreads] = useState(false);
+  const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
+  const [showHiddenFactions, setShowHiddenFactions] = useState(false);
 
   // Filter creatures by type for display
   const characters = creatures.filter(
@@ -160,10 +165,13 @@ export default function CampaignElements() {
     }
   };
 
-  // Show all elements regardless of hidden status
-  const getVisibleThreads = () => threads;
-  const getVisibleCharacters = () => characters;
-  const getVisibleFactions = () => factions;
+  // Filter elements based on hidden status and visibility toggles
+  const getVisibleThreads = () =>
+    threads.filter((thread) => !thread.hidden || showHiddenThreads);
+  const getVisibleCharacters = () =>
+    characters.filter((character) => !character.hidden || showHiddenCharacters);
+  const getVisibleFactions = () =>
+    factions.filter((faction) => !faction.hidden || showHiddenFactions);
 
   if (isLoading) {
     return (
@@ -185,9 +193,26 @@ export default function CampaignElements() {
         {/* Plot Threads */}
         <Card className="flex flex-col h-full">
           <CardHeader className="flex-shrink-0">
-            <CardTitle className="flex items-center gap-2">
-              <Network className="h-5 w-5" />
-              Plot Threads
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Network className="h-5 w-5" />
+                Plot Threads
+              </div>
+              <button
+                onClick={() => setShowHiddenThreads(!showHiddenThreads)}
+                className="p-1 hover:bg-accent rounded transition-colors"
+                title={
+                  showHiddenThreads
+                    ? "Hide hidden elements"
+                    : "Show hidden elements"
+                }
+              >
+                {showHiddenThreads ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+              </button>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-hidden">
@@ -206,7 +231,7 @@ export default function CampaignElements() {
                   <div
                     key={thread.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      thread.hidden ? "bg-muted/50" : ""
+                      thread.hidden ? "bg-muted/50 blur-sm" : ""
                     }`}
                     onClick={() => setSelectedThread(thread)}
                   >
@@ -220,11 +245,6 @@ export default function CampaignElements() {
                       >
                         {thread.status}
                       </Badge>
-                      {thread.hidden && (
-                        <Badge variant="outline" className="text-xs">
-                          Hidden
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -236,9 +256,26 @@ export default function CampaignElements() {
         {/* NPCs & Characters */}
         <Card className="flex flex-col h-full">
           <CardHeader className="flex-shrink-0">
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              NPCs & Characters
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                NPCs & Characters
+              </div>
+              <button
+                onClick={() => setShowHiddenCharacters(!showHiddenCharacters)}
+                className="p-1 hover:bg-accent rounded transition-colors"
+                title={
+                  showHiddenCharacters
+                    ? "Hide hidden elements"
+                    : "Show hidden elements"
+                }
+              >
+                {showHiddenCharacters ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+              </button>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-hidden">
@@ -257,7 +294,7 @@ export default function CampaignElements() {
                   <div
                     key={character.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      character.hidden ? "bg-muted/50" : ""
+                      character.hidden ? "bg-muted/50 blur-sm" : ""
                     }`}
                     onClick={() => setSelectedCharacter(character)}
                   >
@@ -283,11 +320,6 @@ export default function CampaignElements() {
                       >
                         {character.npc_disposition || "unknown"}
                       </Badge>
-                      {character.hidden && (
-                        <Badge variant="outline" className="text-xs">
-                          Hidden
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -299,9 +331,26 @@ export default function CampaignElements() {
         {/* Factions */}
         <Card className="flex flex-col h-full">
           <CardHeader className="flex-shrink-0">
-            <CardTitle className="flex items-center gap-2">
-              <Crown className="h-5 w-5" />
-              Factions
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5" />
+                Factions
+              </div>
+              <button
+                onClick={() => setShowHiddenFactions(!showHiddenFactions)}
+                className="p-1 hover:bg-accent rounded transition-colors"
+                title={
+                  showHiddenFactions
+                    ? "Hide hidden elements"
+                    : "Show hidden elements"
+                }
+              >
+                {showHiddenFactions ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+              </button>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-hidden">
@@ -320,7 +369,7 @@ export default function CampaignElements() {
                   <div
                     key={faction.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      faction.hidden ? "bg-muted/50" : ""
+                      faction.hidden ? "bg-muted/50 blur-sm" : ""
                     }`}
                     onClick={() => setSelectedFaction(faction)}
                   >
@@ -340,11 +389,6 @@ export default function CampaignElements() {
                       >
                         {faction.relationship}
                       </Badge>
-                      {faction.hidden && (
-                        <Badge variant="outline" className="text-xs">
-                          Hidden
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -372,11 +416,6 @@ export default function CampaignElements() {
                 <Badge className={getStatusColor(selectedThread.status)}>
                   {selectedThread.status}
                 </Badge>
-                {selectedThread.hidden && (
-                  <Badge variant="outline" className="text-xs">
-                    Hidden
-                  </Badge>
-                )}
               </div>
               <div>
                 <h4 className="font-medium mb-2">Description</h4>
@@ -437,11 +476,6 @@ export default function CampaignElements() {
                 {selectedCharacter.creature_type === "lieutenant" && (
                   <Badge variant="secondary" className="text-xs">
                     Lieutenant
-                  </Badge>
-                )}
-                {selectedCharacter.hidden && (
-                  <Badge variant="outline" className="text-xs">
-                    Hidden
                   </Badge>
                 )}
               </div>
@@ -530,11 +564,6 @@ export default function CampaignElements() {
                 <Badge className={getInfluenceColor(selectedFaction.influence)}>
                   {selectedFaction.influence}
                 </Badge>
-                {selectedFaction.hidden && (
-                  <Badge variant="outline" className="text-xs">
-                    Hidden
-                  </Badge>
-                )}
               </div>
               <div>
                 <h4 className="font-medium mb-2">Description</h4>
