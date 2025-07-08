@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Network, Users, Crown } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
@@ -256,8 +255,7 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="flex-1">
-                <div className="space-y-2 pr-4">
+              <div className="space-y-2">
                   {getVisibleThreads().map((thread) => (
                     <div
                       key={thread.id}
@@ -412,8 +410,7 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="flex-1">
-                <div className="space-y-3 pr-4">
+              <div className="space-y-3">
                   {getVisibleFactions().map((faction) => (
                     <div
                       key={faction.id}
