@@ -256,44 +256,41 @@ export default function CampaignElements() {
               </div>
             ) : (
               <div className="space-y-2">
-                  {getVisibleThreads().map((thread) => (
-                    <div
-                      key={thread.id}
-                      className={`flex items-center gap-2 p-3 border rounded ${
-                        thread.hidden ? "bg-muted/50 border-dashed" : ""
-                      }`}
-                    >
-                      <div className="flex gap-1">
-                        {(["active", "dormant", "resolved"] as const).map(
-                          (status) => (
-                            <button
-                              key={status}
-                              onClick={() =>
-                                updateThreadStatus(thread.id, status)
-                              }
-                              className={`px-2 py-1 text-xs rounded ${
-                                thread.status === status
-                                  ? getStatusColor(status) + " text-white"
-                                  : "bg-muted text-muted-foreground hover:bg-accent"
-                              }`}
-                            >
-                              {status}
-                            </button>
-                          ),
-                        )}
-                      </div>
-                      <span className="flex-1 text-sm">
-                        {thread.description}
-                      </span>
-                      {thread.hidden && (
-                        <Badge variant="outline" className="text-xs">
-                          Hidden
-                        </Badge>
+                {getVisibleThreads().map((thread) => (
+                  <div
+                    key={thread.id}
+                    className={`flex items-center gap-2 p-3 border rounded ${
+                      thread.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
+                  >
+                    <div className="flex gap-1">
+                      {(["active", "dormant", "resolved"] as const).map(
+                        (status) => (
+                          <button
+                            key={status}
+                            onClick={() =>
+                              updateThreadStatus(thread.id, status)
+                            }
+                            className={`px-2 py-1 text-xs rounded ${
+                              thread.status === status
+                                ? getStatusColor(status) + " text-white"
+                                : "bg-muted text-muted-foreground hover:bg-accent"
+                            }`}
+                          >
+                            {status}
+                          </button>
+                        ),
                       )}
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <span className="flex-1 text-sm">{thread.description}</span>
+                    {thread.hidden && (
+                      <Badge variant="outline" className="text-xs">
+                        Hidden
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
@@ -411,58 +408,55 @@ export default function CampaignElements() {
               </div>
             ) : (
               <div className="space-y-3">
-                  {getVisibleFactions().map((faction) => (
-                    <div
-                      key={faction.id}
-                      className={`p-3 border rounded space-y-2 ${
-                        faction.hidden ? "bg-muted/50 border-dashed" : ""
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{faction.name}</span>
-                          <Badge
-                            className={getInfluenceColor(faction.influence)}
-                          >
-                            {faction.influence}
+                {getVisibleFactions().map((faction) => (
+                  <div
+                    key={faction.id}
+                    className={`p-3 border rounded space-y-2 ${
+                      faction.hidden ? "bg-muted/50 border-dashed" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{faction.name}</span>
+                        <Badge className={getInfluenceColor(faction.influence)}>
+                          {faction.influence}
+                        </Badge>
+                        {faction.hidden && (
+                          <Badge variant="outline" className="text-xs">
+                            Hidden
                           </Badge>
-                          {faction.hidden && (
-                            <Badge variant="outline" className="text-xs">
-                              Hidden
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex gap-1">
-                          {(
-                            ["allied", "neutral", "opposed", "unknown"] as const
-                          ).map((relationship) => (
-                            <button
-                              key={relationship}
-                              onClick={() =>
-                                updateFactionRelationship(
-                                  faction.id,
-                                  relationship,
-                                )
-                              }
-                              className={`px-2 py-1 text-xs rounded ${
-                                faction.relationship === relationship
-                                  ? getRelationshipColor(relationship) +
-                                    " text-white"
-                                  : "bg-muted text-muted-foreground hover:bg-accent"
-                              }`}
-                            >
-                              {relationship}
-                            </button>
-                          ))}
-                        </div>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {faction.description}
-                      </p>
+                      <div className="flex gap-1">
+                        {(
+                          ["allied", "neutral", "opposed", "unknown"] as const
+                        ).map((relationship) => (
+                          <button
+                            key={relationship}
+                            onClick={() =>
+                              updateFactionRelationship(
+                                faction.id,
+                                relationship,
+                              )
+                            }
+                            className={`px-2 py-1 text-xs rounded ${
+                              faction.relationship === relationship
+                                ? getRelationshipColor(relationship) +
+                                  " text-white"
+                                : "bg-muted text-muted-foreground hover:bg-accent"
+                            }`}
+                          >
+                            {relationship}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <p className="text-sm text-muted-foreground">
+                      {faction.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
