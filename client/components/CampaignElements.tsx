@@ -11,38 +11,6 @@ import { Network, Users, Crown } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
-interface Thread {
-  id: string;
-  description: string;
-  status: "active" | "resolved" | "dormant";
-  hidden: boolean;
-}
-
-interface Character {
-  id: string;
-  name: string;
-  description: string;
-  disposition: "friendly" | "neutral" | "hostile" | "unknown";
-  hidden: boolean;
-}
-
-interface Faction {
-  id: string;
-  name: string;
-  description: string;
-  influence: "minor" | "moderate" | "major";
-  relationship: "allied" | "neutral" | "opposed" | "unknown";
-  hidden: boolean;
-}
-
-interface Clue {
-  id: string;
-  description: string;
-  discovered: boolean;
-  importance: "minor" | "moderate" | "major";
-  hidden: boolean;
-}
-
 export default function CampaignElements() {
   // Use database hooks instead of local state
   const {
@@ -80,27 +48,6 @@ export default function CampaignElements() {
       c.creature_type === "lieutenant",
   );
 
-  const addClue = async () => {
-    if (newClue.trim()) {
-      const newClueObj: Clue = {
-        id: `clue_${Date.now()}`,
-        session_id: "current", // Will be set by database service
-        description: newClue,
-        discovered: false,
-        importance: "minor",
-        hidden: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      await updateCampaignData({
-        ...campaignData,
-        clues: [...clues, newClueObj],
-      });
-      setNewClue("");
-    }
-  };
-
   const updateThreadStatus = async (
     threadId: string,
     newStatus: Thread["status"],
@@ -119,7 +66,7 @@ export default function CampaignElements() {
 
   const updateCharacterDisposition = async (
     characterId: string,
-    newDisposition: "friendly" | "neutral" | "hostile" | "unknown",
+    newDisposition: Creature["npc_disposition"],
   ) => {
     const updatedCreatures = creatures.map((creature) =>
       creature.id === characterId
@@ -213,24 +160,10 @@ export default function CampaignElements() {
     }
   };
 
-  const getImportanceColor = (importance: string) => {
-    switch (importance) {
-      case "major":
-        return "bg-red-600";
-      case "moderate":
-        return "bg-yellow-600";
-      case "minor":
-        return "bg-blue-600";
-      default:
-        return "bg-muted";
-    }
-  };
-
   // Show all elements regardless of hidden status
   const getVisibleThreads = () => threads;
   const getVisibleCharacters = () => characters;
   const getVisibleFactions = () => factions;
-  const getVisibleClues = () => clues;
 
   if (isLoading) {
     return (
@@ -299,83 +232,56 @@ export default function CampaignElements() {
         </Card>
 
         {/* NPCs & Characters */}
-        <Card>
-          <CardHeader>
+        <Card className="flex flex-col h-full">
+          <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
               NPCs & Characters
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
             {getVisibleCharacters().length === 0 ? (
               <div className="text-center py-6">
                 <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                   <Users className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  No characters yet. Add NPCs you encounter during your
-                  adventure.
+                  No characters yet.
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {getVisibleCharacters().map((character) => (
                   <div
                     key={character.id}
-                    className={`p-3 border rounded space-y-2 ${
+                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
                       character.hidden ? "bg-muted/50 border-dashed" : ""
                     }`}
+                    onClick={() => setSelectedCharacter(character)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{character.name}</span>
-                        {character.creature_type === "bbeg" && (
-                          <Badge variant="destructive" className="text-xs">
-                            BBEG
-                          </Badge>
-                        )}
-                        {character.creature_type === "lieutenant" && (
-                          <Badge variant="secondary" className="text-xs">
-                            Lieutenant
-                          </Badge>
-                        )}
-                        {character.hidden && (
-                          <Badge variant="outline" className="text-xs">
-                            Hidden
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1">
-                        {(
-                          ["friendly", "neutral", "hostile", "unknown"] as const
-                        ).map((disposition) => (
-                          <button
-                            key={disposition}
-                            onClick={() =>
-                              updateCharacterDisposition(
-                                character.id,
-                                disposition,
-                              )
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              character.npc_disposition === disposition
-                                ? getDispositionColor(disposition) +
-                                  " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {disposition}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {character.description}
-                    </p>
-                    {character.race_species && (
-                      <p className="text-xs text-muted-foreground">
-                        Race: {character.race_species}
-                      </p>
+                    <span className="font-medium">{character.name}</span>
+                    {character.creature_type === "bbeg" && (
+                      <Badge variant="destructive" className="text-xs">
+                        BBEG
+                      </Badge>
+                    )}
+                    {character.creature_type === "lieutenant" && (
+                      <Badge variant="secondary" className="text-xs">
+                        Lieutenant
+                      </Badge>
+                    )}
+                    <Badge
+                      className={getDispositionColor(
+                        character.npc_disposition || "unknown",
+                      )}
+                      variant="outline"
+                    >
+                      {character.npc_disposition || "unknown"}
+                    </Badge>
+                    {character.hidden && (
+                      <Badge variant="outline" className="text-xs">
+                        Hidden
+                      </Badge>
                     )}
                   </div>
                 ))}
@@ -403,53 +309,33 @@ export default function CampaignElements() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {getVisibleFactions().map((faction) => (
                   <div
                     key={faction.id}
-                    className={`p-3 border rounded space-y-2 ${
+                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
                       faction.hidden ? "bg-muted/50 border-dashed" : ""
                     }`}
+                    onClick={() => setSelectedFaction(faction)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{faction.name}</span>
-                        <Badge className={getInfluenceColor(faction.influence)}>
-                          {faction.influence}
-                        </Badge>
-                        {faction.hidden && (
-                          <Badge variant="outline" className="text-xs">
-                            Hidden
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1">
-                        {(
-                          ["allied", "neutral", "opposed", "unknown"] as const
-                        ).map((relationship) => (
-                          <button
-                            key={relationship}
-                            onClick={() =>
-                              updateFactionRelationship(
-                                faction.id,
-                                relationship,
-                              )
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              faction.relationship === relationship
-                                ? getRelationshipColor(relationship) +
-                                  " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {relationship}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {faction.description}
-                    </p>
+                    <span className="font-medium">{faction.name}</span>
+                    <Badge
+                      className={getInfluenceColor(faction.influence)}
+                      variant="outline"
+                    >
+                      {faction.influence}
+                    </Badge>
+                    <Badge
+                      className={getRelationshipColor(faction.relationship)}
+                      variant="outline"
+                    >
+                      {faction.relationship}
+                    </Badge>
+                    {faction.hidden && (
+                      <Badge variant="outline" className="text-xs">
+                        Hidden
+                      </Badge>
+                    )}
                   </div>
                 ))}
               </div>
