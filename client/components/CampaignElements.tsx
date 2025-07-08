@@ -165,13 +165,10 @@ export default function CampaignElements() {
     }
   };
 
-  // Filter elements based on hidden status and visibility toggles
-  const getVisibleThreads = () =>
-    threads.filter((thread) => !thread.hidden || showHiddenThreads);
-  const getVisibleCharacters = () =>
-    characters.filter((character) => !character.hidden || showHiddenCharacters);
-  const getVisibleFactions = () =>
-    factions.filter((faction) => !faction.hidden || showHiddenFactions);
+  // Always show all elements, blur state is controlled by the eye toggle
+  const getVisibleThreads = () => threads;
+  const getVisibleCharacters = () => characters;
+  const getVisibleFactions = () => factions;
 
   if (isLoading) {
     return (
@@ -203,8 +200,8 @@ export default function CampaignElements() {
                 className="p-1 hover:bg-accent rounded transition-colors"
                 title={
                   showHiddenThreads
-                    ? "Hide hidden elements"
-                    : "Show hidden elements"
+                    ? "Blur hidden elements"
+                    : "Unblur hidden elements"
                 }
               >
                 {showHiddenThreads ? (
@@ -231,7 +228,11 @@ export default function CampaignElements() {
                   <div
                     key={thread.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      thread.hidden ? "bg-muted/50 blur-sm" : ""
+                      thread.hidden && !showHiddenThreads
+                        ? "bg-muted/50 blur-sm"
+                        : thread.hidden
+                          ? "bg-muted/50"
+                          : ""
                     }`}
                     onClick={() => setSelectedThread(thread)}
                   >
@@ -266,8 +267,8 @@ export default function CampaignElements() {
                 className="p-1 hover:bg-accent rounded transition-colors"
                 title={
                   showHiddenCharacters
-                    ? "Hide hidden elements"
-                    : "Show hidden elements"
+                    ? "Blur hidden elements"
+                    : "Unblur hidden elements"
                 }
               >
                 {showHiddenCharacters ? (
@@ -294,7 +295,11 @@ export default function CampaignElements() {
                   <div
                     key={character.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      character.hidden ? "bg-muted/50 blur-sm" : ""
+                      character.hidden && !showHiddenCharacters
+                        ? "bg-muted/50 blur-sm"
+                        : character.hidden
+                          ? "bg-muted/50"
+                          : ""
                     }`}
                     onClick={() => setSelectedCharacter(character)}
                   >
@@ -341,8 +346,8 @@ export default function CampaignElements() {
                 className="p-1 hover:bg-accent rounded transition-colors"
                 title={
                   showHiddenFactions
-                    ? "Hide hidden elements"
-                    : "Show hidden elements"
+                    ? "Blur hidden elements"
+                    : "Unblur hidden elements"
                 }
               >
                 {showHiddenFactions ? (
@@ -369,7 +374,11 @@ export default function CampaignElements() {
                   <div
                     key={faction.id}
                     className={`p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
-                      faction.hidden ? "bg-muted/50 blur-sm" : ""
+                      faction.hidden && !showHiddenFactions
+                        ? "bg-muted/50 blur-sm"
+                        : faction.hidden
+                          ? "bg-muted/50"
+                          : ""
                     }`}
                     onClick={() => setSelectedFaction(faction)}
                   >
