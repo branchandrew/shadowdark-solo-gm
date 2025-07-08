@@ -185,13 +185,6 @@ CREATE POLICY "Users can delete their own sessions" ON game_sessions
     FOR DELETE USING (auth.uid() = user_id OR user_id IS NULL);
 
 -- Session-specific tables - access based on session ownership
-CREATE POLICY "Users can access their session data" ON adventure_arcs
-    FOR ALL USING (EXISTS (
-        SELECT 1 FROM game_sessions gs
-        WHERE gs.id = adventure_arcs.session_id
-        AND (gs.user_id = auth.uid() OR gs.user_id IS NULL)
-    ));
-
 CREATE POLICY "Users can access their session creatures" ON creatures
     FOR ALL USING (EXISTS (
         SELECT 1 FROM game_sessions gs
