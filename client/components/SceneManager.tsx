@@ -66,6 +66,7 @@ export default function SceneManager() {
         session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         player_intentions: playerIntentions.trim() || undefined,
         chaos_factor: chaosFactor,
+        character: character,
       };
 
       console.log("Generating new scene with data:", requestBody);
