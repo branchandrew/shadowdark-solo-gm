@@ -7,13 +7,28 @@ export function useDatabase<T>(key: string, defaultValue: T) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // During development: start with empty state, no auto-loading
+  // Load data from localStorage and subscribe to changes
   useEffect(() => {
-    console.log(
-      `useDatabase(${key}): Starting with empty state (development mode)`,
-    );
-    setIsLoading(false); // No loading needed, starting fresh
-    setError(null);
+    const loadData = async () => {
+      try {
+        setError(null);
+        setIsLoading(true);
+        console.log(`useDatabase(${key}): Loading data...`);
+        const result = await db.get<T>(key);
+        console.log(`useDatabase(${key}): Loaded result =`, result);
+        const finalData = result ?? defaultValue;
+        console.log(`useDatabase(${key}): Final data =`, finalData);
+        setData(finalData);
+      } catch (err) {
+        console.error(`useDatabase(${key}): Failed to load:`, err);
+        setError(err instanceof Error ? err.message : "Load failed");
+        setData(defaultValue);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
 
     // Subscribe to real-time changes (for future cloud sync)
     const unsubscribe = db.subscribe("session", (session: any) => {
@@ -25,7 +40,7 @@ export function useDatabase<T>(key: string, defaultValue: T) {
     });
 
     return unsubscribe;
-  }, [key]);
+  }, [key, defaultValue]);
 
   // Helper function to extract field from session (similar to database service)
   const extractFieldFromSession = (session: any, key: string) => {
