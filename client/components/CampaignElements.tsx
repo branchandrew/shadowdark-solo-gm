@@ -76,68 +76,98 @@ export default function CampaignElements() {
   const [showHiddenFactions, setShowHiddenFactions] = useState(false);
   const [showHiddenClues, setShowHiddenClues] = useState(false);
 
-  const addThread = () => {
+  const addThread = async () => {
     if (newThread.trim()) {
-      setThreads((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          description: newThread,
-          status: "active",
-          hidden: false,
-        },
-      ]);
+      const newThreadObj: Thread = {
+        id: `thread_${Date.now()}`,
+        session_id: "current", // Will be set by database service
+        description: newThread,
+        status: "active",
+        hidden: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      await updateCampaignData({
+        ...campaignData,
+        threads: [...threads, newThreadObj],
+      });
       setNewThread("");
     }
   };
 
-  const addCharacter = () => {
+  const addCharacter = async () => {
     if (newCharacterName.trim() && newCharacterDesc.trim()) {
-      setCharacters((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          name: newCharacterName,
-          description: newCharacterDesc,
-          disposition: "unknown",
-          hidden: false,
-        },
-      ]);
+      const newCreature: Creature = {
+        id: `creature_${Date.now()}`,
+        session_id: "current", // Will be set by database service
+        name: newCharacterName,
+        race_species: "Human", // Default, user can edit later
+        description: newCharacterDesc,
+        armor_class: 10,
+        hit_points: "1d8",
+        speed: "30 ft",
+        abilities: { STR: 10, DEX: 10, CON: 10, INT: 10, WIS: 10, CHA: 10 },
+        attacks: [],
+        special_abilities: [],
+        creature_type: "npc",
+        status: "alive",
+        hidden: false,
+        npc_disposition: "unknown",
+        npc_role: "other",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      await updateCampaignData({
+        ...campaignData,
+        creatures: [...creatures, newCreature],
+      });
       setNewCharacterName("");
       setNewCharacterDesc("");
     }
   };
 
-  const addFaction = () => {
+  const addFaction = async () => {
     if (newFactionName.trim() && newFactionDesc.trim()) {
-      setFactions((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          name: newFactionName,
-          description: newFactionDesc,
-          influence: "minor",
-          relationship: "unknown",
-          hidden: false,
-        },
-      ]);
+      const newFactionObj: Faction = {
+        id: `faction_${Date.now()}`,
+        session_id: "current", // Will be set by database service
+        name: newFactionName,
+        description: newFactionDesc,
+        influence: "minor",
+        relationship: "unknown",
+        hidden: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      await updateCampaignData({
+        ...campaignData,
+        factions: [...factions, newFactionObj],
+      });
       setNewFactionName("");
       setNewFactionDesc("");
     }
   };
 
-  const addClue = () => {
+  const addClue = async () => {
     if (newClue.trim()) {
-      setClues((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          description: newClue,
-          discovered: false,
-          importance: "minor",
-          hidden: false,
-        },
-      ]);
+      const newClueObj: Clue = {
+        id: `clue_${Date.now()}`,
+        session_id: "current", // Will be set by database service
+        description: newClue,
+        discovered: false,
+        importance: "minor",
+        hidden: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      await updateCampaignData({
+        ...campaignData,
+        clues: [...clues, newClueObj],
+      });
       setNewClue("");
     }
   };
