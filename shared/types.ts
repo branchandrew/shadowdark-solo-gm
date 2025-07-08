@@ -200,15 +200,7 @@ export interface Clue {
   updated_at: string;
 }
 
-// Adventure Arc (main story metadata, BBEG details now in Creatures table)
-export interface AdventureArc {
-  id: string;
-  session_id: string;
-  bbeg_creature_id: string; // FK to Creature (where creature_type = "bbeg")
-  high_tower_surprise: string;
-  created_at: string;
-  updated_at: string;
-}
+// Note: AdventureArc removed - BBEG data now in Creatures table, high_tower_surprise moved to GameSession
 
 // Adventure log entries
 export interface AdventureLogEntry {
