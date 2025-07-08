@@ -344,3 +344,35 @@ export interface MythicMeaningResponse extends ApiResponse {
   action?: string;
   subject?: string;
 }
+
+export interface Scene {
+  id: string;
+  session_id: string;
+  scene_number: number;
+  title: string;
+  description: string;
+  player_intentions?: string;
+  context_snapshot: any;
+  scene_expectations: string;
+  fate_rolls: Array<{
+    question: string;
+    roll: number;
+    result: "yes" | "no" | "exceptional_yes" | "exceptional_no";
+  }>;
+  chaos_factor: number;
+  chaos_roll: number;
+  scene_type: "expected" | "altered" | "interrupted";
+  random_event?: {
+    focus: string;
+    meaning_action: string;
+    meaning_subject: string;
+    description: string;
+  };
+  scene_goal: string;
+  success_conditions: string[];
+  status: "pending" | "active" | "completed";
+  outcome?: string;
+  next_intentions?: string;
+  created_at: string;
+  updated_at: string;
+}
