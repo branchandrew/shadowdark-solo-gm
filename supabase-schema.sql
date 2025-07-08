@@ -37,16 +37,12 @@ CREATE TABLE IF NOT EXISTS game_sessions (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Adventure arcs (BBEG and main story)
+-- Adventure arcs (main story metadata, BBEG details in creatures table)
 CREATE TABLE IF NOT EXISTS adventure_arcs (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    bbeg_name TEXT NOT NULL,
-    bbeg_description TEXT,
-    bbeg_motivation TEXT,
-    bbeg_hook TEXT,
+    bbeg_creature_id TEXT, -- FK to creatures table (set after BBEG creature is created)
     high_tower_surprise TEXT,
-    minion_monster_id TEXT REFERENCES monsters(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
