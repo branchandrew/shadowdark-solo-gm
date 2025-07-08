@@ -48,14 +48,15 @@ interface TableInfo {
 
 const schemaDefinition: TableInfo[] = [
   {
-    name: "monsters",
+    name: "creature_templates",
     description:
-      "Global catalog of Shadowdark monsters, shared across all sessions",
+      "Global templates for Shadowdark creatures, shared across all sessions",
     scope: "global",
     icon: <Globe className="h-4 w-4" />,
     fields: [
       { name: "id", type: "string", required: true, isPrimaryKey: true },
       { name: "name", type: "string", required: true },
+      { name: "race_species", type: "string", required: false },
       { name: "description", type: "string", required: false },
       { name: "armor_class", type: "number", required: false },
       {
@@ -73,7 +74,7 @@ const schemaDefinition: TableInfo[] = [
       { name: "created_at", type: "string", required: true },
       { name: "updated_at", type: "string", required: true },
     ],
-    relationships: ["session_monsters"],
+    relationships: ["creatures"],
   },
   {
     name: "game_sessions",
