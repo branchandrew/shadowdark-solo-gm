@@ -274,14 +274,15 @@ CREATE INDEX IF NOT EXISTS idx_game_sessions_updated_at ON game_sessions(updated
 
 -- Foreign key indexes for better JOIN performance
 CREATE INDEX IF NOT EXISTS idx_adventure_arcs_session_id ON adventure_arcs(session_id);
-CREATE INDEX IF NOT EXISTS idx_npcs_session_id ON npcs(session_id);
-CREATE INDEX IF NOT EXISTS idx_npcs_adventure_arc_id ON npcs(adventure_arc_id);
+CREATE INDEX IF NOT EXISTS idx_adventure_arcs_bbeg_creature_id ON adventure_arcs(bbeg_creature_id);
+CREATE INDEX IF NOT EXISTS idx_creatures_session_id ON creatures(session_id);
+CREATE INDEX IF NOT EXISTS idx_creatures_adventure_arc_id ON creatures(adventure_arc_id);
+CREATE INDEX IF NOT EXISTS idx_creatures_creature_type ON creatures(creature_type);
+CREATE INDEX IF NOT EXISTS idx_creatures_faction_id ON creatures(faction_id);
 CREATE INDEX IF NOT EXISTS idx_factions_session_id ON factions(session_id);
 CREATE INDEX IF NOT EXISTS idx_factions_adventure_arc_id ON factions(adventure_arc_id);
 CREATE INDEX IF NOT EXISTS idx_threads_session_id ON threads(session_id);
 CREATE INDEX IF NOT EXISTS idx_clues_session_id ON clues(session_id);
-CREATE INDEX IF NOT EXISTS idx_session_monsters_session_id ON session_monsters(session_id);
-CREATE INDEX IF NOT EXISTS idx_session_monsters_monster_id ON session_monsters(monster_id);
 CREATE INDEX IF NOT EXISTS idx_adventure_log_session_id ON adventure_log(session_id);
 CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
 
