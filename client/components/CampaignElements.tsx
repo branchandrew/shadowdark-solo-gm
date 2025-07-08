@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Network, Users, Crown } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
@@ -454,6 +460,226 @@ export default function CampaignElements() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Thread Details Modal */}
+      <Dialog
+        open={!!selectedThread}
+        onOpenChange={() => setSelectedThread(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Network className="h-5 w-5" />
+              Plot Thread Details
+            </DialogTitle>
+          </DialogHeader>
+          {selectedThread && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge className={getStatusColor(selectedThread.status)}>
+                  {selectedThread.status}
+                </Badge>
+                {selectedThread.hidden && (
+                  <Badge variant="outline" className="text-xs">
+                    Hidden
+                  </Badge>
+                )}
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Description</h4>
+                <p className="text-sm text-muted-foreground">
+                  {selectedThread.description}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-xs text-muted-foreground">Status:</span>
+                <div className="flex gap-1">
+                  {(["active", "dormant", "resolved"] as const).map(
+                    (status) => (
+                      <button
+                        key={status}
+                        onClick={() =>
+                          updateThreadStatus(selectedThread.id, status)
+                        }
+                        className={`px-2 py-1 text-xs rounded ${
+                          selectedThread.status === status
+                            ? getStatusColor(status) + " text-white"
+                            : "bg-muted text-muted-foreground hover:bg-accent"
+                        }`}
+                      >
+                        {status}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Character Details Modal */}
+      <Dialog
+        open={!!selectedCharacter}
+        onOpenChange={() => setSelectedCharacter(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Character Details
+            </DialogTitle>
+          </DialogHeader>
+          {selectedCharacter && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium text-lg">
+                  {selectedCharacter.name}
+                </h3>
+                {selectedCharacter.creature_type === "bbeg" && (
+                  <Badge variant="destructive" className="text-xs">
+                    BBEG
+                  </Badge>
+                )}
+                {selectedCharacter.creature_type === "lieutenant" && (
+                  <Badge variant="secondary" className="text-xs">
+                    Lieutenant
+                  </Badge>
+                )}
+                {selectedCharacter.hidden && (
+                  <Badge variant="outline" className="text-xs">
+                    Hidden
+                  </Badge>
+                )}
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Description</h4>
+                <p className="text-sm text-muted-foreground">
+                  {selectedCharacter.description}
+                </p>
+              </div>
+              {selectedCharacter.creature_type === "bbeg" && (
+                <>
+                  {selectedCharacter.bbeg_motivation && (
+                    <div>
+                      <h4 className="font-medium mb-2">Motivation</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedCharacter.bbeg_motivation}
+                      </p>
+                    </div>
+                  )}
+                  {selectedCharacter.bbeg_hook && (
+                    <div>
+                      <h4 className="font-medium mb-2">Adventure Hook</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedCharacter.bbeg_hook}
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+              {selectedCharacter.creature_type === "lieutenant" && (
+                <div>
+                  <h4 className="font-medium mb-2">Background</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedCharacter.lieutenant_tarot_background}
+                  </p>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <span className="text-xs text-muted-foreground">
+                  Disposition:
+                </span>
+                <div className="flex gap-1">
+                  {(["friendly", "neutral", "hostile", "unknown"] as const).map(
+                    (disposition) => (
+                      <button
+                        key={disposition}
+                        onClick={() =>
+                          updateCharacterDisposition(
+                            selectedCharacter.id,
+                            disposition,
+                          )
+                        }
+                        className={`px-2 py-1 text-xs rounded ${
+                          selectedCharacter.npc_disposition === disposition
+                            ? getDispositionColor(disposition) + " text-white"
+                            : "bg-muted text-muted-foreground hover:bg-accent"
+                        }`}
+                      >
+                        {disposition}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Faction Details Modal */}
+      <Dialog
+        open={!!selectedFaction}
+        onOpenChange={() => setSelectedFaction(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5" />
+              Faction Details
+            </DialogTitle>
+          </DialogHeader>
+          {selectedFaction && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium text-lg">{selectedFaction.name}</h3>
+                <Badge className={getInfluenceColor(selectedFaction.influence)}>
+                  {selectedFaction.influence}
+                </Badge>
+                {selectedFaction.hidden && (
+                  <Badge variant="outline" className="text-xs">
+                    Hidden
+                  </Badge>
+                )}
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Description</h4>
+                <p className="text-sm text-muted-foreground">
+                  {selectedFaction.description}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-xs text-muted-foreground">
+                  Relationship:
+                </span>
+                <div className="flex gap-1">
+                  {(["allied", "neutral", "opposed", "unknown"] as const).map(
+                    (relationship) => (
+                      <button
+                        key={relationship}
+                        onClick={() =>
+                          updateFactionRelationship(
+                            selectedFaction.id,
+                            relationship,
+                          )
+                        }
+                        className={`px-2 py-1 text-xs rounded ${
+                          selectedFaction.relationship === relationship
+                            ? getRelationshipColor(relationship) + " text-white"
+                            : "bg-muted text-muted-foreground hover:bg-accent"
+                        }`}
+                      >
+                        {relationship}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
