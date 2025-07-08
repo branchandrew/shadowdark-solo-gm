@@ -56,9 +56,9 @@ export default function RightPanel() {
       </TabsContent>
 
       <TabsContent value="elements" className="flex-1 mt-4 overflow-hidden">
-        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+        <div className="h-full pr-2">
           <CampaignElements />
-        </ScrollArea>
+        </div>
       </TabsContent>
 
       <TabsContent value="map" className="flex-1 mt-4 overflow-hidden">
