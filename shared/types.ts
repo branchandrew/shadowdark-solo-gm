@@ -97,55 +97,66 @@ export interface Character {
 
 // === RELATIONAL DATABASE ENTITIES ===
 
-// Global monster catalog (shared across all sessions)
-export interface Monster {
+// Base creature type for all lifeforms (BBEG, Lieutenants, Monsters, NPCs)
+export interface Creature {
   id: string;
+  session_id: string;
+  adventure_arc_id?: string; // FK to AdventureArc (if related to main story)
+
+  // Common creature attributes
   name: string;
+  race_species: string; // e.g., "Human", "Orc", "Skeleton"
   description: string;
+
+  // Shadowdark stats (standard for all creatures)
   armor_class: number;
-  hit_points: string; // e.g., "2d6+2"
+  hit_points: string; // e.g., "2d6+2" or actual number as string
+  current_hit_points?: number; // For tracking damage in session
   speed: string;
-  abilities: Stats;
+  abilities: Stats; // STR, DEX, CON, INT, WIS, CHA
   attacks: string[];
   special_abilities: string[];
-  challenge_rating: number;
-  source: "shadowdark_core" | "custom";
-  created_at: string;
-  updated_at: string;
-}
+  challenge_rating?: number; // Mainly for monsters, optional for others
 
-// Session-specific monster instances
-export interface SessionMonster {
-  id: string;
-  session_id: string;
-  monster_id: string; // FK to Monster
-  name: string; // Can override monster name
-  current_hit_points?: number;
+  // Creature type and status
+  creature_type: "bbeg" | "lieutenant" | "monster" | "npc";
   status: "alive" | "dead" | "fled" | "unknown";
-  notes?: string;
   hidden: boolean;
-  created_at: string;
-  updated_at: string;
-}
 
-// NPCs (includes lieutenants and other characters)
-export interface NPC {
-  id: string;
-  session_id: string;
-  adventure_arc_id?: string; // FK to AdventureArc (for lieutenants)
-  name: string;
-  description: string;
-  disposition: "friendly" | "neutral" | "hostile" | "unknown";
-  role: "bbeg" | "lieutenant" | "ally" | "neutral" | "enemy" | "other";
-  tarot_spread?: {
-    seed: string;
-    background: string;
-    location: string;
-    why_protect: string;
-    how_protect: string;
-    reward: string;
-  };
-  hidden: boolean;
+  // Type-specific fields (conditional based on creature_type)
+
+  // BBEG-specific fields
+  bbeg_motivation?: string;
+  bbeg_hook?: string;
+
+  // Lieutenant-specific fields (no tarot_spread stored - generated then discarded)
+  lieutenant_seed?: string;
+  lieutenant_occupation?: string;
+  lieutenant_background?: string;
+  lieutenant_why_protect?: string;
+  lieutenant_how_protect?: string;
+  lieutenant_reward?: string;
+
+  // Monster-specific fields
+  is_minion_of_bbeg?: boolean;
+  source?: "shadowdark_core" | "custom"; // For monsters from official sources vs custom
+
+  // NPC-specific fields
+  npc_disposition?: "friendly" | "neutral" | "hostile" | "unknown";
+  npc_role?:
+    | "ally"
+    | "neutral"
+    | "enemy"
+    | "merchant"
+    | "guard"
+    | "villager"
+    | "other";
+
+  // Common optional fields
+  faction_id?: string; // FK to Faction (BBEG and Lieutenants can be aligned with factions)
+  notes?: string;
+
+  // Metadata
   created_at: string;
   updated_at: string;
 }
