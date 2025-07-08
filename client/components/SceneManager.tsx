@@ -57,6 +57,7 @@ export default function SceneManager() {
     "scene_chaos_factor",
     5,
   );
+  const [character] = useSessionState("character", null);
 
   const generateNewScene = async () => {
     setIsGenerating(true);
