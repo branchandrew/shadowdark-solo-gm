@@ -25,6 +25,7 @@ import {
   X,
   Skull,
 } from "lucide-react";
+import { useSessionState } from "../hooks/useSessionState";
 
 interface Stats {
   STR: number;
@@ -166,30 +167,22 @@ const EMPTY_CHARACTER: Character = {
 };
 
 export default function CharacterSheet() {
-  const [character, setCharacter] = useState<Character>(EMPTY_CHARACTER);
-  const [newGearName, setNewGearName] = useState("");
-  const [newAttack, setNewAttack] = useState("");
+  const [character, setCharacter] = useSessionState<Character>(
+    "character",
+    EMPTY_CHARACTER,
+  );
+  const [newGearName, setNewGearName] = useSessionState(
+    "character_new_gear_name",
+    "",
+  );
+  const [newAttack, setNewAttack] = useSessionState("character_new_attack", "");
   const [showPasteDialog, setShowPasteDialog] = useState(false);
   const [pastedJson, setPastedJson] = useState("");
-  const [hasExplicitCharacter, setHasExplicitCharacter] = useState(false);
+  const [hasExplicitCharacter, setHasExplicitCharacter] = useSessionState(
+    "character_has_explicit",
+    false,
+  );
   const [showKillDialog, setShowKillDialog] = useState(false);
-
-  // Development mode: start fresh each time, no auto-loading
-  useEffect(() => {
-    console.log("CharacterSheet: Starting fresh (development mode)");
-    // No auto-loading during development - always start empty
-  }, []);
-
-  // Development mode: save only for current session
-  useEffect(() => {
-    if (hasExplicitCharacter) {
-      localStorage.setItem("shadowdark_character", JSON.stringify(character));
-      localStorage.setItem("shadowdark_has_character", "true");
-      console.log(
-        "CharacterSheet: Saved to localStorage (session-only during development)",
-      );
-    }
-  }, [character, hasExplicitCharacter]);
 
   const updateCharacter = (updates: Partial<Character>) => {
     setCharacter((prev) => ({ ...prev, ...updates }));
