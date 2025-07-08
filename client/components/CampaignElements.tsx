@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Network, Users, Crown, Search, Eye, EyeOff } from "lucide-react";
+import { Plus, Network, Users, Crown, Search } from "lucide-react";
 import { useCampaignElements } from "@/hooks/useDatabase";
 import type { Thread, Creature, Faction, Clue } from "../../shared/types";
 
@@ -526,24 +526,9 @@ export default function CampaignElements() {
       {/* Factions */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Crown className="h-5 w-5" />
-              Factions
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHiddenFactions(!showHiddenFactions)}
-              className="text-xs"
-            >
-              {showHiddenFactions ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-              Debug
-            </Button>
+          <CardTitle className="flex items-center gap-2">
+            <Crown className="h-5 w-5" />
+            Factions
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -638,24 +623,9 @@ export default function CampaignElements() {
       {/* Clues */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
-              Clues
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHiddenClues(!showHiddenClues)}
-              className="text-xs"
-            >
-              {showHiddenClues ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-              Debug
-            </Button>
+          <CardTitle className="flex items-center gap-2">
+            <Search className="h-5 w-5" />
+            Clues
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
