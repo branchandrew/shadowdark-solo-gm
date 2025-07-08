@@ -11,6 +11,7 @@ interface SceneGenerationRequest {
   session_id: string;
   player_intentions?: string;
   chaos_factor?: number;
+  character?: any;
 }
 
 export async function generateScene(req: Request, res: Response) {
@@ -19,6 +20,7 @@ export async function generateScene(req: Request, res: Response) {
       session_id,
       player_intentions,
       chaos_factor = 5,
+      character,
     }: SceneGenerationRequest = req.body;
 
     if (!session_id) {
@@ -31,7 +33,7 @@ export async function generateScene(req: Request, res: Response) {
     console.log("=== STEP 1: Gathering Context Snapshot ===");
 
     // Get current campaign data for context
-    const contextSnapshot = await gatherContextSnapshot(session_id);
+    const contextSnapshot = await gatherContextSnapshot(session_id, character);
 
     console.log("Context Snapshot:", JSON.stringify(contextSnapshot, null, 2));
     console.log(
@@ -132,10 +134,10 @@ export async function generateScene(req: Request, res: Response) {
   }
 }
 
-async function gatherContextSnapshot(sessionId: string) {
+async function gatherContextSnapshot(sessionId: string, character?: any) {
   // Get real data from database/localStorage
   const campaignElements = await getCampaignElementsData(sessionId);
-  const characterData = await getCharacterData(sessionId);
+  const characterData = character || (await getCharacterData(sessionId));
   const adventureLog = await getAdventureLogData(sessionId);
 
   return {
@@ -149,11 +151,19 @@ async function gatherContextSnapshot(sessionId: string) {
     plot_threads: campaignElements.plot_threads || [],
     factions: campaignElements.factions || [],
     adventure_log: adventureLog || [],
-    character: characterData || {
-      name: "Unnamed Adventurer",
-      level: 1,
-      class: "Unknown",
-    },
+    character: characterData
+      ? {
+          name: characterData.name || "Unnamed Adventurer",
+          level: characterData.level || 1,
+          class: characterData.className || characterData.class || "Unknown",
+          ancestry: characterData.ancestry || "Human",
+          background: characterData.background || "Unknown",
+        }
+      : {
+          name: "Unnamed Adventurer",
+          level: 1,
+          class: "Unknown",
+        },
   };
 }
 
