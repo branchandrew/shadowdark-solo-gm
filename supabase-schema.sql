@@ -180,10 +180,10 @@ ALTER TABLE clues ENABLE ROW LEVEL SECURITY;
 ALTER TABLE adventure_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 
--- Global monsters table - readable by all, writable by authenticated users
-CREATE POLICY "Anyone can view monsters" ON monsters FOR SELECT USING (true);
-CREATE POLICY "Authenticated users can insert monsters" ON monsters FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
-CREATE POLICY "Authenticated users can update monsters" ON monsters FOR UPDATE USING (auth.uid() IS NOT NULL);
+-- Global creature templates - readable by all, writable by authenticated users
+CREATE POLICY "Anyone can view creature templates" ON creature_templates FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert creature templates" ON creature_templates FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users can update creature templates" ON creature_templates FOR UPDATE USING (auth.uid() IS NOT NULL);
 
 -- Game sessions - users can only access their own
 CREATE POLICY "Users can view their own sessions" ON game_sessions
