@@ -145,11 +145,17 @@ export default function BTSPanel() {
 
         // Save campaign elements if provided (from database write)
         if (data.campaign_elements) {
-          console.log("Saving campaign elements to localStorage...");
+          console.log(
+            "Saving campaign elements to localStorage...",
+            data.campaign_elements,
+          );
           localStorage.setItem(
             "shadowdark_campaign_elements",
             JSON.stringify(data.campaign_elements),
           );
+          console.log("Campaign elements saved to localStorage");
+        } else {
+          console.log("No campaign_elements in server response");
         }
 
         // Combine all the BBEG information for display

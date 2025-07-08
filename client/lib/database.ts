@@ -187,19 +187,26 @@ class HybridDatabase {
 
   // Generic get method - reads from localStorage during current session
   async get<T>(key: string): Promise<T | null> {
+    console.log(
+      `Database.get(${key}): Attempting to read from localStorage...`,
+    );
     try {
       // Read from localStorage (this preserves data during tab switches)
       const stored = localStorage.getItem(`shadowdark_${key}`);
+      console.log(`Database.get(${key}): localStorage value =`, stored);
       if (stored) {
         const parsed = JSON.parse(stored);
-        console.log(`Retrieved ${key} from localStorage:`, parsed);
+        console.log(`Database.get(${key}): Parsed value =`, parsed);
         return parsed;
       }
     } catch (error) {
-      console.warn(`Failed to read ${key} from localStorage:`, error);
+      console.warn(
+        `Database.get(${key}): Failed to read from localStorage:`,
+        error,
+      );
     }
 
-    console.log(`No data found for ${key}, returning null`);
+    console.log(`Database.get(${key}): No data found, returning null`);
     return null;
   }
 
