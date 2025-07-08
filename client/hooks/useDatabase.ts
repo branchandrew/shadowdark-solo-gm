@@ -166,7 +166,7 @@ export function useChaosFactor() {
 export function useCampaignElements() {
   return useDatabase("campaign_elements", {
     threads: [],
-    characters: [],
+    creatures: [],
     factions: [],
     clues: [],
   });
