@@ -101,7 +101,6 @@ CREATE TABLE IF NOT EXISTS creatures (
 CREATE TABLE IF NOT EXISTS factions (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    adventure_arc_id TEXT REFERENCES adventure_arcs(id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT,
     influence TEXT DEFAULT 'minor' CHECK (influence IN ('minor', 'moderate', 'major')),
