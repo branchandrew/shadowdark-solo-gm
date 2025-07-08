@@ -3,6 +3,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAIChat } from "./routes/ai-chat";
 import { generateAdventure } from "./routes/adventure-generator";
+import { generateScene } from "./routes/scene-generator";
 import { rollFateChart } from "./routes/mythic-fate";
 import { rollMeaningTable } from "./routes/mythic-meaning";
 

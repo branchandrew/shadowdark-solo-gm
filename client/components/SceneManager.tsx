@@ -76,38 +76,36 @@ export default function SceneManager() {
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
 
-      // Read the response body once and handle both success and error cases
-      let data;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType?.includes("application/json")) {
+      // Check if response is ok before reading body
+      if (!response.ok) {
+        // For error responses, try to read as JSON first, then text
+        let errorMessage = `Server error (${response.status}): ${response.statusText}`;
         try {
-          data = await response.json();
-        } catch (parseError) {
-          console.error("Failed to parse JSON response:", parseError);
-          throw new Error(
-            `Server returned malformed JSON (${response.status}): ${response.statusText}`,
-          );
+          const errorData = await response.json();
+          errorMessage = errorData?.error || errorMessage;
+        } catch {
+          // If JSON parsing fails, try reading as text
+          try {
+            const errorText = await response.text();
+            if (errorText) {
+              errorMessage = `Server error: ${errorText.substring(0, 200)}`;
+            }
+          } catch {
+            // If all else fails, use the status text
+          }
         }
-      } else {
-        // Handle non-JSON responses (like HTML error pages)
-        try {
-          const textResponse = await response.text();
-          console.log("Non-JSON response:", textResponse.substring(0, 200));
-          data = { error: `Server error: ${response.statusText}` };
-        } catch (textError) {
-          console.error("Failed to read response text:", textError);
-          throw new Error(
-            `Unable to read server response (${response.status}): ${response.statusText}`,
-          );
-        }
+        throw new Error(errorMessage);
       }
 
-      if (!response.ok) {
-        const errorMessage =
-          data?.error ||
-          `Server error (${response.status}): ${response.statusText}`;
-        throw new Error(errorMessage);
+      // Read successful response as JSON
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse JSON response:", parseError);
+        throw new Error(
+          `Server returned invalid JSON (${response.status}): ${response.statusText}`,
+        );
       }
 
       console.log("Received data:", data);
