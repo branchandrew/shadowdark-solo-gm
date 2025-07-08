@@ -9,23 +9,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Eye, Crown, Skull, Users, RefreshCw } from "lucide-react";
 import CloudSync from "./CloudSync";
 import SchemaVisualizer from "./SchemaVisualizer";
+import { useSessionState } from "../hooks/useSessionState";
 
 import type { AdventureArcDisplay } from "../../shared/types";
 
 export default function BTSPanel() {
-  const [adventureArc, setAdventureArc] = useState<AdventureArcDisplay | null>(
-    null,
-  );
+  const [adventureArc, setAdventureArc] =
+    useSessionState<AdventureArcDisplay | null>("bts_adventure_arc", null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [theme, setTheme] = useState("");
-  const [tone, setTone] = useState("");
-  const [voice, setVoice] = useState("");
-
-  // Development mode: start fresh each time, no auto-loading
-  useEffect(() => {
-    console.log("BTSPanel: Starting fresh (development mode)");
-    // No auto-loading during development - always start empty
-  }, []);
+  const [theme, setTheme] = useSessionState("bts_theme", "");
+  const [tone, setTone] = useSessionState("bts_tone", "");
+  const [voice, setVoice] = useSessionState("bts_voice", "");
 
   // Save adventure arc to localStorage (no duplication)
   const saveAdventureToLocalStorage = (adventureData: AdventureArcDisplay) => {

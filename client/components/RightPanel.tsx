@@ -6,10 +6,20 @@ import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
 import Map from "./Map";
 import { User, BookOpen, Network, Eye, MapPin } from "lucide-react";
+import { useSessionState } from "../hooks/useSessionState";
 
 export default function RightPanel() {
+  const [activeTab, setActiveTab] = useSessionState(
+    "right_panel_tab",
+    "character",
+  );
+
   return (
-    <Tabs defaultValue="character" className="h-full flex flex-col">
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="h-full flex flex-col"
+    >
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
