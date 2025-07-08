@@ -172,15 +172,20 @@ export default function CampaignElements() {
     }
   };
 
-  const updateThreadStatus = (
+  const updateThreadStatus = async (
     threadId: string,
     newStatus: Thread["status"],
   ) => {
-    setThreads((prev) =>
-      prev.map((thread) =>
-        thread.id === threadId ? { ...thread, status: newStatus } : thread,
-      ),
+    const updatedThreads = threads.map((thread) =>
+      thread.id === threadId
+        ? { ...thread, status: newStatus, updated_at: new Date().toISOString() }
+        : thread,
     );
+
+    await updateCampaignData({
+      ...campaignData,
+      threads: updatedThreads,
+    });
   };
 
   const updateCharacterDisposition = (
