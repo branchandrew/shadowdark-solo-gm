@@ -208,32 +208,53 @@ export default function CampaignElements() {
     });
   };
 
-  const updateFactionRelationship = (
+  const updateFactionRelationship = async (
     factionId: string,
     newRelationship: Faction["relationship"],
   ) => {
-    setFactions((prev) =>
-      prev.map((faction) =>
-        faction.id === factionId
-          ? { ...faction, relationship: newRelationship }
-          : faction,
-      ),
+    const updatedFactions = factions.map((faction) =>
+      faction.id === factionId
+        ? {
+            ...faction,
+            relationship: newRelationship,
+            updated_at: new Date().toISOString(),
+          }
+        : faction,
     );
+
+    await updateCampaignData({
+      ...campaignData,
+      factions: updatedFactions,
+    });
   };
 
-  const updateClueDiscovered = (clueId: string, discovered: boolean) => {
-    setClues((prev) =>
-      prev.map((clue) => (clue.id === clueId ? { ...clue, discovered } : clue)),
+  const updateClueDiscovered = async (clueId: string, discovered: boolean) => {
+    const updatedClues = clues.map((clue) =>
+      clue.id === clueId
+        ? { ...clue, discovered, updated_at: new Date().toISOString() }
+        : clue,
     );
+
+    await updateCampaignData({
+      ...campaignData,
+      clues: updatedClues,
+    });
   };
 
-  const updateClueImportance = (
+  const updateClueImportance = async (
     clueId: string,
     importance: Clue["importance"],
   ) => {
-    setClues((prev) =>
-      prev.map((clue) => (clue.id === clueId ? { ...clue, importance } : clue)),
+    const updatedClues = clues.map((clue) =>
+      clue.id === clueId
+        ? { ...clue, importance, updated_at: new Date().toISOString() }
+        : clue,
     );
+
+    await updateCampaignData({
+      ...campaignData,
+      clues: updatedClues,
+    });
   };
 
   const getStatusColor = (status: string) => {
