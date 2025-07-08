@@ -25,6 +25,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { clearAllShadowdarkData } from "@/utils/dev-helpers";
+import { clearAllSessionState } from "@/hooks/useSessionState";
 
 export default function CloudSync() {
   const { isEnabled, sessionInfo, toggleCloudSync, exportData, importData } =
@@ -60,11 +61,10 @@ export default function CloudSync() {
 
   const handleClearData = () => {
     if (
-      confirm(
-        "Clear all localStorage data? This will reset everything for development.",
-      )
+      confirm("Clear all data? This will reset everything for development.")
     ) {
       clearAllShadowdarkData();
+      clearAllSessionState();
       alert("All data cleared! Refresh the page for a fresh start.");
     }
   };
