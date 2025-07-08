@@ -355,9 +355,23 @@ ${adventureArc.faction.description}
       {adventureArc ? (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Skull className="h-5 w-5 text-destructive" />
-              Current Adventure Arc
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Skull className="h-5 w-5 text-destructive" />
+                Current Adventure Arc
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setAdventureArc(null);
+                  localStorage.removeItem("shadowdark_adventure_arc");
+                  localStorage.removeItem("shadowdark_campaign_elements");
+                }}
+                className="text-xs"
+              >
+                Clear Arc
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
