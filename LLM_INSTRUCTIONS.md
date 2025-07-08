@@ -245,7 +245,54 @@ When updating existing code:
 3. **Remove state management** → Let database manage state
 4. **Add real-time subscriptions** → Use existing database hooks
 
-### 12. Common Anti-Patterns to Avoid
+### 12. Game Engine Logic Rule
+
+**CRITICAL RULE**: All game engine rules, checks, dice rolls, tables, and game mechanics MUST be implemented in Python scripts located in the `server/scripts/` folder. TypeScript files in `server/routes/` should ONLY handle API routing and calling Python scripts.
+
+**DO THIS:**
+
+```python
+# server/scripts/mythic_fate_chart.py
+def roll_fate_chart(likelihood="50/50", chaos_factor=5):
+    roll = random.randint(1, 99)
+    # ... game logic here
+    return result
+```
+
+```typescript
+// server/routes/scene-generator.ts
+const runFateChart = (likelihood, chaosFactor) => {
+  return new Promise((resolve, reject) => {
+    const proc = spawn("python3", [
+      "mythic_fate_chart.py",
+      likelihood,
+      chaosFactor.toString(),
+    ]);
+    // ... handle process result
+  });
+};
+```
+
+**DON'T DO THIS:**
+
+```typescript
+// ❌ Game logic in TypeScript routes
+function rollDice() {
+  return Math.floor(Math.random() * 20) + 1;
+}
+
+const thresholds = {
+  very_likely: { yes: 90, exceptional: 18 },
+};
+```
+
+**Separation of Concerns:**
+
+- ✅ **Python scripts**: All dice rolls, table lookups, game rules, calculations
+- ✅ **TypeScript routes**: API handling, calling Python scripts, database operations
+- ✅ **Frontend**: UI rendering, user interactions, database subscriptions
+
+### 13. Common Anti-Patterns to Avoid
 
 ```typescript
 // ❌ Direct localStorage access
@@ -263,9 +310,14 @@ useEffect(() => { /* complex sync logic */ }, []);
 
 // ❌ Prop drilling
 <Child data={data} onUpdate={setData} />
+
+// ❌ Game logic in TypeScript routes
+const diceRoll = Math.floor(Math.random() * 20) + 1;
+const isSuccess = diceRoll >= threshold;
 ```
 
 **Always ask**: "Is the database the source of truth here?" If not, refactor.
+**Always ask**: "Is this game logic that should be in Python?" If yes, move it.
 
 ---
 
