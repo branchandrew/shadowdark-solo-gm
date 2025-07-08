@@ -188,17 +188,24 @@ export default function CampaignElements() {
     });
   };
 
-  const updateCharacterDisposition = (
+  const updateCharacterDisposition = async (
     characterId: string,
-    newDisposition: Character["disposition"],
+    newDisposition: "friendly" | "neutral" | "hostile" | "unknown",
   ) => {
-    setCharacters((prev) =>
-      prev.map((character) =>
-        character.id === characterId
-          ? { ...character, disposition: newDisposition }
-          : character,
-      ),
+    const updatedCreatures = creatures.map((creature) =>
+      creature.id === characterId
+        ? {
+            ...creature,
+            npc_disposition: newDisposition,
+            updated_at: new Date().toISOString(),
+          }
+        : creature,
     );
+
+    await updateCampaignData({
+      ...campaignData,
+      creatures: updatedCreatures,
+    });
   };
 
   const updateFactionRelationship = (
