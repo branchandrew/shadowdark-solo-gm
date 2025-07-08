@@ -381,10 +381,48 @@ Return one clean JSON object and nothing else.  Keep values concise:
           hiddenElements,
         );
         console.log("Adventure data written to database successfully");
-      }
-    }
 
-    res.json({ ...villain, success: true });
+        // Return the campaign elements in the response so client can sync them
+        res.json({
+          ...villain,
+          success: true,
+          campaign_elements: {
+            threads: hiddenElements.threads,
+            creatures: hiddenElements.npcs.map((npc) => ({
+              id: npc.id,
+              session_id: session_id,
+              name: npc.name,
+              description: npc.description,
+              creature_type: npc.role === "bbeg" ? "bbeg" : "lieutenant",
+              npc_disposition: npc.disposition,
+              hidden: npc.hidden,
+              created_at: npc.created_at,
+              updated_at: npc.updated_at,
+              ...(npc.role === "bbeg" && {
+                bbeg_motivation: villain.bbeg_motivation,
+                bbeg_hook: villain.bbeg_hook,
+              }),
+              ...(npc.tarot_spread && {
+                lieutenant_tarot_seed: npc.tarot_spread.seed,
+                lieutenant_tarot_background: npc.tarot_spread.background,
+                lieutenant_tarot_location: npc.tarot_spread.location,
+                lieutenant_tarot_why_protect: npc.tarot_spread.why_protect,
+                lieutenant_tarot_how_protect: npc.tarot_spread.how_protect,
+                lieutenant_tarot_reward: npc.tarot_spread.reward,
+              }),
+            })),
+            factions: hiddenElements.factions,
+            clues: hiddenElements.clues,
+          },
+        });
+      } else {
+        // No database available, still return success
+        res.json({ ...villain, success: true });
+      }
+    } else {
+      // No session_id provided, just return the villain data
+      res.json({ ...villain, success: true });
+    }
   } catch (err) {
     console.error("Adventure generation error:", err);
 

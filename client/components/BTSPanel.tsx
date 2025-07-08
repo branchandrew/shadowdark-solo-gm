@@ -143,6 +143,15 @@ export default function BTSPanel() {
           voice.trim() || "Atmospheric",
         );
 
+        // Save campaign elements if provided (from database write)
+        if (data.campaign_elements) {
+          console.log("Saving campaign elements to localStorage...");
+          localStorage.setItem(
+            "shadowdark_campaign_elements",
+            JSON.stringify(data.campaign_elements),
+          );
+        }
+
         // Combine all the BBEG information for display
         const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
 
