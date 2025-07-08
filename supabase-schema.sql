@@ -257,14 +257,13 @@ END;
 $$ language 'plpgsql';
 
 -- Apply triggers to all tables with updated_at
-CREATE TRIGGER update_monsters_updated_at BEFORE UPDATE ON monsters FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_creature_templates_updated_at BEFORE UPDATE ON creature_templates FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_game_sessions_updated_at BEFORE UPDATE ON game_sessions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_adventure_arcs_updated_at BEFORE UPDATE ON adventure_arcs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_npcs_updated_at BEFORE UPDATE ON npcs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_creatures_updated_at BEFORE UPDATE ON creatures FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_factions_updated_at BEFORE UPDATE ON factions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_threads_updated_at BEFORE UPDATE ON threads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_clues_updated_at BEFORE UPDATE ON clues FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_session_monsters_updated_at BEFORE UPDATE ON session_monsters FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_adventure_log_updated_at BEFORE UPDATE ON adventure_log FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- === INDEXES ===
