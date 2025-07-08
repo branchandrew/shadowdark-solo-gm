@@ -267,7 +267,7 @@ ${contextSnapshot.adventure_log.map((entry: any) => `- ${entry.content}`).join("
 
 PLAYER INTENTIONS: ${playerIntentions || "No specific intentions stated"}
 
-For each story element you want to include in this scene, make a FATE ROLL assumption and I'll tell you if it happens:
+For each story element you want to include in this scene, make a FATE ROLL with a likelihood assessment and I'll tell you if it happens:
 
 1. Should the BBEG be directly involved in this scene?
 2. Should NPCs/Lieutenants appear in this scene?
@@ -277,13 +277,20 @@ For each story element you want to include in this scene, make a FATE ROLL assum
 
 Create a scene that logically follows from the player's intentions and current story state. Focus on what would make narrative sense for the next part of the story.
 
+For each fate roll question, assess the likelihood based on the current story context. Use one of these Mythic Fate Table likelihood levels:
+- very_likely
+- likely
+- 50_50
+- unlikely
+- very_unlikely
+
 Return a JSON object with:
 {
   "description": "A paragraph describing what this scene is probably about",
   "fateRolls": [
     {
       "question": "Should the BBEG be directly involved?",
-      "assumption": "yes|no"
+      "likelihood": "very_likely|likely|50_50|unlikely|very_unlikely"
     }
     // ... more fate roll questions
   ]
