@@ -125,7 +125,6 @@ CREATE TABLE IF NOT EXISTS threads (
 CREATE TABLE IF NOT EXISTS clues (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
-    adventure_arc_id TEXT REFERENCES adventure_arcs(id) ON DELETE SET NULL,
     description TEXT NOT NULL,
     discovered BOOLEAN DEFAULT FALSE,
     importance TEXT DEFAULT 'minor' CHECK (importance IN ('minor', 'moderate', 'major')),
