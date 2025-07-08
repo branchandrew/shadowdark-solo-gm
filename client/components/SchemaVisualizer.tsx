@@ -336,46 +336,7 @@ const schemaDefinition: TableInfo[] = [
     ],
     relationships: [],
   },
-  {
-    name: "session_monsters",
-    description: "Monster instances in a specific session",
-    scope: "session",
-    icon: <Table className="h-4 w-4" />,
-    fields: [
-      { name: "id", type: "string", required: true, isPrimaryKey: true },
-      {
-        name: "session_id",
-        type: "string",
-        required: true,
-        isForeignKey: true,
-        referencesTable: "game_sessions",
-      },
-      {
-        name: "monster_id",
-        type: "string",
-        required: true,
-        isForeignKey: true,
-        referencesTable: "monsters",
-      },
-      {
-        name: "name",
-        type: "string",
-        required: false,
-        description: "Can override monster name",
-      },
-      { name: "current_hit_points", type: "number", required: false },
-      {
-        name: "status",
-        type: "'alive' | 'dead' | 'fled' | 'unknown'",
-        required: true,
-      },
-      { name: "notes", type: "string", required: false },
-      { name: "hidden", type: "boolean", required: true },
-      { name: "created_at", type: "string", required: true },
-      { name: "updated_at", type: "string", required: true },
-    ],
-    relationships: [],
-  },
+  // Note: session_monsters table removed - now part of unified creatures table
   {
     name: "adventure_log",
     description: "Scene-by-scene adventure journal",
