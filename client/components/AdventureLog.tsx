@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, BookOpen, Zap, Calendar } from "lucide-react";
+import { useSessionState } from "../hooks/useSessionState";
 
 interface Thread {
   id: string;
@@ -30,11 +31,20 @@ interface Scene {
 }
 
 export default function AdventureLog() {
-  const [chaosFactor, setChaosFactor] = useState(5);
-  const [scenes, setScenes] = useState<Scene[]>([]);
+  const [chaosFactor, setChaosFactor] = useSessionState(
+    "adventure_chaos_factor",
+    5,
+  );
+  const [scenes, setScenes] = useSessionState<Scene[]>("adventure_scenes", []);
 
-  const [newSceneTitle, setNewSceneTitle] = useState("");
-  const [newSceneDesc, setNewSceneDesc] = useState("");
+  const [newSceneTitle, setNewSceneTitle] = useSessionState(
+    "adventure_new_scene_title",
+    "",
+  );
+  const [newSceneDesc, setNewSceneDesc] = useSessionState(
+    "adventure_new_scene_desc",
+    "",
+  );
 
   const addScene = () => {
     if (newSceneTitle.trim() && newSceneDesc.trim()) {
