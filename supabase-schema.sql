@@ -47,17 +47,59 @@ CREATE TABLE IF NOT EXISTS adventure_arcs (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- NPCs (includes lieutenants)
-CREATE TABLE IF NOT EXISTS npcs (
+-- Unified creatures table (BBEG, Lieutenants, Monsters, NPCs)
+CREATE TABLE IF NOT EXISTS creatures (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
     adventure_arc_id TEXT REFERENCES adventure_arcs(id) ON DELETE SET NULL,
+
+    -- Common creature attributes
     name TEXT NOT NULL,
+    race_species TEXT,
     description TEXT,
-    disposition TEXT DEFAULT 'unknown' CHECK (disposition IN ('friendly', 'neutral', 'hostile', 'unknown')),
-    role TEXT DEFAULT 'other' CHECK (role IN ('bbeg', 'lieutenant', 'ally', 'neutral', 'enemy', 'other')),
-    tarot_spread JSONB, -- For lieutenants
+
+    -- Shadowdark stats (standard for all creatures)
+    armor_class INTEGER DEFAULT 10,
+    hit_points TEXT, -- e.g., "2d6+2" or actual number
+    current_hit_points INTEGER, -- For tracking damage in session
+    speed TEXT DEFAULT '30 ft',
+    abilities JSONB, -- Stats object {STR, DEX, CON, INT, WIS, CHA}
+    attacks TEXT[] DEFAULT '{}',
+    special_abilities TEXT[] DEFAULT '{}',
+    challenge_rating INTEGER,
+
+    -- Creature type and status
+    creature_type TEXT NOT NULL CHECK (creature_type IN ('bbeg', 'lieutenant', 'monster', 'npc')),
+    status TEXT DEFAULT 'alive' CHECK (status IN ('alive', 'dead', 'fled', 'unknown')),
     hidden BOOLEAN DEFAULT FALSE,
+
+    -- Type-specific fields (conditional based on creature_type)
+
+    -- BBEG-specific fields
+    bbeg_motivation TEXT,
+    bbeg_hook TEXT,
+
+    -- Lieutenant-specific fields (tarot spread results, not the spread itself)
+    lieutenant_seed TEXT,
+    lieutenant_occupation TEXT,
+    lieutenant_background TEXT,
+    lieutenant_why_protect TEXT,
+    lieutenant_how_protect TEXT,
+    lieutenant_reward TEXT,
+
+    -- Monster-specific fields
+    is_minion_of_bbeg BOOLEAN DEFAULT FALSE,
+    source TEXT CHECK (source IN ('shadowdark_core', 'custom')),
+
+    -- NPC-specific fields
+    npc_disposition TEXT CHECK (npc_disposition IN ('friendly', 'neutral', 'hostile', 'unknown')),
+    npc_role TEXT CHECK (npc_role IN ('ally', 'neutral', 'enemy', 'merchant', 'guard', 'villager', 'other')),
+
+    -- Common optional fields
+    faction_id TEXT REFERENCES factions(id) ON DELETE SET NULL,
+    notes TEXT,
+
+    -- Metadata
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
