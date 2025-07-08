@@ -323,377 +323,292 @@ export default function CampaignElements() {
       <div className="grid grid-cols-3 gap-6">
         {/* Plot Threads */}
         <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Network className="h-5 w-5" />
-            Plot Threads
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {getVisibleThreads().length === 0 ? (
-            <div className="text-center py-6">
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <Network className="h-6 w-6 text-muted-foreground" />
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Network className="h-5 w-5" />
+              Plot Threads
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {getVisibleThreads().length === 0 ? (
+              <div className="text-center py-6">
+                <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                  <Network className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  No plot threads yet. Add one below to start tracking story
+                  elements.
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                No plot threads yet. Add one below to start tracking story
-                elements.
-              </p>
-            </div>
-          ) : (
-            <ScrollArea className="h-40">
-              <div className="space-y-2">
-                {getVisibleThreads().map((thread) => (
-                  <div
-                    key={thread.id}
-                    className={`flex items-center gap-2 p-3 border rounded ${
-                      thread.hidden ? "bg-muted/50 border-dashed" : ""
-                    }`}
-                  >
-                    <div className="flex gap-1">
-                      {(["active", "dormant", "resolved"] as const).map(
-                        (status) => (
-                          <button
-                            key={status}
-                            onClick={() =>
-                              updateThreadStatus(thread.id, status)
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              thread.status === status
-                                ? getStatusColor(status) + " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {status}
-                          </button>
-                        ),
-                      )}
-                    </div>
-                    <span className="flex-1 text-sm">{thread.description}</span>
-                    {thread.hidden && (
-                      <Badge variant="outline" className="text-xs">
-                        Hidden
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-          <div className="flex gap-2">
-            <Input
-              placeholder="New plot thread..."
-              value={newThread}
-              onChange={(e) => setNewThread(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && addThread()}
-            />
-            <Button onClick={addThread} size="icon">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-        </Card>
-
-        {/* NPCs & Characters */}
-        <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            NPCs & Characters
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {getVisibleCharacters().length === 0 ? (
-            <div className="text-center py-6">
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <Users className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                No characters yet. Add NPCs you encounter during your adventure.
-              </p>
-            </div>
-          ) : (
-            <ScrollArea className="h-48">
-              <div className="space-y-3">
-                {getVisibleCharacters().map((character) => (
-                  <div
-                    key={character.id}
-                    className={`p-3 border rounded space-y-2 ${
-                      character.hidden ? "bg-muted/50 border-dashed" : ""
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{character.name}</span>
-                        {character.creature_type === "bbeg" && (
-                          <Badge variant="destructive" className="text-xs">
-                            BBEG
-                          </Badge>
-                        )}
-                        {character.creature_type === "lieutenant" && (
-                          <Badge variant="secondary" className="text-xs">
-                            Lieutenant
-                          </Badge>
-                        )}
-                        {character.hidden && (
-                          <Badge variant="outline" className="text-xs">
-                            Hidden
-                          </Badge>
-                        )}
-                      </div>
+            ) : (
+              <ScrollArea className="h-40">
+                <div className="space-y-2">
+                  {getVisibleThreads().map((thread) => (
+                    <div
+                      key={thread.id}
+                      className={`flex items-center gap-2 p-3 border rounded ${
+                        thread.hidden ? "bg-muted/50 border-dashed" : ""
+                      }`}
+                    >
                       <div className="flex gap-1">
-                        {(
-                          ["friendly", "neutral", "hostile", "unknown"] as const
-                        ).map((disposition) => (
-                          <button
-                            key={disposition}
-                            onClick={() =>
-                              updateCharacterDisposition(
-                                character.id,
-                                disposition,
-                              )
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              character.npc_disposition === disposition
-                                ? getDispositionColor(disposition) +
-                                  " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {disposition}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {character.description}
-                    </p>
-                    {character.race_species && (
-                      <p className="text-xs text-muted-foreground">
-                        Race: {character.race_species}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Character name..."
-                value={newCharacterName}
-                onChange={(e) => setNewCharacterName(e.target.value)}
-              />
-              <Button onClick={addCharacter} size="icon">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            <Textarea
-              placeholder="Character description..."
-              value={newCharacterDesc}
-              onChange={(e) => setNewCharacterDesc(e.target.value)}
-              onKeyPress={(e) =>
-                e.key === "Enter" && !e.shiftKey && addCharacter()
-              }
-              rows={2}
-            />
-          </div>
-        </CardContent>
-        </Card>
-
-        {/* Factions */}
-        <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5" />
-            Factions
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {getVisibleFactions().length === 0 ? (
-            <div className="text-center py-6">
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <Crown className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                No factions yet. Track organizations and groups that influence
-                your story.
-              </p>
-            </div>
-          ) : (
-            <ScrollArea className="h-48">
-              <div className="space-y-3">
-                {getVisibleFactions().map((faction) => (
-                  <div
-                    key={faction.id}
-                    className={`p-3 border rounded space-y-2 ${
-                      faction.hidden ? "bg-muted/50 border-dashed" : ""
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{faction.name}</span>
-                        <Badge className={getInfluenceColor(faction.influence)}>
-                          {faction.influence}
-                        </Badge>
-                        {faction.hidden && (
-                          <Badge variant="outline" className="text-xs">
-                            Hidden
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1">
-                        {(
-                          ["allied", "neutral", "opposed", "unknown"] as const
-                        ).map((relationship) => (
-                          <button
-                            key={relationship}
-                            onClick={() =>
-                              updateFactionRelationship(
-                                faction.id,
-                                relationship,
-                              )
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              faction.relationship === relationship
-                                ? getRelationshipColor(relationship) +
-                                  " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {relationship}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {faction.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Faction name..."
-                value={newFactionName}
-                onChange={(e) => setNewFactionName(e.target.value)}
-              />
-              <Button onClick={addFaction} size="icon">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            <Textarea
-              placeholder="Faction description..."
-              value={newFactionDesc}
-              onChange={(e) => setNewFactionDesc(e.target.value)}
-              onKeyPress={(e) =>
-                e.key === "Enter" && !e.shiftKey && addFaction()
-              }
-              rows={2}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Clues */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
-            Clues
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {getVisibleClues().length === 0 ? (
-            <div className="text-center py-6">
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <Search className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                No clues yet. Track important information and discoveries.
-              </p>
-            </div>
-          ) : (
-            <ScrollArea className="h-48">
-              <div className="space-y-3">
-                {getVisibleClues().map((clue) => (
-                  <div
-                    key={clue.id}
-                    className={`p-3 border rounded space-y-2 ${
-                      clue.hidden ? "bg-muted/50 border-dashed" : ""
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() =>
-                              updateClueDiscovered(clue.id, !clue.discovered)
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              clue.discovered
-                                ? "bg-green-600 text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {clue.discovered ? "Discovered" : "Hidden"}
-                          </button>
-                        </div>
-                        <Badge className={getImportanceColor(clue.importance)}>
-                          {clue.importance}
-                        </Badge>
-                        {clue.hidden && (
-                          <Badge variant="outline" className="text-xs">
-                            Hidden
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1">
-                        {(["minor", "moderate", "major"] as const).map(
-                          (importance) => (
+                        {(["active", "dormant", "resolved"] as const).map(
+                          (status) => (
                             <button
-                              key={importance}
+                              key={status}
                               onClick={() =>
-                                updateClueImportance(clue.id, importance)
+                                updateThreadStatus(thread.id, status)
                               }
                               className={`px-2 py-1 text-xs rounded ${
-                                clue.importance === importance
-                                  ? getImportanceColor(importance) +
-                                    " text-white"
+                                thread.status === status
+                                  ? getStatusColor(status) + " text-white"
                                   : "bg-muted text-muted-foreground hover:bg-accent"
                               }`}
                             >
-                              {importance}
+                              {status}
                             </button>
                           ),
                         )}
                       </div>
+                      <span className="flex-1 text-sm">
+                        {thread.description}
+                      </span>
+                      {thread.hidden && (
+                        <Badge variant="outline" className="text-xs">
+                          Hidden
+                        </Badge>
+                      )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      {clue.description}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+            <div className="flex gap-2">
+              <Input
+                placeholder="New plot thread..."
+                value={newThread}
+                onChange={(e) => setNewThread(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && addThread()}
+              />
+              <Button onClick={addThread} size="icon">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* NPCs & Characters */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              NPCs & Characters
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {getVisibleCharacters().length === 0 ? (
+              <div className="text-center py-6">
+                <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                  <Users className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  No characters yet. Add NPCs you encounter during your
+                  adventure.
+                </p>
               </div>
-            </ScrollArea>
-          )}
-          <div className="flex gap-2">
-            <Input
-              placeholder="New clue..."
-              value={newClue}
-              onChange={(e) => setNewClue(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && addClue()}
-            />
-            <Button onClick={addClue} size="icon">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            ) : (
+              <ScrollArea className="h-48">
+                <div className="space-y-3">
+                  {getVisibleCharacters().map((character) => (
+                    <div
+                      key={character.id}
+                      className={`p-3 border rounded space-y-2 ${
+                        character.hidden ? "bg-muted/50 border-dashed" : ""
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{character.name}</span>
+                          {character.creature_type === "bbeg" && (
+                            <Badge variant="destructive" className="text-xs">
+                              BBEG
+                            </Badge>
+                          )}
+                          {character.creature_type === "lieutenant" && (
+                            <Badge variant="secondary" className="text-xs">
+                              Lieutenant
+                            </Badge>
+                          )}
+                          {character.hidden && (
+                            <Badge variant="outline" className="text-xs">
+                              Hidden
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-1">
+                          {(
+                            [
+                              "friendly",
+                              "neutral",
+                              "hostile",
+                              "unknown",
+                            ] as const
+                          ).map((disposition) => (
+                            <button
+                              key={disposition}
+                              onClick={() =>
+                                updateCharacterDisposition(
+                                  character.id,
+                                  disposition,
+                                )
+                              }
+                              className={`px-2 py-1 text-xs rounded ${
+                                character.npc_disposition === disposition
+                                  ? getDispositionColor(disposition) +
+                                    " text-white"
+                                  : "bg-muted text-muted-foreground hover:bg-accent"
+                              }`}
+                            >
+                              {disposition}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {character.description}
+                      </p>
+                      {character.race_species && (
+                        <p className="text-xs text-muted-foreground">
+                          Race: {character.race_species}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Character name..."
+                  value={newCharacterName}
+                  onChange={(e) => setNewCharacterName(e.target.value)}
+                />
+                <Button onClick={addCharacter} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <Textarea
+                placeholder="Character description..."
+                value={newCharacterDesc}
+                onChange={(e) => setNewCharacterDesc(e.target.value)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && !e.shiftKey && addCharacter()
+                }
+                rows={2}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Factions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5" />
+              Factions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {getVisibleFactions().length === 0 ? (
+              <div className="text-center py-6">
+                <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                  <Crown className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  No factions yet. Track organizations and groups that influence
+                  your story.
+                </p>
+              </div>
+            ) : (
+              <ScrollArea className="h-48">
+                <div className="space-y-3">
+                  {getVisibleFactions().map((faction) => (
+                    <div
+                      key={faction.id}
+                      className={`p-3 border rounded space-y-2 ${
+                        faction.hidden ? "bg-muted/50 border-dashed" : ""
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{faction.name}</span>
+                          <Badge
+                            className={getInfluenceColor(faction.influence)}
+                          >
+                            {faction.influence}
+                          </Badge>
+                          {faction.hidden && (
+                            <Badge variant="outline" className="text-xs">
+                              Hidden
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-1">
+                          {(
+                            ["allied", "neutral", "opposed", "unknown"] as const
+                          ).map((relationship) => (
+                            <button
+                              key={relationship}
+                              onClick={() =>
+                                updateFactionRelationship(
+                                  faction.id,
+                                  relationship,
+                                )
+                              }
+                              className={`px-2 py-1 text-xs rounded ${
+                                faction.relationship === relationship
+                                  ? getRelationshipColor(relationship) +
+                                    " text-white"
+                                  : "bg-muted text-muted-foreground hover:bg-accent"
+                              }`}
+                            >
+                              {relationship}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {faction.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Faction name..."
+                  value={newFactionName}
+                  onChange={(e) => setNewFactionName(e.target.value)}
+                />
+                <Button onClick={addFaction} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <Textarea
+                placeholder="Faction description..."
+                value={newFactionDesc}
+                onChange={(e) => setNewFactionDesc(e.target.value)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && !e.shiftKey && addFaction()
+                }
+                rows={2}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
