@@ -202,19 +202,38 @@ async function getCampaignElementsData(sessionId: string) {
 }
 
 async function getCharacterData(sessionId: string) {
-  // Try to get real character data from localStorage/database
+  // Try to get real character data from session state
   try {
-    // In a real implementation, we'd query the database here
-    // For now, try to read from what would be stored in localStorage
+    // Read from session storage where character sheet data is stored
+    if (typeof sessionStorage !== "undefined") {
+      const characterData = sessionStorage.getItem("character");
+      if (characterData) {
+        const character = JSON.parse(characterData);
+        return {
+          name: character.name || "Unknown Adventurer",
+          level: character.level || 1,
+          class: character.className || "Fighter",
+          ancestry: character.ancestry || "Human",
+          background: character.background || "Unknown",
+          stats: character.stats || {
+            STR: 10,
+            DEX: 10,
+            CON: 10,
+            INT: 10,
+            WIS: 10,
+            CHA: 10,
+          },
+          hitPoints: character.hitPoints || 1,
+          armorClass: character.armorClass || 10,
+        };
+      }
+    }
+
+    // Fallback for default character
     return {
-      name: "Hero of Shadowdark",
-      level: 3,
+      name: "Unknown Adventurer",
+      level: 1,
       class: "Fighter",
-      ancestry: "Human",
-      background: "Mercenary",
-      stats: { STR: 14, DEX: 12, CON: 16, INT: 10, WIS: 13, CHA: 8 },
-      hitPoints: 18,
-      armorClass: 15,
     };
   } catch (error) {
     console.error("Error getting character data:", error);
@@ -369,23 +388,23 @@ async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
 }
 
 function evaluateFateRoll(roll: number, likelihood: string): string {
-  // Mythic GME Fate Chart implementation
+  // Mythic GME Fate Chart implementation - thresholds based on chaos factor 5
   const thresholds = {
-    very_unlikely: { yes: 10, exceptional: 1 },
-    unlikely: { yes: 25, exceptional: 5 },
-    "50_50": { yes: 50, exceptional: 10 },
-    likely: { yes: 75, exceptional: 15 },
-    very_likely: { yes: 90, exceptional: 18 },
+    very_unlikely: { exceptional_yes: 1, yes: 5, exceptional_no: 96 },
+    unlikely: { exceptional_yes: 2, yes: 10, exceptional_no: 91 },
+    "50_50": { exceptional_yes: 3, yes: 15, exceptional_no: 86 },
+    likely: { exceptional_yes: 5, yes: 25, exceptional_no: 75 },
+    very_likely: { exceptional_yes: 7, yes: 35, exceptional_no: 66 },
   };
 
   const threshold =
     thresholds[likelihood as keyof typeof thresholds] || thresholds["50_50"];
 
-  if (roll <= threshold.exceptional) {
+  if (roll <= threshold.exceptional_yes) {
     return "exceptional_yes";
   } else if (roll <= threshold.yes) {
     return "yes";
-  } else if (roll >= 100 - threshold.exceptional) {
+  } else if (roll >= threshold.exceptional_no) {
     return "exceptional_no";
   } else {
     return "no";
