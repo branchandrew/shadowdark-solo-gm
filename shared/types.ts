@@ -200,16 +200,12 @@ export interface Clue {
   updated_at: string;
 }
 
-// Adventure Arc (BBEG and main story)
+// Adventure Arc (main story metadata, BBEG details now in Creatures table)
 export interface AdventureArc {
   id: string;
   session_id: string;
-  bbeg_name: string;
-  bbeg_description: string;
-  bbeg_motivation: string;
-  bbeg_hook: string;
+  bbeg_creature_id: string; // FK to Creature (where creature_type = "bbeg")
   high_tower_surprise: string;
-  minion_monster_id?: string; // FK to Monster (for BBEG's minions)
   created_at: string;
   updated_at: string;
 }
