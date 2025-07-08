@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { spawn } from "child_process";
+import path from "path";
 import { relationalDB } from "../lib/relational-database.js";
 
 const anthropic = new Anthropic({
@@ -345,15 +346,17 @@ Return a JSON object with:
   const sceneData = JSON.parse(jsonMatch[0]);
 
   // Process fate rolls with proper Mythic GME likelihood system
-  const fateRolls = sceneData.fateRolls.map((roll: any) => {
-    const diceRoll = Math.floor(Math.random() * 100) + 1;
-    const result = evaluateFateRoll(diceRoll, roll.likelihood);
-    return {
-      ...roll,
-      roll: diceRoll,
-      result,
-    };
-  });
+  const fateRolls = await Promise.all(
+    sceneData.fateRolls.map(async (roll: any) => {
+      const fateResult = await runFateChart(roll.likelihood, 5); // Use chaos factor 5 for now
+      return {
+        ...roll,
+        roll: fateResult.roll,
+        result: fateResult.result.toLowerCase().replace(" ", "_"),
+        mythic_result: fateResult,
+      };
+    }),
+  );
 
   return {
     description: sceneData.description,
@@ -397,70 +400,93 @@ async function performSceneSetup(chaosFactor: number, contextSnapshot: any) {
   };
 }
 
-function evaluateFateRoll(roll: number, likelihood: string): string {
-  // Mythic GME Fate Chart implementation - thresholds based on chaos factor 5
-  // Format: [exceptional_yes_threshold, yes_threshold, no_threshold]
-  // Roll <= exceptional_yes = Exceptional Yes
-  // Roll <= yes = Yes
-  // Roll <= no = No
-  // Roll > no = Exceptional No
-  const thresholds = {
-    very_unlikely: { exceptional_yes: 3, yes: 15, no: 84 },
-    unlikely: { exceptional_yes: 5, yes: 25, no: 86 },
-    "50_50": { exceptional_yes: 10, yes: 50, no: 91 },
-    likely: { exceptional_yes: 13, yes: 65, no: 94 },
-    very_likely: { exceptional_yes: 15, yes: 75, no: 96 },
-  };
+/**
+ * Executes the Mythic Fate Chart Python script and returns the result
+ */
+const runFateChart = (
+  likelihood: string = "50/50",
+  chaosFactor: number = 5,
+): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "mythic_fate_chart.py",
+    );
+    const proc = spawn("python3", [
+      scriptPath,
+      likelihood,
+      chaosFactor.toString(),
+    ]);
 
-  const threshold =
-    thresholds[likelihood as keyof typeof thresholds] || thresholds["50_50"];
+    let stdout = "";
+    let stderr = "";
 
-  if (roll <= threshold.exceptional_yes) {
-    return "exceptional_yes";
-  } else if (roll <= threshold.yes) {
-    return "yes";
-  } else if (roll <= threshold.no) {
-    return "no";
-  } else {
-    return "exceptional_no";
-  }
-}
+    proc.stdout.on("data", (data) => (stdout += data));
+    proc.stderr.on("data", (data) => (stderr += data));
+
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        return reject(
+          new Error(stderr || `Python script exited with code ${code}`),
+        );
+      }
+      try {
+        resolve(JSON.parse(stdout.trim()));
+      } catch (error) {
+        reject(new Error("Invalid JSON from Fate Chart script"));
+      }
+    });
+  });
+
+/**
+ * Executes the Mythic Meaning Table Python script and returns the result
+ */
+const runMeaningTable = (): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "mythic_meaning_table.py",
+    );
+    const proc = spawn("python3", [scriptPath]);
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (data) => (stdout += data));
+    proc.stderr.on("data", (data) => (stderr += data));
+
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        return reject(
+          new Error(stderr || `Python script exited with code ${code}`),
+        );
+      }
+      try {
+        resolve(JSON.parse(stdout.trim()));
+      } catch (error) {
+        reject(new Error("Invalid JSON from Meaning Table script"));
+      }
+    });
+  });
 
 async function generateRandomEvent(contextSnapshot: any) {
-  // Simplified random event generation - will expand with actual Mythic tables
+  // Use actual Mythic Meaning Table
+  const meaningResult = await runMeaningTable();
+
+  // For now, use a simple focus selection - could be enhanced with the Random Event Focus Table from Python
   const focusOptions = ["NPC", "Faction", "Plot Thread", "PC", "Environment"];
   const focus = focusOptions[Math.floor(Math.random() * focusOptions.length)];
 
-  // Mock Mythic Meaning table
-  const actions = [
-    "Abandon",
-    "Activate",
-    "Agree",
-    "Arrive",
-    "Assist",
-    "Attack",
-    "Betray",
-    "Change",
-  ];
-  const subjects = [
-    "Ally",
-    "Enemy",
-    "Information",
-    "Power",
-    "Secret",
-    "Treasure",
-    "Weapon",
-    "Magic",
-  ];
-
-  const meaningAction = actions[Math.floor(Math.random() * actions.length)];
-  const meaningSubject = subjects[Math.floor(Math.random() * subjects.length)];
-
   return {
     focus,
-    meaning_action: meaningAction,
-    meaning_subject: meaningSubject,
-    description: `Random event involves ${focus}: ${meaningAction} ${meaningSubject}`,
+    meaning_action: meaningResult.verb,
+    meaning_subject: meaningResult.subject,
+    meaning_result: meaningResult,
+    description: `Random event involves ${focus}: ${meaningResult.meaning}`,
   };
 }
 
