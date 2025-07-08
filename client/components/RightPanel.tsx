@@ -6,7 +6,7 @@ import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
 import Map from "./Map";
 import SchemaVisualizer from "./SchemaVisualizer";
-import { User, BookOpen, Network, Eye, MapPin, Database } from "lucide-react";
+import { User, BookOpen, Network, Eye, MapPin } from "lucide-react";
 
 export default function RightPanel() {
   return (
