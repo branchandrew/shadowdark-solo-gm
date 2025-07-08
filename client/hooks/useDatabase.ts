@@ -164,7 +164,7 @@ export function useChaosFactor() {
 }
 
 export function useCampaignElements() {
-  return useDatabase("shadowdark_campaign_elements", {
+  return useDatabase("campaign_elements", {
     threads: [],
     creatures: [],
     factions: [],
