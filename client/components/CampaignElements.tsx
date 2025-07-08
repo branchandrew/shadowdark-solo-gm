@@ -65,6 +65,13 @@ export default function CampaignElements() {
     clues: clues.length,
   });
 
+  // Modal state
+  const [selectedThread, setSelectedThread] = useState<Thread | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<Creature | null>(
+    null,
+  );
+  const [selectedFaction, setSelectedFaction] = useState<Faction | null>(null);
+
   // Filter creatures by type for display
   const characters = creatures.filter(
     (c) =>
@@ -265,30 +272,20 @@ export default function CampaignElements() {
                 {getVisibleThreads().map((thread) => (
                   <div
                     key={thread.id}
-                    className={`flex items-center gap-2 p-3 border rounded ${
+                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-accent/50 transition-colors ${
                       thread.hidden ? "bg-muted/50 border-dashed" : ""
                     }`}
+                    onClick={() => setSelectedThread(thread)}
                   >
-                    <div className="flex gap-1">
-                      {(["active", "dormant", "resolved"] as const).map(
-                        (status) => (
-                          <button
-                            key={status}
-                            onClick={() =>
-                              updateThreadStatus(thread.id, status)
-                            }
-                            className={`px-2 py-1 text-xs rounded ${
-                              thread.status === status
-                                ? getStatusColor(status) + " text-white"
-                                : "bg-muted text-muted-foreground hover:bg-accent"
-                            }`}
-                          >
-                            {status}
-                          </button>
-                        ),
-                      )}
-                    </div>
-                    <span className="flex-1 text-sm">{thread.description}</span>
+                    <Badge
+                      className={getStatusColor(thread.status)}
+                      variant="outline"
+                    >
+                      {thread.status}
+                    </Badge>
+                    <span className="flex-1 text-sm truncate">
+                      {thread.description}
+                    </span>
                     {thread.hidden && (
                       <Badge variant="outline" className="text-xs">
                         Hidden
