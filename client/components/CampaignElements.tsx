@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Network, Users, Crown } from "lucide-react";
@@ -70,81 +67,6 @@ export default function CampaignElements() {
       c.creature_type === "bbeg" ||
       c.creature_type === "lieutenant",
   );
-
-  const addThread = async () => {
-    if (newThread.trim()) {
-      const newThreadObj: Thread = {
-        id: `thread_${Date.now()}`,
-        session_id: "current", // Will be set by database service
-        description: newThread,
-        status: "active",
-        hidden: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      await updateCampaignData({
-        ...campaignData,
-        threads: [...threads, newThreadObj],
-      });
-      setNewThread("");
-    }
-  };
-
-  const addCharacter = async () => {
-    if (newCharacterName.trim() && newCharacterDesc.trim()) {
-      const newCreature: Creature = {
-        id: `creature_${Date.now()}`,
-        session_id: "current", // Will be set by database service
-        name: newCharacterName,
-        race_species: "Human", // Default, user can edit later
-        description: newCharacterDesc,
-        armor_class: 10,
-        hit_points: "1d8",
-        speed: "30 ft",
-        abilities: { STR: 10, DEX: 10, CON: 10, INT: 10, WIS: 10, CHA: 10 },
-        attacks: [],
-        special_abilities: [],
-        creature_type: "npc",
-        status: "alive",
-        hidden: false,
-        npc_disposition: "unknown",
-        npc_role: "other",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      await updateCampaignData({
-        ...campaignData,
-        creatures: [...creatures, newCreature],
-      });
-      setNewCharacterName("");
-      setNewCharacterDesc("");
-    }
-  };
-
-  const addFaction = async () => {
-    if (newFactionName.trim() && newFactionDesc.trim()) {
-      const newFactionObj: Faction = {
-        id: `faction_${Date.now()}`,
-        session_id: "current", // Will be set by database service
-        name: newFactionName,
-        description: newFactionDesc,
-        influence: "minor",
-        relationship: "unknown",
-        hidden: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      await updateCampaignData({
-        ...campaignData,
-        factions: [...factions, newFactionObj],
-      });
-      setNewFactionName("");
-      setNewFactionDesc("");
-    }
-  };
 
   const addClue = async () => {
     if (newClue.trim()) {
