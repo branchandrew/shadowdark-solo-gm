@@ -381,48 +381,81 @@ Return one clean JSON object and nothing else.  Keep values concise:
           hiddenElements,
         );
         console.log("Adventure data written to database successfully");
-
-        // Return the campaign elements in the response so client can sync them
-        res.json({
-          ...villain,
-          success: true,
-          campaign_elements: {
-            threads: hiddenElements.threads,
-            creatures: hiddenElements.npcs.map((npc) => ({
-              id: npc.id,
-              session_id: session_id,
-              name: npc.name,
-              description: npc.description,
-              creature_type: npc.role === "bbeg" ? "bbeg" : "lieutenant",
-              npc_disposition: npc.disposition,
-              hidden: npc.hidden,
-              created_at: npc.created_at,
-              updated_at: npc.updated_at,
-              ...(npc.role === "bbeg" && {
-                bbeg_motivation: villain.bbeg_motivation,
-                bbeg_hook: villain.bbeg_hook,
-              }),
-              ...(npc.tarot_spread && {
-                lieutenant_tarot_seed: npc.tarot_spread.seed,
-                lieutenant_tarot_background: npc.tarot_spread.background,
-                lieutenant_tarot_location: npc.tarot_spread.location,
-                lieutenant_tarot_why_protect: npc.tarot_spread.why_protect,
-                lieutenant_tarot_how_protect: npc.tarot_spread.how_protect,
-                lieutenant_tarot_reward: npc.tarot_spread.reward,
-              }),
-            })),
-            factions: hiddenElements.factions,
-            clues: hiddenElements.clues,
-          },
-        });
-      } else {
-        // No database available, still return success
-        res.json({ ...villain, success: true });
       }
-    } else {
-      // No session_id provided, just return the villain data
-      res.json({ ...villain, success: true });
     }
+
+    // Always return campaign elements in response (regardless of database availability)
+    const campaignElements = {
+      threads: [],
+      creatures: [
+        // Add BBEG as creature
+        {
+          id: `creature_${Date.now()}_bbeg`,
+          session_id: session_id || "local",
+          name: villain.bbeg_name,
+          description: villain.bbeg_detailed_description,
+          creature_type: "bbeg",
+          npc_disposition: "hostile",
+          hidden: true,
+          bbeg_motivation: villain.bbeg_motivation,
+          bbeg_hook: villain.bbeg_hook,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        // Add lieutenants as creatures
+        ...(villain.lieutenants?.map((lieutenant, index) => ({
+          id: `creature_${Date.now()}_lt_${index}`,
+          session_id: session_id || "local",
+          name: lieutenant.name,
+          description: `Lieutenant of ${villain.bbeg_name}. ${lieutenant.tarot_spread.background}`,
+          creature_type: "lieutenant",
+          npc_disposition: "hostile",
+          hidden: true,
+          lieutenant_tarot_seed: lieutenant.tarot_spread.seed,
+          lieutenant_tarot_background: lieutenant.tarot_spread.background,
+          lieutenant_tarot_location: lieutenant.tarot_spread.location,
+          lieutenant_tarot_why_protect: lieutenant.tarot_spread.why_protect,
+          lieutenant_tarot_how_protect: lieutenant.tarot_spread.how_protect,
+          lieutenant_tarot_reward: lieutenant.tarot_spread.reward,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })) || []),
+      ],
+      factions: villain.faction_name
+        ? [
+            {
+              id: `faction_${Date.now()}`,
+              session_id: session_id || "local",
+              name: villain.faction_name,
+              description: villain.faction_description || "",
+              influence: "moderate",
+              relationship: "opposed",
+              hidden: true,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ]
+        : [],
+      clues:
+        villain.clues?.map((clue, index) => ({
+          id: `clue_${Date.now()}_${index}`,
+          session_id: session_id || "local",
+          description: clue,
+          discovered: false,
+          importance: "moderate",
+          hidden: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })) || [],
+    };
+
+    console.log("Returning campaign elements:", campaignElements);
+
+    res.json({
+      ...villain,
+      success: true,
+      campaign_elements: campaignElements,
+    });
   } catch (err) {
     console.error("Adventure generation error:", err);
 
