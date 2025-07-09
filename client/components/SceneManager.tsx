@@ -58,16 +58,26 @@ export default function SceneManager() {
     5,
   );
   const [character] = useSessionState("character", null);
+  const [adventureArc] = useSessionState("bts_adventure_arc", null);
 
   const generateNewScene = async () => {
     setIsGenerating(true);
 
     try {
+      // Get campaign elements from localStorage
+      const campaignElements = localStorage.getItem(
+        "shadowdark_campaign_elements",
+      );
+      const parsedCampaignElements = campaignElements
+        ? JSON.parse(campaignElements)
+        : null;
+
       const requestBody = {
         session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         player_intentions: playerIntentions.trim() || undefined,
         chaos_factor: chaosFactor,
         character: character,
+        campaign_elements: parsedCampaignElements,
       };
 
       console.log("Generating new scene with data:", requestBody);
@@ -206,7 +216,7 @@ export default function SceneManager() {
 
             <Button
               onClick={generateNewScene}
-              disabled={isGenerating}
+              disabled={isGenerating || !adventureArc}
               className="flex-1"
             >
               {isGenerating ? (
