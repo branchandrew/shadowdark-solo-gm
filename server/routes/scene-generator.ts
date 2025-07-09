@@ -13,6 +13,7 @@ interface SceneGenerationRequest {
   player_intentions?: string;
   chaos_factor?: number;
   character?: any;
+  campaign_elements?: any;
 }
 
 export async function generateScene(req: Request, res: Response) {
@@ -22,6 +23,7 @@ export async function generateScene(req: Request, res: Response) {
       player_intentions,
       chaos_factor = 5,
       character,
+      campaign_elements,
     }: SceneGenerationRequest = req.body;
 
     if (!session_id) {
@@ -34,7 +36,11 @@ export async function generateScene(req: Request, res: Response) {
     console.log("=== STEP 1: Gathering Context Snapshot ===");
 
     // Get current campaign data for context
-    const contextSnapshot = await gatherContextSnapshot(session_id, character);
+    const contextSnapshot = await gatherContextSnapshot(
+      session_id,
+      character,
+      campaign_elements,
+    );
 
     console.log("Context Snapshot:", JSON.stringify(contextSnapshot, null, 2));
     console.log(
@@ -143,15 +149,15 @@ async function gatherContextSnapshot(sessionId: string, character?: any) {
   const adventureLog = await getAdventureLogData(sessionId);
 
   return {
-    bbeg: campaignElements.bbeg || {
+    bbeg: campaignData.bbeg || {
       name: "Unknown BBEG",
       description: "No BBEG generated yet",
       motivation: "Unknown motivation",
       hook: "No hook defined",
     },
-    npcs: campaignElements.npcs || [],
-    plot_threads: campaignElements.plot_threads || [],
-    factions: campaignElements.factions || [],
+    npcs: campaignData.npcs || [],
+    plot_threads: campaignData.plot_threads || [],
+    factions: campaignData.factions || [],
     adventure_log: adventureLog || [],
     character: characterData
       ? {
@@ -170,47 +176,14 @@ async function gatherContextSnapshot(sessionId: string, character?: any) {
 }
 
 async function getCampaignElementsData(sessionId: string) {
-  // Try to get from database first, then fall back to stub data
-  try {
-    // For now, return stub data until we have better database integration
-    return {
-      bbeg: {
-        name: "Malakai Duskweaver",
-        description:
-          "A fallen celestial who weaves star essence into dark tapestries",
-        motivation: "To achieve immortality by harvesting celestial essence",
-        hook: "Whispers speak of a shadow merchant whose coins bring dreams and death",
-      },
-      npcs: [
-        {
-          name: "Sister Vesper",
-          type: "lieutenant",
-          description: "Former temple priestess with prophetic dreams",
-          disposition: "hostile",
-        },
-      ],
-      plot_threads: [
-        {
-          description: "Strange auroras appearing in impossible patterns",
-          status: "active",
-        },
-        {
-          description: "People found transformed into living constellations",
-          status: "active",
-        },
-      ],
-      factions: [
-        {
-          name: "The Constellation Covenant",
-          description: "Secretive order of astronomers and mystics",
-          relationship: "opposed",
-        },
-      ],
-    };
-  } catch (error) {
-    console.error("Error getting campaign elements:", error);
-    return { bbeg: null, npcs: [], plot_threads: [], factions: [] };
-  }
+  // Return empty data - campaign elements should only exist if user generated them
+  // The frontend will pass campaign elements in the request if they exist
+  return {
+    bbeg: null,
+    npcs: [],
+    plot_threads: [],
+    factions: [],
+  };
 }
 
 async function getCharacterData(sessionId: string) {
