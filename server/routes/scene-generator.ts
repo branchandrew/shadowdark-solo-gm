@@ -142,9 +142,14 @@ export async function generateScene(req: Request, res: Response) {
   }
 }
 
-async function gatherContextSnapshot(sessionId: string, character?: any) {
-  // Get real data from database/localStorage
-  const campaignElements = await getCampaignElementsData(sessionId);
+async function gatherContextSnapshot(
+  sessionId: string,
+  character?: any,
+  campaignElements?: any,
+) {
+  // Use provided campaign elements or fall back to empty data
+  const campaignData =
+    campaignElements || (await getCampaignElementsData(sessionId));
   const characterData = character || (await getCharacterData(sessionId));
   const adventureLog = await getAdventureLogData(sessionId);
 
