@@ -224,6 +224,11 @@ export default function SceneManager() {
                   <RotateCcw className="h-4 w-4 mr-2 animate-spin" />
                   Generating Scene...
                 </>
+              ) : !adventureArc ? (
+                <>
+                  <ChevronRight className="h-4 w-4 mr-2" />
+                  Generate Adventure Arc First
+                </>
               ) : (
                 <>
                   <ChevronRight className="h-4 w-4 mr-2" />
