@@ -143,20 +143,40 @@ export default function BTSPanel() {
           voice.trim() || "Atmospheric",
         );
 
-        // Save campaign elements if provided (from database write)
-        if (data.campaign_elements) {
-          console.log(
-            "Saving campaign elements to localStorage...",
-            data.campaign_elements,
-          );
-          localStorage.setItem(
-            "shadowdark_campaign_elements",
-            JSON.stringify(data.campaign_elements),
-          );
-          console.log("Campaign elements saved to localStorage");
-        } else {
-          console.log("No campaign_elements in server response");
-        }
+        // Create campaign elements structure for scene generation
+        const campaignElements = {
+          bbeg: {
+            name: data.bbeg_name,
+            description: data.bbeg_detailed_description,
+            motivation: data.bbeg_motivation,
+            hook: data.bbeg_hook,
+          },
+          npcs: data.lieutenants || [],
+          plot_threads:
+            data.clues?.map((clue: string) => ({
+              description: clue,
+              status: "active",
+            })) || [],
+          factions: data.faction_name
+            ? [
+                {
+                  name: data.faction_name,
+                  description: data.faction_description || "",
+                  relationship: "opposed",
+                },
+              ]
+            : [],
+        };
+
+        console.log(
+          "Saving campaign elements to localStorage...",
+          campaignElements,
+        );
+        localStorage.setItem(
+          "shadowdark_campaign_elements",
+          JSON.stringify(campaignElements),
+        );
+        console.log("Campaign elements saved to localStorage");
 
         // Combine all the BBEG information for display
         const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
