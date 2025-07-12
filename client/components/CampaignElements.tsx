@@ -527,7 +527,7 @@ export default function CampaignElements() {
               {selectedCharacter.creature_type === "bbeg" && (
                 <>
                   {selectedCharacter.bbeg_motivation && (
-                    <div>
+                    <div key="bbeg-motivation">
                       <h4 className="font-medium mb-2">Motivation</h4>
                       <p className="text-sm text-muted-foreground">
                         {selectedCharacter.bbeg_motivation}
@@ -535,7 +535,7 @@ export default function CampaignElements() {
                     </div>
                   )}
                   {selectedCharacter.bbeg_hook && (
-                    <div>
+                    <div key="bbeg-hook">
                       <h4 className="font-medium mb-2">Adventure Hook</h4>
                       <p className="text-sm text-muted-foreground">
                         {selectedCharacter.bbeg_hook}
