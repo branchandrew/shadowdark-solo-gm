@@ -450,7 +450,7 @@ export default function CampaignElements() {
                   {(["active", "dormant", "resolved"] as const).map(
                     (status) => (
                       <button
-                        key={status}
+                        key={`thread-status-${status}`}
                         onClick={() =>
                           updateThreadStatus(selectedThread.id, status)
                         }
@@ -542,7 +542,7 @@ export default function CampaignElements() {
                   {(["friendly", "neutral", "hostile", "unknown"] as const).map(
                     (disposition) => (
                       <button
-                        key={disposition}
+                        key={`character-disposition-${disposition}`}
                         onClick={() =>
                           updateCharacterDisposition(
                             selectedCharacter.id,
