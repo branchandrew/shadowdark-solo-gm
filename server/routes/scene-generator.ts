@@ -418,15 +418,24 @@ Please ensure this is a completely fresh scene generation, not a cached response
 
   console.log("=== FINAL PROMPT BEING SENT TO ANTHROPIC ===");
   console.log("Prompt length:", promptWithRandomization.length);
-  console.log("First 500 chars:", promptWithRandomization.substring(0, 500));
-  console.log(
-    "Last 500 chars:",
-    promptWithRandomization.substring(promptWithRandomization.length - 500),
-  );
+  console.log("BBEG name from context:", contextSnapshot.bbeg.name);
   console.log(
     "Contains BBEG name:",
     promptWithRandomization.includes(contextSnapshot.bbeg.name),
   );
+
+  // Find and extract the BBEG line specifically
+  const lines = promptWithRandomization.split("\n");
+  const bbegLine = lines.find((line) => line.startsWith("BBEG:"));
+  console.log("EXACT BBEG LINE IN PROMPT:", bbegLine);
+
+  // Also check the debug line
+  const debugLine = lines.find((line) => line.startsWith("DEBUG_BBEG_NAME:"));
+  console.log("EXACT DEBUG LINE IN PROMPT:", debugLine);
+
+  console.log("=== FIRST 800 CHARS OF PROMPT ===");
+  console.log(promptWithRandomization.substring(0, 800));
+  console.log("=== END FIRST 800 CHARS ===");
   console.log("=== END FINAL PROMPT DEBUG ===");
 
   const response = await anthropic.messages.create({
