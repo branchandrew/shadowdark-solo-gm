@@ -600,13 +600,13 @@ export default function CampaignElements() {
                   {(["allied", "neutral", "opposed", "unknown"] as const).map(
                     (relationship) => (
                       <button
-                        key={relationship}
+                        key={`faction-relationship-${relationship}`}
                         onClick={() =>
                           updateFactionRelationship(
                             selectedFaction.id,
                             relationship,
                           )
-                        }
+                        >
                         className={`px-2 py-1 text-xs rounded ${
                           selectedFaction.relationship === relationship
                             ? getRelationshipColor(relationship) + " text-white"
