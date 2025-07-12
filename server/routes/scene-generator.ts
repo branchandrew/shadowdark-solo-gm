@@ -34,6 +34,10 @@ export async function generateScene(req: Request, res: Response) {
     }
 
     console.log("=== STEP 1: Gathering Context Snapshot ===");
+    console.log(
+      "Received campaign_elements:",
+      JSON.stringify(campaign_elements, null, 2),
+    );
 
     // Get current campaign data for context
     const contextSnapshot = await gatherContextSnapshot(
@@ -148,8 +152,18 @@ async function gatherContextSnapshot(
   campaignElements?: any,
 ) {
   // Use provided campaign elements or fall back to empty data
+  console.log(
+    "gatherContextSnapshot - campaignElements parameter:",
+    JSON.stringify(campaignElements, null, 2),
+  );
+
   const campaignData =
     campaignElements || (await getCampaignElementsData(sessionId));
+  console.log(
+    "gatherContextSnapshot - final campaignData:",
+    JSON.stringify(campaignData, null, 2),
+  );
+
   const characterData = character || (await getCharacterData(sessionId));
   const adventureLog = await getAdventureLogData(sessionId);
 
