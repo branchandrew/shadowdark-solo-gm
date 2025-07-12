@@ -347,6 +347,9 @@ CONTEXT:
 BBEG: ${contextSnapshot.bbeg.name} - ${contextSnapshot.bbeg.description}
 Motivation: ${contextSnapshot.bbeg.motivation}
 
+DEBUG_BBEG_NAME: ${contextSnapshot.bbeg.name}
+DEBUG_BBEG_CHECK: The BBEG for this scene is named "${contextSnapshot.bbeg.name}" and must be referenced in the response.
+
 Current Plot Threads:
 ${contextSnapshot.plot_threads.map((thread: any) => `- ${thread.description} (${thread.status})`).join("\n")}
 
