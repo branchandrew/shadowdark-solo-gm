@@ -185,12 +185,7 @@ async function gatherContextSnapshot(
   const adventureLog = await getAdventureLogData(sessionId);
 
   return {
-    bbeg: campaignData.bbeg || {
-      name: "Unknown BBEG",
-      description: "No BBEG generated yet",
-      motivation: "Unknown motivation",
-      hook: "No hook defined",
-    },
+    bbeg: campaignData.bbeg || null,
     npcs: campaignData.npcs || [],
     plot_threads: campaignData.plot_threads || [],
     factions: campaignData.factions || [],
