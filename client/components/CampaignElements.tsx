@@ -606,7 +606,7 @@ export default function CampaignElements() {
                             selectedFaction.id,
                             relationship,
                           )
-                        >
+                        }
                         className={`px-2 py-1 text-xs rounded ${
                           selectedFaction.relationship === relationship
                             ? getRelationshipColor(relationship) + " text-white"
