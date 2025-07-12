@@ -64,143 +64,73 @@ export default function SceneManager() {
     setIsGenerating(true);
 
     try {
-      // Get campaign elements from database/localStorage with debugging
+      // Get campaign elements from localStorage only
       let finalCampaignElements = null;
 
-      // Try to get from database first (since that's where real data lives)
-      // Use the session ID from the database data - look for it in localStorage or generate consistent one
-      const getSessionId = () => {
-        // Try to get existing session ID from localStorage or create a consistent one
-        let sessionId = localStorage.getItem("current_session_id");
-        if (!sessionId) {
-          // Check if we can extract session_id from existing database entries
-          const dbEntries = Object.keys(localStorage).find((key) =>
-            key.includes("session_"),
-          );
-          if (dbEntries) {
-            // Extract session ID from existing data structure
-            try {
-              const data = JSON.parse(localStorage.getItem(dbEntries) || "{}");
-              if (data.session_id) {
-                sessionId = data.session_id;
-                localStorage.setItem("current_session_id", sessionId);
-              }
-            } catch (e) {
-              console.warn("Could not extract session ID from localStorage");
-            }
-          }
+      // First try shadowdark_campaign_elements
+      const campaignElementsRaw = localStorage.getItem(
+        "shadowdark_campaign_elements",
+      );
+      console.log("Campaign elements from localStorage:", campaignElementsRaw);
 
-          if (!sessionId) {
-            // From your example: session_1752018723225_8wnwbm8u3
-            sessionId = "session_1752018723225_8wnwbm8u3"; // Use the actual session ID from your data
-            localStorage.setItem("current_session_id", sessionId);
-          }
+      if (campaignElementsRaw) {
+        try {
+          finalCampaignElements = JSON.parse(campaignElementsRaw);
+          console.log("Parsed campaign elements:", finalCampaignElements);
+        } catch (e) {
+          console.error("Error parsing campaign elements:", e);
         }
-        return sessionId;
-      };
-
-      try {
-        const sessionId = getSessionId();
-        console.log("Using session ID:", sessionId);
-
-        const response = await fetch("/api/get-session-data", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_id: sessionId }),
-        });
-
-        if (response.ok) {
-          const dbData = await response.json();
-          console.log("Database data:", dbData);
-
-          if (dbData.success && dbData.data) {
-            // Transform database structure to scene generator format
-            const creatures = dbData.data.creatures || [];
-            const clues = dbData.data.clues || [];
-            const factions = dbData.data.factions || [];
-
-            // Find BBEG in creatures array
-            const bbegCreature = creatures.find(
-              (c: any) => c.creature_type === "bbeg",
-            );
-
-            // Find lieutenants in creatures array
-            const lieutenants = creatures.filter(
-              (c: any) => c.creature_type === "lieutenant",
-            );
-
-            finalCampaignElements = {
-              bbeg: bbegCreature
-                ? {
-                    name: bbegCreature.name,
-                    description: bbegCreature.description,
-                    motivation: bbegCreature.bbeg_motivation,
-                    hook: bbegCreature.bbeg_hook,
-                  }
-                : null,
-              npcs: lieutenants.map((lt: any) => ({
-                name: lt.name,
-                description: lt.description,
-                type: "lieutenant",
-                disposition: lt.npc_disposition || "hostile",
-              })),
-              plot_threads: clues.map((clue: any) => ({
-                description: clue.description,
-                status: clue.discovered ? "resolved" : "active",
-              })),
-              factions: factions.map((faction: any) => ({
-                name: faction.name,
-                description: faction.description,
-                relationship: faction.relationship,
-              })),
-            };
-
-            console.log(
-              "Transformed database campaign elements:",
-              finalCampaignElements,
-            );
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching from database:", error);
       }
 
-      // Fallback to localStorage if database fails
+      // If still no data, try to extract from adventure arc
       if (!finalCampaignElements) {
-        const campaignElementsRaw = localStorage.getItem(
-          "shadowdark_campaign_elements",
+        const adventureArcRaw = localStorage.getItem(
+          "shadowdark_adventure_arc",
         );
-        console.log("Falling back to localStorage:", campaignElementsRaw);
+        console.log("Adventure arc from localStorage:", adventureArcRaw);
 
-        if (campaignElementsRaw) {
-          finalCampaignElements = JSON.parse(campaignElementsRaw);
-        } else {
-          // Try adventure arc as last resort
-          const adventureArcRaw = localStorage.getItem(
-            "shadowdark_adventure_arc",
-          );
-          if (adventureArcRaw) {
+        if (adventureArcRaw) {
+          try {
             const adventureArc = JSON.parse(adventureArcRaw);
-            finalCampaignElements = {
-              bbeg: adventureArc.bbeg || null,
-              npcs: adventureArc.lieutenants || [],
-              plot_threads:
-                adventureArc.clues?.map((clue: string) => ({
-                  description: clue,
-                  status: "active",
-                })) || [],
-              factions: adventureArc.faction?.name
-                ? [
-                    {
-                      name: adventureArc.faction.name,
-                      description: adventureArc.faction.description || "",
-                      relationship: "opposed",
-                    },
-                  ]
-                : [],
-            };
+            if (adventureArc && adventureArc.bbeg && adventureArc.bbeg.name) {
+              finalCampaignElements = {
+                bbeg: adventureArc.bbeg,
+                npcs: adventureArc.lieutenants || [],
+                plot_threads:
+                  adventureArc.clues?.map((clue: string) => ({
+                    description: clue,
+                    status: "active",
+                  })) || [],
+                factions: adventureArc.faction?.name
+                  ? [
+                      {
+                        name: adventureArc.faction.name,
+                        description: adventureArc.faction.description || "",
+                        relationship: "opposed",
+                      },
+                    ]
+                  : [],
+              };
+              console.log(
+                "Extracted campaign elements from adventure arc:",
+                finalCampaignElements,
+              );
+            }
+          } catch (e) {
+            console.error("Error parsing adventure arc:", e);
           }
         }
+      }
+
+      // Validate we have a proper BBEG before proceeding
+      if (
+        !finalCampaignElements ||
+        !finalCampaignElements.bbeg ||
+        !finalCampaignElements.bbeg.name
+      ) {
+        console.log("No valid campaign elements found. Cannot generate scene.");
+        alert("Please generate an adventure arc first before creating scenes.");
+        return;
       }
 
       const requestBody = {
