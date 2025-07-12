@@ -77,7 +77,7 @@ export default function SceneManager() {
         player_intentions: playerIntentions.trim() || undefined,
         chaos_factor: chaosFactor,
         character: character,
-        campaign_elements: parsedCampaignElements,
+        campaign_elements: finalCampaignElements,
       };
 
       console.log("Generating new scene with data:", requestBody);
