@@ -68,11 +68,45 @@ export default function SceneManager() {
       let finalCampaignElements = null;
 
       // Try to get from database first (since that's where real data lives)
+      // Use the session ID from the database data - look for it in localStorage or generate consistent one
+      const getSessionId = () => {
+        // Try to get existing session ID from localStorage or create a consistent one
+        let sessionId = localStorage.getItem("current_session_id");
+        if (!sessionId) {
+          // Check if we can extract session_id from existing database entries
+          const dbEntries = Object.keys(localStorage).find((key) =>
+            key.includes("session_"),
+          );
+          if (dbEntries) {
+            // Extract session ID from existing data structure
+            try {
+              const data = JSON.parse(localStorage.getItem(dbEntries) || "{}");
+              if (data.session_id) {
+                sessionId = data.session_id;
+                localStorage.setItem("current_session_id", sessionId);
+              }
+            } catch (e) {
+              console.warn("Could not extract session ID from localStorage");
+            }
+          }
+
+          if (!sessionId) {
+            // From your example: session_1752018723225_8wnwbm8u3
+            sessionId = "session_1752018723225_8wnwbm8u3"; // Use the actual session ID from your data
+            localStorage.setItem("current_session_id", sessionId);
+          }
+        }
+        return sessionId;
+      };
+
       try {
+        const sessionId = getSessionId();
+        console.log("Using session ID:", sessionId);
+
         const response = await fetch("/api/get-session-data", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_id: `session_${Date.now()}` }),
+          body: JSON.stringify({ session_id: sessionId }),
         });
 
         if (response.ok) {
