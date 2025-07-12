@@ -6,6 +6,7 @@ import { generateAdventure } from "./routes/adventure-generator";
 import { generateScene } from "./routes/scene-generator";
 import { rollFateChart } from "./routes/mythic-fate";
 import { rollMeaningTable } from "./routes/mythic-meaning";
+import { getSessionData } from "./routes/session-data";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
@@ -35,6 +36,7 @@ export function createServer() {
   app.post("/api/generate-scene", generateScene);
   app.post("/api/roll-fate", rollFateChart);
   app.post("/api/roll-meaning", rollMeaningTable);
+  app.post("/api/get-session-data", getSessionData);
 
   return app;
 }
