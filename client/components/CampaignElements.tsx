@@ -316,12 +316,20 @@ export default function CampaignElements() {
                     </div>
                     <div className="flex items-center gap-2">
                       {character.creature_type === "bbeg" && (
-                        <Badge variant="destructive" className="text-xs">
+                        <Badge
+                          key="bbeg-badge"
+                          variant="destructive"
+                          className="text-xs"
+                        >
                           BBEG
                         </Badge>
                       )}
                       {character.creature_type === "lieutenant" && (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge
+                          key="lieutenant-badge"
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           Lieutenant
                         </Badge>
                       )}
