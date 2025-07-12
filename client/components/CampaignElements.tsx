@@ -500,12 +500,20 @@ export default function CampaignElements() {
                   {selectedCharacter.name}
                 </h3>
                 {selectedCharacter.creature_type === "bbeg" && (
-                  <Badge variant="destructive" className="text-xs">
+                  <Badge
+                    key="modal-bbeg-badge"
+                    variant="destructive"
+                    className="text-xs"
+                  >
                     BBEG
                   </Badge>
                 )}
                 {selectedCharacter.creature_type === "lieutenant" && (
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge
+                    key="modal-lieutenant-badge"
+                    variant="secondary"
+                    className="text-xs"
+                  >
                     Lieutenant
                   </Badge>
                 )}
