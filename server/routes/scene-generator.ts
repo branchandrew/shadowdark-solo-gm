@@ -282,6 +282,15 @@ async function createSceneExpectations(
   contextSnapshot: any,
   playerIntentions?: string,
 ) {
+  console.log("=== createSceneExpectations - contextSnapshot ===");
+  console.log("BBEG:", JSON.stringify(contextSnapshot.bbeg, null, 2));
+  console.log("NPCs:", JSON.stringify(contextSnapshot.npcs, null, 2));
+  console.log("Factions:", JSON.stringify(contextSnapshot.factions, null, 2));
+  console.log(
+    "Plot Threads:",
+    JSON.stringify(contextSnapshot.plot_threads, null, 2),
+  );
+
   const prompt = `You are a GM for a Shadowdark RPG solo session. Create scene expectations based on the story context and player intentions.
 
 CONTEXT:
