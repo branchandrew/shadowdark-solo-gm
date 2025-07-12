@@ -386,10 +386,20 @@ Return a JSON object with:
   console.log(prompt);
   console.log("=== END LLM PROMPT ===");
 
+  // Add randomization to prevent caching and ensure fresh responses
+  const randomSeed = Math.random().toString(36).substring(2, 15);
+  const promptWithRandomization = `${prompt}
+
+GENERATION_ID: ${randomSeed}
+TIMESTAMP: ${new Date().toISOString()}
+
+Please ensure this is a completely fresh scene generation, not a cached response.`;
+
   const response = await anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 800,
-    messages: [{ role: "user", content: prompt }],
+    temperature: 0.7, // Add some randomness
+    messages: [{ role: "user", content: promptWithRandomization }],
   });
 
   const content = response.content[0];
