@@ -57,10 +57,15 @@ export async function generateScene(req: Request, res: Response) {
     }
 
     // Get current campaign data for context
+    console.log(
+      `${trackingId} - Calling gatherContextSnapshot with campaign_elements.bbeg:`,
+      campaign_elements?.bbeg?.name,
+    );
     const contextSnapshot = await gatherContextSnapshot(
       session_id,
       character,
       campaign_elements,
+      trackingId,
     );
 
     console.log("Context Snapshot:", JSON.stringify(contextSnapshot, null, 2));
@@ -71,7 +76,7 @@ export async function generateScene(req: Request, res: Response) {
 
     console.log("=== STEP 2: Creating Scene Expectations ===");
     console.log(
-      "BEFORE createSceneExpectations - contextSnapshot.bbeg:",
+      `${trackingId} - BEFORE createSceneExpectations - contextSnapshot.bbeg:`,
       JSON.stringify(contextSnapshot.bbeg, null, 2),
     );
 
@@ -79,6 +84,7 @@ export async function generateScene(req: Request, res: Response) {
     const sceneExpectations = await createSceneExpectations(
       contextSnapshot,
       player_intentions,
+      trackingId,
     );
 
     console.log("Scene Expectations:", sceneExpectations.description);
@@ -172,17 +178,18 @@ async function gatherContextSnapshot(
   sessionId: string,
   character?: any,
   campaignElements?: any,
+  trackingId?: string,
 ) {
   // Use provided campaign elements or fall back to empty data
   console.log(
-    "gatherContextSnapshot - campaignElements parameter:",
+    `${trackingId} - gatherContextSnapshot - campaignElements parameter:`,
     JSON.stringify(campaignElements, null, 2),
   );
 
   const campaignData =
     campaignElements || (await getCampaignElementsData(sessionId));
   console.log(
-    "gatherContextSnapshot - final campaignData:",
+    `${trackingId} - gatherContextSnapshot - final campaignData:`,
     JSON.stringify(campaignData, null, 2),
   );
 
@@ -286,13 +293,25 @@ async function getAdventureLogData(sessionId: string) {
 async function createSceneExpectations(
   contextSnapshot: any,
   playerIntentions?: string,
+  trackingId?: string,
 ) {
-  console.log("=== createSceneExpectations - contextSnapshot ===");
-  console.log("BBEG:", JSON.stringify(contextSnapshot.bbeg, null, 2));
-  console.log("NPCs:", JSON.stringify(contextSnapshot.npcs, null, 2));
-  console.log("Factions:", JSON.stringify(contextSnapshot.factions, null, 2));
   console.log(
-    "Plot Threads:",
+    `${trackingId} - === createSceneExpectations - contextSnapshot ===`,
+  );
+  console.log(
+    `${trackingId} - BBEG:`,
+    JSON.stringify(contextSnapshot.bbeg, null, 2),
+  );
+  console.log(
+    `${trackingId} - NPCs:`,
+    JSON.stringify(contextSnapshot.npcs, null, 2),
+  );
+  console.log(
+    `${trackingId} - Factions:`,
+    JSON.stringify(contextSnapshot.factions, null, 2),
+  );
+  console.log(
+    `${trackingId} - Plot Threads:`,
     JSON.stringify(contextSnapshot.plot_threads, null, 2),
   );
 
