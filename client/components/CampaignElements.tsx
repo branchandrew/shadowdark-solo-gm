@@ -407,12 +407,14 @@ export default function CampaignElements() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge
+                        key="influence-badge"
                         className={getInfluenceColor(faction.influence)}
                         variant="outline"
                       >
                         {faction.influence}
                       </Badge>
                       <Badge
+                        key="relationship-badge"
                         className={getRelationshipColor(faction.relationship)}
                         variant="outline"
                       >
