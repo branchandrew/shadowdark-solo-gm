@@ -70,6 +70,10 @@ export async function generateScene(req: Request, res: Response) {
     );
 
     console.log("=== STEP 2: Creating Scene Expectations ===");
+    console.log(
+      "BEFORE createSceneExpectations - contextSnapshot.bbeg:",
+      JSON.stringify(contextSnapshot.bbeg, null, 2),
+    );
 
     // Get scene expectations from LLM
     const sceneExpectations = await createSceneExpectations(
