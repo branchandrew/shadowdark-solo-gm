@@ -292,7 +292,17 @@ Current Plot Threads:
 ${contextSnapshot.plot_threads.map((thread: any) => `- ${thread.description} (${thread.status})`).join("\n")}
 
 NPCs:
-${contextSnapshot.npcs.map((npc: any) => `- ${npc.name}: ${npc.description} (${npc.disposition})`).join("\n")}
+${contextSnapshot.npcs
+  .map((npc: any) => {
+    if (npc.tarot_spread) {
+      // Handle lieutenant structure with tarot spread
+      return `- ${npc.name}: ${npc.tarot_spread.seed || npc.tarot_spread.background || "Lieutenant"}`;
+    } else {
+      // Handle simple NPC structure
+      return `- ${npc.name}: ${npc.description || "NPC"} (${npc.disposition || "unknown"})`;
+    }
+  })
+  .join("\n")}
 
 Factions:
 ${contextSnapshot.factions.map((faction: any) => `- ${faction.name}: ${faction.description} (${faction.relationship})`).join("\n")}
