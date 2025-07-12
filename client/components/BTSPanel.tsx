@@ -143,8 +143,72 @@ export default function BTSPanel() {
           voice.trim() || "Atmospheric",
         );
 
-        // Create campaign elements structure for scene generation
+        // Create campaign elements structure that matches CampaignElements component expectations
         const campaignElements = {
+          threads: [], // Plot threads will be populated later
+          creatures: [
+            // Add BBEG as a creature
+            {
+              id: `creature_${Date.now()}_bbeg`,
+              name: data.bbeg_name,
+              description: data.bbeg_detailed_description,
+              creature_type: "bbeg",
+              npc_disposition: "hostile",
+              bbeg_motivation: data.bbeg_motivation,
+              bbeg_hook: data.bbeg_hook,
+            },
+            // Add lieutenants as creatures
+            ...(data.lieutenants || []).map(
+              (lieutenant: any, index: number) => ({
+                id: `creature_${Date.now()}_lt_${index}`,
+                name: lieutenant.name,
+                description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
+                creature_type: "lieutenant",
+                npc_disposition: "hostile",
+                lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
+                lieutenant_tarot_background:
+                  lieutenant.tarot_spread?.background,
+                lieutenant_tarot_location: lieutenant.tarot_spread?.location,
+                lieutenant_tarot_why_protect:
+                  lieutenant.tarot_spread?.why_protect,
+                lieutenant_tarot_how_protect:
+                  lieutenant.tarot_spread?.how_protect,
+                lieutenant_tarot_reward: lieutenant.tarot_spread?.reward,
+              }),
+            ),
+          ],
+          factions: data.faction_name
+            ? [
+                {
+                  id: `faction_${Date.now()}`,
+                  name: data.faction_name,
+                  description: data.faction_description || "",
+                  relationship: "opposed",
+                  influence: "moderate",
+                },
+              ]
+            : [],
+          clues: (data.clues || []).map((clue: string, index: number) => ({
+            id: `clue_${Date.now()}_${index}`,
+            description: clue,
+            discovered: false,
+            importance: "moderate",
+          })),
+        };
+
+        console.log(
+          "Saving campaign elements to database...",
+          campaignElements,
+        );
+
+        // Save to the correct key that the database hook expects
+        localStorage.setItem(
+          "campaign_elements",
+          JSON.stringify(campaignElements),
+        );
+
+        // Also create the scene generation format for backward compatibility
+        const sceneGenerationElements = {
           bbeg: {
             name: data.bbeg_name,
             description: data.bbeg_detailed_description,
@@ -168,14 +232,11 @@ export default function BTSPanel() {
             : [],
         };
 
-        console.log(
-          "Saving campaign elements to localStorage...",
-          campaignElements,
-        );
         localStorage.setItem(
           "shadowdark_campaign_elements",
-          JSON.stringify(campaignElements),
+          JSON.stringify(sceneGenerationElements),
         );
+
         console.log("Campaign elements saved to localStorage");
 
         // Combine all the BBEG information for display
