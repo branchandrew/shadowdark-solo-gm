@@ -201,40 +201,10 @@ export default function BTSPanel() {
           campaignElements,
         );
 
-        // Save to the correct key that the database hook expects
-        localStorage.setItem(
-          "campaign_elements",
-          JSON.stringify(campaignElements),
-        );
-
-        // Also create the scene generation format for backward compatibility
-        const sceneGenerationElements = {
-          bbeg: {
-            name: data.bbeg_name,
-            description: data.bbeg_detailed_description,
-            motivation: data.bbeg_motivation,
-            hook: data.bbeg_hook,
-          },
-          npcs: data.lieutenants || [],
-          plot_threads:
-            data.clues?.map((clue: string) => ({
-              description: clue,
-              status: "active",
-            })) || [],
-          factions: data.faction_name
-            ? [
-                {
-                  name: data.faction_name,
-                  description: data.faction_description || "",
-                  relationship: "opposed",
-                },
-              ]
-            : [],
-        };
-
+        // Save to the correct key that the database hook expects (database.get adds shadowdark_ prefix)
         localStorage.setItem(
           "shadowdark_campaign_elements",
-          JSON.stringify(sceneGenerationElements),
+          JSON.stringify(campaignElements),
         );
 
         console.log("Campaign elements saved to localStorage");
