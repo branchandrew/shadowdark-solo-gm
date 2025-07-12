@@ -39,6 +39,14 @@ export async function generateScene(req: Request, res: Response) {
       JSON.stringify(campaign_elements, null, 2),
     );
 
+    // Add unique tracking ID
+    const trackingId = `TRACK_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    console.log(`${trackingId} - Starting scene generation`);
+    console.log(
+      `${trackingId} - Received campaign_elements.bbeg:`,
+      campaign_elements?.bbeg?.name,
+    );
+
     // Validate that we have campaign elements - reject if none exist
     if (
       !campaign_elements ||
