@@ -60,6 +60,41 @@ export default function SceneManager() {
   const [character] = useSessionState("character", null);
   const [adventureArc] = useSessionState("bts_adventure_arc", null);
 
+  // Check if we have valid campaign elements
+  const hasValidCampaignElements = () => {
+    const campaignElementsRaw = localStorage.getItem(
+      "shadowdark_campaign_elements",
+    );
+    const adventureArcRaw = localStorage.getItem("shadowdark_adventure_arc");
+
+    if (campaignElementsRaw) {
+      try {
+        const elements = JSON.parse(campaignElementsRaw);
+        return (
+          elements &&
+          elements.bbeg &&
+          elements.bbeg.name &&
+          elements.bbeg.name !== "Unknown BBEG"
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (adventureArcRaw) {
+      try {
+        const arc = JSON.parse(adventureArcRaw);
+        return (
+          arc && arc.bbeg && arc.bbeg.name && arc.bbeg.name !== "Unknown BBEG"
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
+  };
+
   const generateNewScene = async () => {
     setIsGenerating(true);
 
@@ -277,7 +312,7 @@ export default function SceneManager() {
 
             <Button
               onClick={generateNewScene}
-              disabled={isGenerating || !adventureArc}
+              disabled={isGenerating || !hasValidCampaignElements()}
               className="flex-1"
             >
               {isGenerating ? (
@@ -285,7 +320,7 @@ export default function SceneManager() {
                   <RotateCcw className="h-4 w-4 mr-2 animate-spin" />
                   Generating Scene...
                 </>
-              ) : !adventureArc ? (
+              ) : !hasValidCampaignElements() ? (
                 <>
                   <ChevronRight className="h-4 w-4 mr-2" />
                   Generate Adventure Arc First
