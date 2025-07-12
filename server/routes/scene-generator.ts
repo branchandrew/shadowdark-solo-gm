@@ -4,6 +4,9 @@ import { spawn } from "child_process";
 import path from "path";
 import { relationalDB } from "../lib/relational-database.js";
 
+// Prevent concurrent scene generation requests
+let isGeneratingScene = false;
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -17,6 +20,18 @@ interface SceneGenerationRequest {
 }
 
 export async function generateScene(req: Request, res: Response) {
+  // Prevent concurrent requests
+  if (isGeneratingScene) {
+    console.log("BLOCKING CONCURRENT SCENE GENERATION REQUEST");
+    return res.status(429).json({
+      success: false,
+      error: "Scene generation already in progress. Please wait.",
+    });
+  }
+
+  isGeneratingScene = true;
+  console.log("ACQUIRED SCENE GENERATION LOCK");
+
   try {
     const {
       session_id,
@@ -179,6 +194,9 @@ export async function generateScene(req: Request, res: Response) {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
     });
+  } finally {
+    isGeneratingScene = false;
+    console.log("RELEASED SCENE GENERATION LOCK");
   }
 }
 
