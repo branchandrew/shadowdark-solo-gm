@@ -39,6 +39,23 @@ export async function generateScene(req: Request, res: Response) {
       JSON.stringify(campaign_elements, null, 2),
     );
 
+    // Validate that we have campaign elements - reject if none exist
+    if (
+      !campaign_elements ||
+      !campaign_elements.bbeg ||
+      !campaign_elements.bbeg.name ||
+      campaign_elements.bbeg.name === "Unknown BBEG"
+    ) {
+      console.log(
+        "ERROR: No valid campaign elements provided. Scene generation requires an adventure arc.",
+      );
+      return res.status(400).json({
+        success: false,
+        error:
+          "No campaign elements found. Please generate an adventure arc first.",
+      });
+    }
+
     // Get current campaign data for context
     const contextSnapshot = await gatherContextSnapshot(
       session_id,
