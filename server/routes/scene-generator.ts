@@ -300,16 +300,9 @@ async function getCharacterData(sessionId: string) {
 }
 
 async function getAdventureLogData(sessionId: string) {
-  // Get adventure log entries
+  // Get adventure log entries - for now return empty until we have real adventure log data
   try {
-    return [
-      {
-        content:
-          "Adventure begins with reports of falling stars that never reach ground",
-        type: "scene",
-        timestamp: new Date().toISOString(),
-      },
-    ];
+    return [];
   } catch (error) {
     console.error("Error getting adventure log:", error);
     return [];
