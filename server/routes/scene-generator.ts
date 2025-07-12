@@ -395,17 +395,42 @@ TIMESTAMP: ${new Date().toISOString()}
 
 Please ensure this is a completely fresh scene generation, not a cached response.`;
 
+  console.log("=== FINAL PROMPT BEING SENT TO ANTHROPIC ===");
+  console.log("Prompt length:", promptWithRandomization.length);
+  console.log("First 500 chars:", promptWithRandomization.substring(0, 500));
+  console.log(
+    "Last 500 chars:",
+    promptWithRandomization.substring(promptWithRandomization.length - 500),
+  );
+  console.log(
+    "Contains BBEG name:",
+    promptWithRandomization.includes(contextSnapshot.bbeg.name),
+  );
+  console.log("=== END FINAL PROMPT DEBUG ===");
+
   const response = await anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 800,
-    temperature: 0.7, // Add some randomness
+    temperature: 0.9, // Even more randomness
     messages: [{ role: "user", content: promptWithRandomization }],
   });
+
+  console.log("=== ANTHROPIC API RESPONSE ===");
+  console.log("Response ID:", response.id);
+  console.log("Model used:", response.model);
+  console.log("Stop reason:", response.stop_reason);
+  console.log("Usage:", JSON.stringify(response.usage, null, 2));
 
   const content = response.content[0];
   if (content.type !== "text") {
     throw new Error("Invalid response from LLM");
   }
+
+  console.log(
+    "Raw response text (first 200 chars):",
+    content.text.substring(0, 200),
+  );
+  console.log("=== END ANTHROPIC RESPONSE DEBUG ===");
 
   // Extract JSON from response
   const jsonMatch = content.text.match(/\{[\s\S]*\}/);
