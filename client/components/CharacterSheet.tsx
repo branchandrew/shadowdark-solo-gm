@@ -272,13 +272,31 @@ export default function CharacterSheet() {
     }
 
     try {
+      // Check if the pasted content looks like it might not be JSON
+      const trimmedContent = pastedJson.trim();
+
+      // Common non-JSON patterns that users might accidentally paste
+      if (
+        trimmedContent.startsWith("=== STEP") ||
+        trimmedContent.includes("RESULTING SCENE SUMMARY") ||
+        trimmedContent.includes("Fate Roll Results") ||
+        trimmedContent.includes("Context Snapshot") ||
+        !trimmedContent.startsWith("{")
+      ) {
+        alert(
+          "The pasted content doesn't appear to be character JSON. Please make sure you're pasting valid character data in JSON format.",
+        );
+        return;
+      }
+
       const imported = JSON.parse(pastedJson);
 
       // Basic validation - check if it looks like a Shadowdark character
       if (!imported.name && !imported.stats && !imported.ancestry) {
-        throw new Error(
-          "This doesn't appear to be a valid Shadowdark character JSON",
+        alert(
+          "This doesn't appear to be a valid Shadowdark character. Please check that the JSON contains character data with name, stats, or ancestry fields.",
         );
+        return;
       }
 
       setCharacter(imported);
@@ -287,11 +305,17 @@ export default function CharacterSheet() {
       setPastedJson("");
     } catch (error) {
       console.error("Failed to import character:", error);
-      alert(
-        error instanceof Error
-          ? `Invalid JSON: ${error.message}`
-          : "Invalid character JSON. Please check the format and try again.",
-      );
+
+      // Provide user-friendly error messages based on the error type
+      if (error instanceof SyntaxError) {
+        alert(
+          "The pasted content is not valid JSON format. Please check for missing brackets, quotes, or commas and try again.",
+        );
+      } else {
+        alert(
+          "Failed to import character. Please check that you're pasting valid Shadowdark character JSON data.",
+        );
+      }
     }
   };
 
