@@ -64,54 +64,109 @@ export default function SceneManager() {
     setIsGenerating(true);
 
     try {
-      // Get campaign elements from localStorage with debugging
-      const campaignElementsRaw = localStorage.getItem(
-        "shadowdark_campaign_elements",
-      );
-      console.log(
-        "Raw campaign elements from localStorage:",
-        campaignElementsRaw,
-      );
+      // Get campaign elements from database/localStorage with debugging
+      let finalCampaignElements = null;
 
-      const parsedCampaignElements = campaignElementsRaw
-        ? JSON.parse(campaignElementsRaw)
-        : null;
-      console.log("Parsed campaign elements:", parsedCampaignElements);
+      // Try to get from database first (since that's where real data lives)
+      try {
+        const response = await fetch("/api/get-session-data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: `session_${Date.now()}` }),
+        });
 
-      // Also check adventure arc data
-      const adventureArcRaw = localStorage.getItem("shadowdark_adventure_arc");
-      console.log("Adventure arc from localStorage:", adventureArcRaw);
+        if (response.ok) {
+          const dbData = await response.json();
+          console.log("Database data:", dbData);
 
-      // If campaign elements are missing but adventure arc exists, extract from adventure arc
-      let finalCampaignElements = parsedCampaignElements;
-      if (!parsedCampaignElements && adventureArcRaw) {
-        const adventureArc = JSON.parse(adventureArcRaw);
-        console.log(
-          "Extracting campaign elements from adventure arc:",
-          adventureArc,
+          if (dbData.success && dbData.data) {
+            // Transform database structure to scene generator format
+            const creatures = dbData.data.creatures || [];
+            const clues = dbData.data.clues || [];
+            const factions = dbData.data.factions || [];
+
+            // Find BBEG in creatures array
+            const bbegCreature = creatures.find(
+              (c: any) => c.creature_type === "bbeg",
+            );
+
+            // Find lieutenants in creatures array
+            const lieutenants = creatures.filter(
+              (c: any) => c.creature_type === "lieutenant",
+            );
+
+            finalCampaignElements = {
+              bbeg: bbegCreature
+                ? {
+                    name: bbegCreature.name,
+                    description: bbegCreature.description,
+                    motivation: bbegCreature.bbeg_motivation,
+                    hook: bbegCreature.bbeg_hook,
+                  }
+                : null,
+              npcs: lieutenants.map((lt: any) => ({
+                name: lt.name,
+                description: lt.description,
+                type: "lieutenant",
+                disposition: lt.npc_disposition || "hostile",
+              })),
+              plot_threads: clues.map((clue: any) => ({
+                description: clue.description,
+                status: clue.discovered ? "resolved" : "active",
+              })),
+              factions: factions.map((faction: any) => ({
+                name: faction.name,
+                description: faction.description,
+                relationship: faction.relationship,
+              })),
+            };
+
+            console.log(
+              "Transformed database campaign elements:",
+              finalCampaignElements,
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching from database:", error);
+      }
+
+      // Fallback to localStorage if database fails
+      if (!finalCampaignElements) {
+        const campaignElementsRaw = localStorage.getItem(
+          "shadowdark_campaign_elements",
         );
-        finalCampaignElements = {
-          bbeg: adventureArc.bbeg || null,
-          npcs: adventureArc.lieutenants || [],
-          plot_threads:
-            adventureArc.clues?.map((clue: string) => ({
-              description: clue,
-              status: "active",
-            })) || [],
-          factions: adventureArc.faction?.name
-            ? [
-                {
-                  name: adventureArc.faction.name,
-                  description: adventureArc.faction.description || "",
-                  relationship: "opposed",
-                },
-              ]
-            : [],
-        };
-        console.log(
-          "Final extracted campaign elements:",
-          finalCampaignElements,
-        );
+        console.log("Falling back to localStorage:", campaignElementsRaw);
+
+        if (campaignElementsRaw) {
+          finalCampaignElements = JSON.parse(campaignElementsRaw);
+        } else {
+          // Try adventure arc as last resort
+          const adventureArcRaw = localStorage.getItem(
+            "shadowdark_adventure_arc",
+          );
+          if (adventureArcRaw) {
+            const adventureArc = JSON.parse(adventureArcRaw);
+            finalCampaignElements = {
+              bbeg: adventureArc.bbeg || null,
+              npcs: adventureArc.lieutenants || [],
+              plot_threads:
+                adventureArc.clues?.map((clue: string) => ({
+                  description: clue,
+                  status: "active",
+                })) || [],
+              factions: adventureArc.faction?.name
+                ? [
+                    {
+                      name: adventureArc.faction.name,
+                      description: adventureArc.faction.description || "",
+                      relationship: "opposed",
+                    },
+                  ]
+                : [],
+            };
+          }
+        }
       }
 
       const requestBody = {
