@@ -81,6 +81,7 @@ export async function generateScene(req: Request, res: Response) {
     console.log("Fate Rolls:", sceneExpectations.fateRolls);
 
     console.log("=== STEP 2 SUMMARY ===");
+    console.log(`TIMESTAMP: ${new Date().toISOString()}`);
     console.log("RESULTING SCENE SUMMARY:");
     console.log(sceneExpectations.description);
     console.log("Fate Roll Results:");
