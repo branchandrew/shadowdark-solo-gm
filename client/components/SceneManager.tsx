@@ -64,13 +64,55 @@ export default function SceneManager() {
     setIsGenerating(true);
 
     try {
-      // Get campaign elements from localStorage
-      const campaignElements = localStorage.getItem(
+      // Get campaign elements from localStorage with debugging
+      const campaignElementsRaw = localStorage.getItem(
         "shadowdark_campaign_elements",
       );
-      const parsedCampaignElements = campaignElements
-        ? JSON.parse(campaignElements)
+      console.log(
+        "Raw campaign elements from localStorage:",
+        campaignElementsRaw,
+      );
+
+      const parsedCampaignElements = campaignElementsRaw
+        ? JSON.parse(campaignElementsRaw)
         : null;
+      console.log("Parsed campaign elements:", parsedCampaignElements);
+
+      // Also check adventure arc data
+      const adventureArcRaw = localStorage.getItem("shadowdark_adventure_arc");
+      console.log("Adventure arc from localStorage:", adventureArcRaw);
+
+      // If campaign elements are missing but adventure arc exists, extract from adventure arc
+      let finalCampaignElements = parsedCampaignElements;
+      if (!parsedCampaignElements && adventureArcRaw) {
+        const adventureArc = JSON.parse(adventureArcRaw);
+        console.log(
+          "Extracting campaign elements from adventure arc:",
+          adventureArc,
+        );
+        finalCampaignElements = {
+          bbeg: adventureArc.bbeg || null,
+          npcs: adventureArc.lieutenants || [],
+          plot_threads:
+            adventureArc.clues?.map((clue: string) => ({
+              description: clue,
+              status: "active",
+            })) || [],
+          factions: adventureArc.faction?.name
+            ? [
+                {
+                  name: adventureArc.faction.name,
+                  description: adventureArc.faction.description || "",
+                  relationship: "opposed",
+                },
+              ]
+            : [],
+        };
+        console.log(
+          "Final extracted campaign elements:",
+          finalCampaignElements,
+        );
+      }
 
       const requestBody = {
         session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
