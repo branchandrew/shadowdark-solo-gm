@@ -390,7 +390,7 @@ Follow these steps using Mythic GME rules:
        * Location (Occupation): What is the Lieutenant's occupation?
        * Why Protect: What motivates their loyalty to the BBEG?
        * How Protect: What methods do they use to serve/protect the BBEG?
-       * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead
+       * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead (if any, this is not required)
      - Keep each tarot interpretation to 1-2 sentences
      Do this TWICE, once for each lieutenant
     
