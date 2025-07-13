@@ -244,6 +244,7 @@ Tarot Spread:\n${cardsFormatted}
      - [name] the [descriptor] (e.g., "the Destroyer", "the Corrupted", "the Shadow")
      - Just [name] (for subtle or mysterious villains)
    • Not all villains need titles - choose based on their nature and status
+   • IMPORTANT: Include your reasoning for the name choice in the "name_reasoning" field
 5. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
 6. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
    • Clues pointing to the BBEG as the source of evil
