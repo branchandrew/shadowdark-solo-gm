@@ -271,6 +271,11 @@ class RelationalDatabase {
         );
       }
 
+      // Add creatures (BBEG, lieutenants, minions)
+      if (creatures.length > 0) {
+        await this.addCreatures(sessionId, creatures);
+      }
+
       // Add factions (linked to adventure arc)
       if (factions.length > 0) {
         await this.addFactions(
