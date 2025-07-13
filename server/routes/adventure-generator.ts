@@ -146,6 +146,53 @@ export const generateAdventure: RequestHandler = async (req, res) => {
       .join("\n");
 
     /* ---------- 2. Claude call ---------- */
+    /* ---------- 2. Generate names using Python script ---------- */
+    console.log("Generating names for BBEG...");
+
+    // Determine alignment based on theme and tone
+    let alignment = 1; // Default to evil
+    const themeToUpper = theme.toUpperCase();
+    const toneToUpper = tone.toUpperCase();
+
+    if (
+      themeToUpper.includes("SLAVIC") ||
+      themeToUpper.includes("EASTERN") ||
+      toneToUpper.includes("SLAVIC")
+    ) {
+      alignment = 2; // Slavic
+    } else if (
+      themeToUpper.includes("ANGLO") ||
+      themeToUpper.includes("SAXON") ||
+      themeToUpper.includes("MEDIEVAL") ||
+      themeToUpper.includes("NOBLE") ||
+      toneToUpper.includes("HEROIC") ||
+      toneToUpper.includes("CHIVALRIC")
+    ) {
+      alignment = 3; // Anglo-Saxon
+    } else if (
+      themeToUpper.includes("FAE") ||
+      themeToUpper.includes("ELF") ||
+      themeToUpper.includes("ELVISH") ||
+      themeToUpper.includes("FAIRY") ||
+      themeToUpper.includes("ETHEREAL") ||
+      toneToUpper.includes("ETHEREAL")
+    ) {
+      alignment = 4; // Fae/Elvish
+    }
+    // Otherwise stay with alignment = 1 (Evil) for dark/evil themes
+
+    console.log(
+      `Using alignment ${alignment} for theme: ${theme}, tone: ${tone}`,
+    );
+
+    const nameResult = await generateNames(alignment, 6);
+    if (!nameResult.success) {
+      throw new Error(`Name generation failed: ${nameResult.error}`);
+    }
+
+    console.log("Generated names:", nameResult.names);
+
+    /* ---------- 3. Claude call ---------- */
     const userPrompt =
       `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
