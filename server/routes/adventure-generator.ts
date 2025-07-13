@@ -647,7 +647,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
           lieutenant_tarot_location: lieutenant.tarot_spread.location,
           lieutenant_tarot_why_protect: lieutenant.tarot_spread.why_protect,
           lieutenant_tarot_how_protect: lieutenant.tarot_spread.how_protect,
-          lieutenant_tarot_reward: lieutenant.tarot_spread.reward,
+          lieutenant_tarot_minions: lieutenant.tarot_spread.minions,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })) || []),
