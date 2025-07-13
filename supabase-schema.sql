@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS creatures (
     lieutenant_how_protect TEXT,
 
     -- Monster-specific fields
-    is_minion_of_bbeg BOOLEAN DEFAULT FALSE,
+    is_minion BOOLEAN DEFAULT FALSE,
     source TEXT CHECK (source IN ('shadowdark_core', 'custom')),
 
     -- NPC-specific fields
