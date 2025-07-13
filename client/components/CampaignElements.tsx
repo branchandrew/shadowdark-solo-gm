@@ -315,34 +315,33 @@ export default function CampaignElements() {
                   console.log(`Character ${character.name}: hidden=${character.hidden}, showHiddenCharacters=${showHiddenCharacters}, shouldBlur=${shouldBlur}`);
 
                   return (
-                  <div
-                    key={character.id}
-                    className={`p-3 border rounded transition-colors ${
-                      shouldBlur
-                        ? "bg-red-500/50 blur-lg pointer-events-none select-none opacity-30 grayscale"
-                        : character.hidden
-                          ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
-                          : "cursor-pointer hover:bg-accent/50"
-                    }`}
-                    style={
-                      shouldBlur
-                        ? {
-                            filter: "blur(8px) grayscale(100%)",
-                            backgroundColor: "rgba(255, 0, 0, 0.3)",
-                            color: "transparent"
-                          }
-                        : {}
-                    }
-                    onClick={
-                      shouldBlur
-                        ? undefined
-                        : () => setSelectedCharacter(character)
-                    }
-                  >
-                })}
-                    <div className="text-sm font-medium mb-2">
-                      {character.name}
-                    </div>
+                    <div
+                      key={character.id}
+                      className={`p-3 border rounded transition-colors ${
+                        shouldBlur
+                          ? "bg-red-500/50 blur-lg pointer-events-none select-none opacity-30 grayscale"
+                          : character.hidden
+                            ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
+                            : "cursor-pointer hover:bg-accent/50"
+                      }`}
+                      style={
+                        shouldBlur
+                          ? {
+                              filter: "blur(8px) grayscale(100%)",
+                              backgroundColor: "rgba(255, 0, 0, 0.3)",
+                              color: "transparent"
+                            }
+                          : {}
+                      }
+                      onClick={
+                        shouldBlur
+                          ? undefined
+                          : () => setSelectedCharacter(character)
+                      }
+                    >
+                      <div className="text-sm font-medium mb-2">
+                        {character.name}
+                      </div>
                     <div className="flex items-center gap-2">
                       {character.creature_type === "bbeg" && (
                         <Badge
