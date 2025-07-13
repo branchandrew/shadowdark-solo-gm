@@ -331,7 +331,7 @@ Tarot Spread:\n${cardsFormatted}
    • Information about where the BBEG might be found or operates
    • Evidence of the BBEG's evil doings
    Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc. All clues must reflect the theme, tone, and voice.
-4. **Generate a High Tower Surprise** — a twist that escalates danger during the final confrontation of the campaign. This is a key narrative reversal or complication that alters the expected outcome at the climax.
+4. **Generate a High Tower Surprise** �� a twist that escalates danger during the final confrontation of the campaign. This is a key narrative reversal or complication that alters the expected outcome at the climax.
 
 Follow these steps using Mythic GME rules:
 
@@ -582,9 +582,14 @@ Return one clean JSON object and nothing else.  Keep values concise:
 
         // Add BBEG minions as creatures if they exist
         if (villain.minions && villain.minions.trim()) {
+          // Extract race from minions description or default to a generic type
+          const minionsRace =
+            extractRaceFromDescription(villain.minions) || "Monster";
+
           hiddenElements.creatures.push({
             id: `creature_${Date.now()}_bbeg_minion`,
             name: "BBEG Minions",
+            race_species: minionsRace,
             description: villain.minions,
             creature_type: "monster",
             npc_disposition: "hostile",
