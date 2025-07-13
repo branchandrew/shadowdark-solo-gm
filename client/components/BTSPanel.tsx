@@ -15,8 +15,10 @@ import { useAdventureLog, useDatabase } from "../hooks/useDatabase";
 import type { AdventureArcDisplay } from "../../shared/types";
 
 export default function BTSPanel() {
-  const [adventureArc, setAdventureArc] =
-    useSessionState<AdventureArcDisplay | null>("bts_adventure_arc", null);
+  const { data: adventureArc, updateData: updateAdventureArc } =
+    useDatabase<AdventureArcDisplay | null>("adventure_arc", null);
+  const { data: campaignElements, updateData: updateCampaignElements } =
+    useDatabase("campaign_elements", null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [theme, setTheme] = useSessionState("bts_theme", "");
   const [tone, setTone] = useSessionState("bts_tone", "");
@@ -323,7 +325,7 @@ export default function BTSPanel() {
 
     try {
       // Format the complete adventure data for chat
-      const formattedContent = `🎭 **Complete Adventure Arc Details**
+      const formattedContent = `���� **Complete Adventure Arc Details**
 
 **${adventureArc.bbeg.name}**
 ${adventureArc.bbeg.hook}
