@@ -239,6 +239,7 @@ class RelationalDatabase {
     adventureArcId: string,
     elements: {
       npcs?: Omit<NPC, "session_id">[];
+      creatures?: Array<any>; // Omit<Creature, "session_id">[];
       factions?: Omit<Faction, "session_id">[];
       threads?: Omit<Thread, "session_id">[];
       clues?: Omit<Clue, "session_id">[];
@@ -248,7 +249,13 @@ class RelationalDatabase {
 
     try {
       // Add adventure_arc_id to elements that are related to the main story
-      const { npcs = [], factions = [], threads = [], clues = [] } = elements;
+      const {
+        npcs = [],
+        creatures = [],
+        factions = [],
+        threads = [],
+        clues = [],
+      } = elements;
 
       // Add NPCs (with adventure_arc_id for lieutenants)
       if (npcs.length > 0) {
