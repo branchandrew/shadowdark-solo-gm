@@ -562,7 +562,7 @@ ${adventureArc.faction.description}
                             Minions
                           </Badge>
                           <p className="text-sm text-muted-foreground">
-                            {lieutenant.tarot_spread.minions}
+                            {lieutenant.tarot_spread.reward}
                           </p>
                         </div>
                       </div>
