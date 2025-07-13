@@ -97,6 +97,7 @@ export default function BTSPanel() {
               {
                 id: bbegId,
                 name: data.bbeg_name,
+                race_species: data.race || "Unknown",
                 description: data.bbeg_detailed_description,
                 creature_type: "bbeg",
                 npc_disposition: "hostile",
