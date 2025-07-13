@@ -51,6 +51,7 @@ export default function SceneManager() {
     null,
   );
   const [isGenerating, setIsGenerating] = useState(false);
+  const [sceneNumber, setSceneNumber] = useSessionState("scene_number", 1);
   const [playerIntentions, setPlayerIntentions] = useSessionState(
     "scene_player_intentions",
     "",
