@@ -1,7 +1,5 @@
 import { RequestHandler } from "express";
 import Anthropic from "@anthropic-ai/sdk";
-import { spawn } from "child_process";
-import path from "path";
 import { AIChatRequest, AIChatResponse } from "@shared/api";
 
 const anthropic = new Anthropic({
