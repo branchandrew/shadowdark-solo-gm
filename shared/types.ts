@@ -135,7 +135,6 @@ export interface Creature {
   lieutenant_background?: string;
   lieutenant_why_protect?: string;
   lieutenant_how_protect?: string;
-  lieutenant_reward?: string;
 
   // Monster-specific fields
   is_minion_of_bbeg?: boolean;
