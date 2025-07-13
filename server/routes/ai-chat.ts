@@ -8,34 +8,6 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-/**
- * Executes the AI Fallback Python script and returns the result
- */
-const runAIFallback = (): Promise<any> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(__dirname, "..", "scripts", "ai_fallbacks.py");
-    const proc = spawn("python3", [scriptPath]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (data) => (stdout += data));
-    proc.stderr.on("data", (data) => (stderr += data));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(stderr || `Python script exited with code ${code}`),
-        );
-      }
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch (error) {
-        reject(new Error("Invalid JSON from AI Fallback script"));
-      }
-    });
-  });
-
 export const handleAIChat: RequestHandler = async (req, res) => {
   const { message, context } = req.body as AIChatRequest;
 
