@@ -406,8 +406,6 @@ Follow these steps using Mythic GME rules:
        lieutenant: Captain Ahab's Ghost > No minions.
        lieutenant: Scera the Assasin > No minions.
 
-
-
      - Keep each tarot interpretation to 1-2 sentences
      Do this TWICE, once for each lieutenant
     
