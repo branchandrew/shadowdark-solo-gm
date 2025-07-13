@@ -27,10 +27,7 @@ shadowdark_villain_types = [
   "Fairy",
   "Oni",
   "Hag",
-  "Shadow",
   "Principi Fallen Angel",
-  "Seraph Angel",
-  "Domini Angel",
   "Aboleth",
   "Naga",
   "Couatl",
@@ -39,9 +36,7 @@ shadowdark_villain_types = [
   "Mummy",
   "Efreeti",
   "Phoenix",
-  "Frost Dragon",
-  "Sea Dragon",
-  "Swamp Dragon",
+  "Dragon",
   "Rime Walker",
   "Ten-Eyed Oracle",
   "Obe-Ixx of Azarumme",
@@ -51,12 +46,12 @@ shadowdark_villain_types = [
   "God of Storm / Destruction",
   "Sentient Grimoire",
   "An evil, scheming, intelligent relic or artifact",
-  "A powerful ghost, spirit, or shadow",
+  "A ghost, spirit, or shadow",
   "A god, diety or power representing death",
   "A chaos swarm",
   "A malignant spell or curse",
   "A hive mind corruption",
-  "World Consuming Darkness"
+  "World consuming darkness"
 ]
 
 # Weighted list for gender: Male is 4 times more likely than Female
