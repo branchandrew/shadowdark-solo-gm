@@ -259,7 +259,41 @@ Tarot Spread:\n${cardsFormatted}
    • Numbers��— Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
    • Reversed indicates blockage, secrecy, or excess.
 2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
-4. **Select and enhance the BBEG name** from these pre-generated options:
+3. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
+   • Clues pointing to the BBEG as the source of evil
+   • Hints about potential weaknesses or vulnerabilities
+   • Information about where the BBEG might be found or operates
+   • Evidence of the BBEG's evil doings
+   Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc. All clues must reflect the theme, tone, and voice.
+4. **Generate a High Tower Surprise** — a twist that escalates danger during the final confrontation of the campaign. This is a key narrative reversal or complication that alters the expected outcome at the climax.
+
+Follow these steps using Mythic GME rules:
+
+4.1. Ask a Complex Fate Question:
+   "What unexpected event or revelation occurs during the final confrontation with the BBEG?"
+
+4.2. Roll for:
+   - Chaos Factor (current value)
+   - Scene Setup: is this scene expected, altered, or interrupted?
+   - Event Focus + Meaning Table (if scene is altered or interrupted)
+
+4.3. Interpret the result as a surprising, thematic escalation:
+   - A new enemy appears?
+   - A ritual completes accidentally?
+   - The BBEG transforms or reveals a hidden agenda?
+   - An ally betrays the party?
+   - The location becomes unstable or cursed?
+
+4.4. Show your reasoning:
+   - Fate Question logic
+   - Chaos roll
+   - Scene setup determination
+   - Event Focus and Meaning rolls
+   - Justification for how this surprise fits with the BBEG's long-term arc
+
+5. Return the final result as a one-paragraph narrative twist to insert during the final battle
+
+5. **Select and enhance the BBEG name** from these pre-generated options:
    Generated Names: ${nameResult.names?.join(", ")}
 
    • Choose the name that best fits the BBEG's character and the theme/tone
@@ -270,41 +304,10 @@ Tarot Spread:\n${cardsFormatted}
      - Just [name] (for subtle or mysterious villains)
    • Not all villains need titles - choose based on their nature and status
    • IMPORTANT: Include your reasoning for the name choice in the "name_reasoning" field
-5. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
-6. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
-   • Clues pointing to the BBEG as the source of evil
-   • Hints about potential weaknesses or vulnerabilities
-   • Information about where the BBEG might be found or operates
-   • Evidence of the BBEG's evil doings
-   Make these diverse: rumors from NPCs, journal entries, prophecies/portents, signs in nature, direct physical evidence, etc. All clues must reflect the theme, tone, and voice.
-7. **Generate a High Tower Surprise** — a twist that escalates danger during the final confrontation of the campaign. This is a key narrative reversal or complication that alters the expected outcome at the climax.
+6. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
 
-Follow these steps using Mythic GME rules:
 
-1. Ask a Complex Fate Question:
-   "What unexpected event or revelation occurs during the final confrontation with the BBEG?"
-
-2. Roll for:
-   - Chaos Factor (current value)
-   - Scene Setup: is this scene expected, altered, or interrupted?
-   - Event Focus + Meaning Table (if scene is altered or interrupted)
-
-3. Interpret the result as a surprising, thematic escalation:
-   - A new enemy appears?
-   - A ritual completes accidentally?
-   - The BBEG transforms or reveals a hidden agenda?
-   - An ally betrays the party?
-   - The location becomes unstable or cursed?
-
-4. Show your reasoning:
-   - Fate Question logic
-   - Chaos roll
-   - Scene setup determination
-   - Event Focus and Meaning rolls
-   - Justification for how this surprise fits with the BBEG's long-term arc
-
-5. Return the final result as a one-paragraph narrative twist to insert during the final battle
-8. **Generate exactly 2 Lieutenants** with the following requirements:
+7. **Generate exactly 2 Lieutenants** with the following requirements:
    • **First Lieutenant**: Must be a massive contrast to the BBEG - an unlikely ally who serves them despite being fundamentally different in nature, methods, or motivation
    • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
    • For each lieutenant:
