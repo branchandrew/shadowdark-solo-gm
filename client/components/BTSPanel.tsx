@@ -55,165 +55,20 @@ export default function BTSPanel() {
       }
 
       if (data.success) {
-        console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
-
-        // Create single adventure arc object (no duplication)
-        const newAdventure: AdventureArcDisplay = {
-          id: `arc_${Date.now()}`,
-          bbeg: {
-            name: data.bbeg_name,
-            description: data.bbeg_detailed_description,
-            motivation: data.bbeg_motivation,
-            hook: data.bbeg_hook,
-          },
-          clues: data.clues || [],
-          highTowerSurprise: data.high_tower_surprise || "",
-          lieutenants: data.lieutenants || [],
-          faction: {
-            name: data.faction_name || "",
-            description: data.faction_description || "",
-          },
-          minions: data.minions || "",
-        };
-
-        console.log("Setting new adventure arc...");
-        setAdventureArc(newAdventure);
-
-        // Save single source of truth to localStorage
-        saveAdventureToLocalStorage(newAdventure);
-        saveStyleToLocalStorage(
-          theme.trim() || "Dark Fantasy",
-          tone.trim() || "Mysterious",
-          voice.trim() || "Atmospheric",
-        );
-
-        // Create campaign elements structure that matches CampaignElements component expectations
-        const bbegId = `creature_${Date.now()}_bbeg`;
-        const campaignElements = {
-          threads: [], // Plot threads will be populated later
-          creatures: [
-            // Add BBEG as a creature (hidden initially)
-            {
-              id: bbegId,
-              name: data.bbeg_name,
-              description: data.bbeg_detailed_description,
-              creature_type: "bbeg",
-              npc_disposition: "hostile",
-              bbeg_motivation: data.bbeg_motivation,
-              bbeg_hook: data.bbeg_hook,
-              hidden: true,
-            },
-            // Add BBEG minions if they exist
-            ...(data.minions && data.minions.trim()
-              ? [
-                  {
-                    id: `creature_${Date.now()}_bbeg_minion`,
-                    name: "BBEG Minions",
-                    description: data.minions,
-                    creature_type: "monster",
-                    npc_disposition: "hostile",
-                    is_minion: true,
-                    minion_creature_id: bbegId,
-                    hidden: true,
-                  },
-                ]
-              : []),
-            // Add lieutenants as creatures (hidden initially)
-            ...(data.lieutenants || []).flatMap(
-              (lieutenant: any, index: number) => {
-                const lieutenantId = `creature_${Date.now()}_lt_${index}`;
-                const creatures = [
-                  {
-                    id: lieutenantId,
-                    name: lieutenant.name,
-                    description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
-                    creature_type: "lieutenant",
-                    npc_disposition: "hostile",
-                    lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
-                    lieutenant_tarot_background:
-                      lieutenant.tarot_spread?.background,
-                    lieutenant_tarot_location:
-                      lieutenant.tarot_spread?.location,
-                    lieutenant_tarot_why_protect:
-                      lieutenant.tarot_spread?.why_protect,
-                    lieutenant_tarot_how_protect:
-                      lieutenant.tarot_spread?.how_protect,
-                    hidden: true,
-                  },
-                ];
-
-                // Add lieutenant minions if they exist
-                if (
-                  lieutenant.tarot_spread?.reward &&
-                  lieutenant.tarot_spread.reward.trim()
-                ) {
-                  creatures.push({
-                    id: `creature_${Date.now()}_lt_${index}_minion`,
-                    name: `${lieutenant.name}'s Minions`,
-                    description: lieutenant.tarot_spread.reward,
-                    creature_type: "monster",
-                    npc_disposition: "hostile",
-                    is_minion: true,
-                    minion_creature_id: lieutenantId,
-                    hidden: true,
-                  });
-                }
-
-                return creatures;
-              },
-            ),
-          ],
-          factions: data.faction_name
-            ? [
-                {
-                  id: `faction_${Date.now()}`,
-                  name: data.faction_name,
-                  description: data.faction_description || "",
-                  relationship: "opposed",
-                  influence: "moderate",
-                  hidden: true,
-                },
-              ]
-            : [],
-          clues: (data.clues || []).map((clue: string, index: number) => ({
-            id: `clue_${Date.now()}_${index}`,
-            description: clue,
-            discovered: false,
-            importance: "moderate",
-          })),
-        };
-
-        // Save to the correct key that the database hook expects (database.get adds shadowdark_ prefix)
-        localStorage.setItem(
-          "shadowdark_campaign_elements",
-          JSON.stringify(campaignElements),
-        );
-
-        console.log("Campaign elements saved to localStorage");
+        console.log("Adventure generation triggered successfully!");
 
         // Clear adventure log for new adventure arc
         await updateAdventureLog([]);
         console.log("Adventure log cleared for new adventure arc");
 
-        // Clear current scene and reset scene number for new arc
-        localStorage.removeItem("shadowdark_current_scene");
-        localStorage.setItem("shadowdark_scene_number", "1");
+        // The database will automatically update via real-time subscriptions
+        // No need to manually set data - the useDatabase hooks will receive updates
 
-        // Combine all the BBEG information for display
-        const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
-
-        // Send the villain profile to the AI chat
-        console.log("Sending villain profile to AI chat...");
-        await sendVillainToChat(`**${data.bbeg_name}**\n\n${fullProfile}`);
-
-        console.log("Adventure generation complete!");
-      } else {
-        console.error("Adventure generation failed:", data.error);
-
-        // Show user-friendly error message
-        alert(
-          `Adventure generation failed: ${data.error || "Unknown error occurred"}`,
+        console.log(
+          "Adventure generation complete! Data will arrive via real-time updates.",
         );
+      } else {
+        throw new Error(data.error || "Adventure generation failed");
       }
     } catch (error) {
       console.error("Error generating adventure:", error);
