@@ -630,9 +630,15 @@ Return one clean JSON object and nothing else.  Keep values concise:
             lieutenant.tarot_spread.reward &&
             lieutenant.tarot_spread.reward.trim()
           ) {
+            // Extract race from lieutenant minions description or default to a generic type
+            const lieutenantMinionsRace =
+              extractRaceFromDescription(lieutenant.tarot_spread.reward) ||
+              "Monster";
+
             hiddenElements.creatures.push({
               id: `creature_${Date.now()}_lt_${index}_minion`,
               name: `${lieutenant.name}'s Minions`,
+              race_species: lieutenantMinionsRace,
               description: lieutenant.tarot_spread.reward,
               creature_type: "monster",
               npc_disposition: "hostile",
