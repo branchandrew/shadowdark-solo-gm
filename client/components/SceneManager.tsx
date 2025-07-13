@@ -42,6 +42,7 @@ interface Scene {
     roll: number;
     result: "yes" | "no" | "exceptional_yes" | "exceptional_no";
   }>;
+  adventure_arc_id?: string; // Track which adventure arc this scene belongs to
 }
 
 export default function SceneManager() {
