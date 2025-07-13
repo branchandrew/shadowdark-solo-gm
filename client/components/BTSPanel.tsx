@@ -146,12 +146,13 @@ export default function BTSPanel() {
         );
 
         // Create campaign elements structure that matches CampaignElements component expectations
+        const bbegId = `creature_${Date.now()}_bbeg`;
         const campaignElements = {
           threads: [], // Plot threads will be populated later
           creatures: [
             // Add BBEG as a creature (hidden initially)
             {
-              id: `creature_${Date.now()}_bbeg`,
+              id: bbegId,
               name: data.bbeg_name,
               description: data.bbeg_detailed_description,
               creature_type: "bbeg",
@@ -160,24 +161,64 @@ export default function BTSPanel() {
               bbeg_hook: data.bbeg_hook,
               hidden: true,
             },
+            // Add BBEG minions if they exist
+            ...(data.minions && data.minions.trim()
+              ? [
+                  {
+                    id: `creature_${Date.now()}_bbeg_minion`,
+                    name: "BBEG Minions",
+                    description: data.minions,
+                    creature_type: "monster",
+                    npc_disposition: "hostile",
+                    is_minion: true,
+                    minion_creature_id: bbegId,
+                    hidden: true,
+                  },
+                ]
+              : []),
             // Add lieutenants as creatures (hidden initially)
-            ...(data.lieutenants || []).map(
-              (lieutenant: any, index: number) => ({
-                id: `creature_${Date.now()}_lt_${index}`,
-                name: lieutenant.name,
-                description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
-                creature_type: "lieutenant",
-                npc_disposition: "hostile",
-                lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
-                lieutenant_tarot_background:
-                  lieutenant.tarot_spread?.background,
-                lieutenant_tarot_location: lieutenant.tarot_spread?.location,
-                lieutenant_tarot_why_protect:
-                  lieutenant.tarot_spread?.why_protect,
-                lieutenant_tarot_how_protect:
-                  lieutenant.tarot_spread?.how_protect,
-                hidden: true,
-              }),
+            ...(data.lieutenants || []).flatMap(
+              (lieutenant: any, index: number) => {
+                const lieutenantId = `creature_${Date.now()}_lt_${index}`;
+                const creatures = [
+                  {
+                    id: lieutenantId,
+                    name: lieutenant.name,
+                    description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
+                    creature_type: "lieutenant",
+                    npc_disposition: "hostile",
+                    lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
+                    lieutenant_tarot_background:
+                      lieutenant.tarot_spread?.background,
+                    lieutenant_tarot_location:
+                      lieutenant.tarot_spread?.location,
+                    lieutenant_tarot_why_protect:
+                      lieutenant.tarot_spread?.why_protect,
+                    lieutenant_tarot_how_protect:
+                      lieutenant.tarot_spread?.how_protect,
+                    hidden: true,
+                  },
+                ];
+
+                // Add lieutenant minions if they exist
+                if (
+                  lieutenant.tarot_spread?.reward &&
+                  lieutenant.tarot_spread.reward.trim()
+                ) {
+                  creatures.push({
+                    id: `creature_${Date.now()}_lt_${index}_minion`,
+                    name: `${lieutenant.name}'s Minions`,
+                    description: lieutenant.tarot_spread.reward,
+                    creature_type: "monster",
+                    npc_disposition: "hostile",
+                    is_minion: true,
+                    minion_creature_id: lieutenantId,
+                    hidden: true,
+                  });
+                }
+
+                return creatures;
+              },
             ),
           ],
           factions: data.faction_name
