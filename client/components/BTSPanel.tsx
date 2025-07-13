@@ -176,7 +176,6 @@ export default function BTSPanel() {
                   lieutenant.tarot_spread?.why_protect,
                 lieutenant_tarot_how_protect:
                   lieutenant.tarot_spread?.how_protect,
-                lieutenant_tarot_reward: lieutenant.tarot_spread?.reward,
                 hidden: true,
               }),
             ),
