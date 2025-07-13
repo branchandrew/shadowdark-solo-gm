@@ -62,7 +62,8 @@ export async function generateScene(req: Request, res: Response) {
       campaign_elements?.bbeg?.name,
     );
 
-    // Validate that we have campaign elements - reject if none exist
+    // Note: Allow scene generation even without campaign elements
+    // We'll use fallback data if no campaign elements are provided
     if (
       !campaign_elements ||
       !campaign_elements.bbeg ||
@@ -70,13 +71,8 @@ export async function generateScene(req: Request, res: Response) {
       campaign_elements.bbeg.name === "Unknown BBEG"
     ) {
       console.log(
-        "ERROR: No valid campaign elements provided. Scene generation requires an adventure arc.",
+        "WARNING: No valid campaign elements provided. Using fallback data for scene generation.",
       );
-      return res.status(400).json({
-        success: false,
-        error:
-          "No campaign elements found. Please generate an adventure arc first.",
-      });
     }
 
     // Get current campaign data for context
