@@ -321,7 +321,7 @@ export default function CampaignElements() {
                       key={character.id}
                       className={`p-3 border rounded transition-colors ${
                         shouldBlur
-                          ? "bg-red-500/50 blur-lg pointer-events-none select-none opacity-30 grayscale"
+                          ? "bg-red-500/20 blur-lg pointer-events-none select-none opacity-30"
                           : character.hidden
                             ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
                             : "cursor-pointer hover:bg-accent/50"
@@ -330,8 +330,7 @@ export default function CampaignElements() {
                         shouldBlur
                           ? {
                               filter: "blur(8px) grayscale(100%)",
-                              backgroundColor: "rgba(255, 0, 0, 0.3)",
-                              color: "transparent",
+                              textShadow: "0 0 10px rgba(0,0,0,0.8)",
                             }
                           : {}
                       }
@@ -417,50 +416,65 @@ export default function CampaignElements() {
               </div>
             ) : (
               <div className="space-y-2">
-                {getVisibleFactions().map((faction) => (
-                  <div
-                    key={faction.id}
-                    className={`p-3 border rounded transition-colors ${
-                      faction.hidden && !showHiddenFactions
-                        ? "bg-muted/50 blur-lg pointer-events-none select-none opacity-60"
-                        : faction.hidden
-                          ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
-                          : "cursor-pointer hover:bg-accent/50"
-                    }`}
-                    onClick={
-                      faction.hidden && !showHiddenFactions
-                        ? undefined
-                        : () => setSelectedFaction(faction)
-                    }
-                  >
-                    <div className="text-sm font-medium mb-2">
-                      {faction.name}
+                {getVisibleFactions().map((faction) => {
+                  const shouldBlur = faction.hidden && !showHiddenFactions;
+                  console.log(
+                    `Faction ${faction.name}: hidden=${faction.hidden}, showHiddenFactions=${showHiddenFactions}, shouldBlur=${shouldBlur}`,
+                  );
+
+                  return (
+                    <div
+                      key={faction.id}
+                      className={`p-3 border rounded transition-colors ${
+                        shouldBlur
+                          ? "bg-red-500/20 blur-lg pointer-events-none select-none opacity-30"
+                          : faction.hidden
+                            ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
+                            : "cursor-pointer hover:bg-accent/50"
+                      }`}
+                      style={
+                        shouldBlur
+                          ? {
+                              filter: "blur(8px) grayscale(100%)",
+                              textShadow: "0 0 10px rgba(0,0,0,0.8)",
+                            }
+                          : {}
+                      }
+                      onClick={
+                        shouldBlur
+                          ? undefined
+                          : () => setSelectedFaction(faction)
+                      }
+                    >
+                      <div className="text-sm font-medium mb-2">
+                        {faction.name}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          key="influence-badge"
+                          className={getInfluenceColor(faction.influence)}
+                          variant="outline"
+                        >
+                          {faction.influence}
+                        </Badge>
+                        <Badge
+                          key="relationship-badge"
+                          className={getRelationshipColor(faction.relationship)}
+                          variant="outline"
+                        >
+                          {faction.relationship}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        key="influence-badge"
-                        className={getInfluenceColor(faction.influence)}
-                        variant="outline"
-                      >
-                        {faction.influence}
-                      </Badge>
-                      <Badge
-                        key="relationship-badge"
-                        className={getRelationshipColor(faction.relationship)}
-                        variant="outline"
-                      >
-                        {faction.relationship}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Thread Details Modal */}
+      {/* Modals remain the same... */}
       <Dialog
         open={!!selectedThread}
         onOpenChange={() => setSelectedThread(null)}
