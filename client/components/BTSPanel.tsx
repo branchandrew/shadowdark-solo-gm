@@ -152,6 +152,10 @@ export default function BTSPanel() {
                     creatures.push({
                       id: `creature_${Date.now()}_lt_${index}_minion`,
                       name: `${lieutenant.name}'s Minions`,
+                      race_species:
+                        extractRaceFromDescription(
+                          lieutenant.tarot_spread.reward,
+                        ) || "Monster",
                       description: lieutenant.tarot_spread.reward,
                       creature_type: "monster",
                       npc_disposition: "hostile",
