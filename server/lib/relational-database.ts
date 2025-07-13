@@ -12,7 +12,7 @@ import type {
 } from "../../shared/types";
 
 class RelationalDatabase {
-  private supabase: SupabaseClient | null = null;
+  public supabase: SupabaseClient | null = null;
 
   constructor() {
     this.initializeSupabase();
