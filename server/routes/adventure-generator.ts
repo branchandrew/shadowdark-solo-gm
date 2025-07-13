@@ -112,9 +112,15 @@ const generateNames = (
     proc.stderr.on("data", (d) => (stderr += d));
 
     proc.on("close", (code) => {
+      console.log(`Python script exited with code: ${code}`);
+      console.log(`Python script stdout: ${stdout}`);
+      console.log(`Python script stderr: ${stderr}`);
+
       if (code !== 0) {
         return reject(
-          new Error(stderr || `Name generation script exited with ${code}`),
+          new Error(
+            `Name generation script failed: ${stderr || `exited with code ${code}`}`,
+          ),
         );
       }
       try {
