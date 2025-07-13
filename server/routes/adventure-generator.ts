@@ -673,78 +673,41 @@ Return one clean JSON object and nothing else.  Keep values concise:
       }
     }
 
-    // Always return campaign elements in response (regardless of database availability)
-    const campaignElements = {
-      threads: [],
-      creatures: [
-        // Add BBEG as creature
-        {
-          id: `creature_${Date.now()}_bbeg`,
-          session_id: session_id || "local",
-          name: villain.bbeg_name,
-          description: villain.bbeg_detailed_description,
-          creature_type: "bbeg",
-          npc_disposition: "hostile",
-          hidden: true,
-          bbeg_motivation: villain.bbeg_motivation,
-          bbeg_hook: villain.bbeg_hook,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        // Add lieutenants as creatures
-        ...(villain.lieutenants?.map((lieutenant, index) => ({
-          id: `creature_${Date.now()}_lt_${index}`,
-          session_id: session_id || "local",
-          name: lieutenant.name,
-          description: `Lieutenant of ${villain.bbeg_name}. ${lieutenant.tarot_spread.background}`,
-          creature_type: "lieutenant",
-          npc_disposition: "hostile",
-          hidden: true,
-          lieutenant_tarot_seed: lieutenant.tarot_spread.seed,
-          lieutenant_tarot_background: lieutenant.tarot_spread.background,
-          lieutenant_tarot_location: lieutenant.tarot_spread.location,
-          lieutenant_tarot_why_protect: lieutenant.tarot_spread.why_protect,
-          lieutenant_tarot_how_protect: lieutenant.tarot_spread.how_protect,
-          lieutenant_tarot_reward: lieutenant.tarot_spread.reward,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })) || []),
-      ],
-      factions: villain.faction_name
-        ? [
-            {
-              id: `faction_${Date.now()}`,
-              session_id: session_id || "local",
-              name: villain.faction_name,
-              description: villain.faction_description || "",
-              influence: "moderate",
-              relationship: "opposed",
-              hidden: true,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
+    // Write adventure arc to database for real-time updates
+    if (relationalDB.supabase) {
+      try {
+        await relationalDB.writeAdventureArcToSession(session_id, {
+          adventure_arc: {
+            bbeg: {
+              name: villain.bbeg_name,
+              description: villain.bbeg_detailed_description,
+              motivation: villain.bbeg_motivation,
+              hook: villain.bbeg_hook,
             },
-          ]
-        : [],
-      clues:
-        villain.clues?.map((clue, index) => ({
-          id: `clue_${Date.now()}_${index}`,
-          session_id: session_id || "local",
-          description: clue,
-          discovered: false,
-          importance: "moderate",
-          hidden: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })) || [],
-    };
+            clues: villain.clues || [],
+            highTowerSurprise: villain.high_tower_surprise || "",
+            lieutenants: villain.lieutenants || [],
+            faction: {
+              name: villain.faction_name || "",
+              description: villain.faction_description || "",
+            },
+            minions: villain.minions || "",
+          },
+          campaign_elements: {
+            threads: [],
+            creatures: hiddenElements.creatures,
+            factions: hiddenElements.factions,
+            clues: hiddenElements.clues,
+          },
+        });
+        console.log("Adventure arc written to database successfully");
+      } catch (error) {
+        console.error("Failed to write adventure arc to database:", error);
+      }
+    }
 
-    console.log("Returning campaign elements:", campaignElements);
-
-    res.json({
-      ...villain,
-      success: true,
-      campaign_elements: campaignElements,
-    });
+    // Simple success response - data flows through database
+    res.json({ success: true });
   } catch (err) {
     console.error("Adventure generation error:", err);
 
