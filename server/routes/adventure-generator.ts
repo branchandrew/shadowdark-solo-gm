@@ -185,6 +185,89 @@ const getLieutenantTypes = (
   });
 
 /**
+ * Extracts race/species from a description text
+ */
+const extractRaceFromDescription = (description: string): string | null => {
+  const commonRaces = [
+    "Human",
+    "Elf",
+    "Dwarf",
+    "Halfling",
+    "Hobgoblin",
+    "Drow",
+    "Duergar",
+    "Giant",
+    "Devil",
+    "Demon",
+    "Elemental",
+    "Fairy",
+    "Oni",
+    "Hag",
+    "Dragon",
+    "Orc",
+    "Goblin",
+    "Skeleton",
+    "Zombie",
+    "Ghost",
+    "Spirit",
+    "Wraith",
+    "Vampire",
+    "Werewolf",
+    "Troll",
+    "Ogre",
+    "Golem",
+    "Construct",
+    "Undead",
+    "Fiend",
+    "Celestial",
+    "Fey",
+    "Beast",
+    "Monstrosity",
+  ];
+
+  const lowerDescription = description.toLowerCase();
+
+  // Look for explicit race mentions
+  for (const race of commonRaces) {
+    if (lowerDescription.includes(race.toLowerCase())) {
+      return race;
+    }
+  }
+
+  // Look for common descriptive terms that indicate race
+  if (
+    lowerDescription.includes("squire") ||
+    lowerDescription.includes("knight") ||
+    lowerDescription.includes("soldier")
+  ) {
+    return "Human";
+  }
+  if (
+    lowerDescription.includes("frost") ||
+    lowerDescription.includes("ice") ||
+    lowerDescription.includes("cold")
+  ) {
+    return "Elemental";
+  }
+  if (
+    lowerDescription.includes("shadow") ||
+    lowerDescription.includes("dark") ||
+    lowerDescription.includes("soul")
+  ) {
+    return "Undead";
+  }
+  if (
+    lowerDescription.includes("trader") ||
+    lowerDescription.includes("merchant") ||
+    lowerDescription.includes("crystal")
+  ) {
+    return "Human";
+  }
+
+  return null;
+};
+
+/**
  * Express handler: creates a concise BBEG JSON object.
  */
 export const generateAdventure: RequestHandler = async (req, res) => {
