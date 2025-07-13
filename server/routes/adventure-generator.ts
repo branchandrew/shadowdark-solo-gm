@@ -42,6 +42,7 @@ interface Lieutenant {
 
 interface VillainJson {
   bbeg_name: string;
+  name_reasoning?: string;
   bbeg_hook: string;
   bbeg_motivation: string;
   bbeg_detailed_description: string;
