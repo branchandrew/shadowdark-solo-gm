@@ -304,7 +304,7 @@ Return JSON:
 
     /* ---------- 3. Claude call ---------- */
     const userPrompt =
-      `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
+      `You are a narrative��design assistant tasked with forging a memorable Big��Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
 
 ### STYLE GUIDANCE
 Theme: ${theme}
@@ -374,7 +374,7 @@ Follow these steps using Mythic GME rules:
 7. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
    • A creature type that fits thematically with the BBEG and theme
    • Common enough to be encountered frequently
-   • Challenging but not overwhelming for regular encounters
+   �� Challenging but not overwhelming for regular encounters
    • Reflect the BBEG's influence and corruption
    • 2-3 sentences describing their nature, appearance, and capabilities
 
@@ -552,7 +552,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
       if (adventureArcId) {
         // Create hidden campaign elements
         const hiddenElements: {
-          creatures: Array<any>; // Omit<Creature, "session_id">[];
+          creatures: Omit<Creature, "session_id">[];
           factions: Omit<Faction, "session_id">[];
           threads: Omit<Thread, "session_id">[];
           clues: Omit<Clue, "session_id">[];
