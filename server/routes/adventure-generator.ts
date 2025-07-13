@@ -165,7 +165,7 @@ Goal: ${seeds.goal}
 Gender: ${seeds.gender}
 Race: ${seeds.race}
 
-Return a single number (1-4) representing how this BBEG wants the public to perceive them:
+Return a JSON object with your reasoning and choice:
 1 = Openly evil/threatening (dark names like "Skurlth", "Veyak")
 2 = Neutral/ambiguous (Slavic-style names like "Miroslav", "Katya")
 3 = Noble/respectable (Anglo-Saxon names like "Aelfric", "Godwin")
@@ -173,16 +173,36 @@ Return a single number (1-4) representing how this BBEG wants the public to perc
 
 Consider: Does this villain hide behind a facade of respectability? Are they a corrupt noble? A false prophet? Or do they embrace being feared?
 
-Return only the number (1, 2, 3, or 4):`;
+Return JSON:
+{
+  "alignment": 1-4,
+  "reasoning": "Brief explanation of why this BBEG would want to appear this way to the public"
+}`;
 
     const personaResponse = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
-      max_tokens: 10,
+      max_tokens: 150,
       messages: [{ role: "user", content: personaPrompt }],
     });
 
-    const alignment = parseInt(personaResponse.content[0].text?.trim() || "1");
+    let alignment = 1;
+    let alignmentReasoning = "Default to evil appearance";
+
+    try {
+      const personaData = JSON.parse(
+        personaResponse.content[0].text?.trim() || "{}",
+      );
+      alignment = parseInt(personaData.alignment) || 1;
+      alignmentReasoning = personaData.reasoning || "No reasoning provided";
+    } catch (e) {
+      // Fallback if JSON parsing fails
+      alignment = parseInt(personaResponse.content[0].text?.trim() || "1");
+    }
+
+    console.log(`\n=== ALIGNMENT CHOICE ===`);
     console.log(`AI determined public persona alignment: ${alignment}`);
+    console.log(`Reasoning: ${alignmentReasoning}`);
+    console.log(`========================\n`);
 
     const nameResult = await generateNames(alignment, 6);
     if (!nameResult.success) {
