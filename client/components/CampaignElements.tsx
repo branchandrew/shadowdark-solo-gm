@@ -315,7 +315,7 @@ export default function CampaignElements() {
                     key={character.id}
                     className={`p-3 border rounded transition-colors ${
                       character.hidden && !showHiddenCharacters
-                        ? "bg-muted/50 blur-[8px] pointer-events-none select-none"
+                        ? "bg-muted/50 blur-lg pointer-events-none select-none opacity-60"
                         : character.hidden
                           ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
                           : "cursor-pointer hover:bg-accent/50"
