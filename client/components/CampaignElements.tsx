@@ -33,6 +33,21 @@ export default function CampaignElements() {
     clues: clues.length,
   });
 
+  // Debug hidden status
+  console.log(
+    "Hidden creatures:",
+    creatures.filter((c) => c.hidden),
+  );
+  console.log(
+    "Hidden factions:",
+    factions.filter((f) => f.hidden),
+  );
+  console.log("Eye toggle states:", {
+    showHiddenThreads,
+    showHiddenCharacters,
+    showHiddenFactions,
+  });
+
   // Modal state
   const [selectedThread, setSelectedThread] = useState<Thread | null>(null);
   const [selectedCharacter, setSelectedCharacter] = useState<Creature | null>(
