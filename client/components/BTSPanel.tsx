@@ -25,25 +25,6 @@ export default function BTSPanel() {
   const [voice, setVoice] = useSessionState("bts_voice", "");
   const { updateData: updateAdventureLog } = useAdventureLog();
 
-  // Save adventure arc to localStorage (no duplication)
-  const saveAdventureToLocalStorage = (adventureData: AdventureArcDisplay) => {
-    localStorage.setItem(
-      "shadowdark_adventure_arc",
-      JSON.stringify(adventureData),
-    );
-  };
-
-  // Save theme/tone/voice to localStorage
-  const saveStyleToLocalStorage = (
-    newTheme: string,
-    newTone: string,
-    newVoice: string,
-  ) => {
-    localStorage.setItem("shadowdark_theme", newTheme);
-    localStorage.setItem("shadowdark_tone", newTone);
-    localStorage.setItem("shadowdark_voice", newVoice);
-  };
-
   const regenerateAdventure = async () => {
     console.log("Starting regenerate adventure...");
     setIsGenerating(true);
