@@ -133,6 +133,57 @@ const generateNames = (
   });
 
 /**
+ * Gets random lieutenant types from the Python adventure generator script
+ */
+const getLieutenantTypes = (
+  count: number = 2,
+): Promise<{ success: boolean; lieutenant_types?: string[]; error?: string }> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "adventure_generator.py",
+    );
+
+    console.log(
+      `Getting lieutenant types: python3 ${scriptPath} lieutenant_types ${count}`,
+    );
+
+    const proc = spawn("python3", [
+      scriptPath,
+      "lieutenant_types",
+      count.toString(),
+    ]);
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (d) => (stdout += d));
+    proc.stderr.on("data", (d) => (stderr += d));
+
+    proc.on("close", (code) => {
+      console.log(`Lieutenant types script exited with code: ${code}`);
+      console.log(`Lieutenant types stdout: ${stdout}`);
+      console.log(`Lieutenant types stderr: ${stderr}`);
+
+      if (code !== 0) {
+        return reject(
+          new Error(
+            `Lieutenant types script failed: ${stderr || `exited with code ${code}`}`,
+          ),
+        );
+      }
+      try {
+        const result = JSON.parse(stdout.trim());
+        resolve(result);
+      } catch {
+        reject(new Error("Invalid JSON from lieutenant types script"));
+      }
+    });
+  });
+
+/**
  * Express handler: creates a concise BBEG JSON object.
  */
 export const generateAdventure: RequestHandler = async (req, res) => {
@@ -309,12 +360,12 @@ Follow these steps using Mythic GME rules:
 
 7. **Generate exactly 2 Lieutenants** with the following requirements:
    7.1 Edintify one imortant feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Exmamples:
-    BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy 
+    BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy
     BBEG is a male > Lieutenants is a female
-    BBEG leads hordes of creatures > Lieutenant acts alone. 
-    
-    7.2 
-  
+    BBEG leads hordes of creatures > Lieutenant acts alone.
+
+    7.2
+
     7.3
      - Create a name that fits the theme
      - Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
@@ -345,7 +396,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
-• "high_tower_surprise" – the major plot twist (2-3 sentences)
+• "high_tower_surprise" ��� the major plot twist (2-3 sentences)
 • "lieutenants" – array of 1-3 lieutenant objects, each with name and tarot_spread
 • "faction_name" – name of the aligned faction
 • "faction_description" – description of faction (2-3 sentences)
