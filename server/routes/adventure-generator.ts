@@ -150,40 +150,39 @@ export const generateAdventure: RequestHandler = async (req, res) => {
     console.log("Generating names for BBEG...");
 
     // Ask AI to determine BBEG's public persona for name generation
-    let alignment = 1; // Default to evil
-    const themeToUpper = theme.toUpperCase();
-    const toneToUpper = tone.toUpperCase();
+    const personaPrompt = `Based on these tarot cards and style guidance, determine how this BBEG wants to appear to the public:
 
-    if (
-      themeToUpper.includes("SLAVIC") ||
-      themeToUpper.includes("EASTERN") ||
-      toneToUpper.includes("SLAVIC")
-    ) {
-      alignment = 2; // Slavic
-    } else if (
-      themeToUpper.includes("ANGLO") ||
-      themeToUpper.includes("SAXON") ||
-      themeToUpper.includes("MEDIEVAL") ||
-      themeToUpper.includes("NOBLE") ||
-      toneToUpper.includes("HEROIC") ||
-      toneToUpper.includes("CHIVALRIC")
-    ) {
-      alignment = 3; // Anglo-Saxon
-    } else if (
-      themeToUpper.includes("FAE") ||
-      themeToUpper.includes("ELF") ||
-      themeToUpper.includes("ELVISH") ||
-      themeToUpper.includes("FAIRY") ||
-      themeToUpper.includes("ETHEREAL") ||
-      toneToUpper.includes("ETHEREAL")
-    ) {
-      alignment = 4; // Fae/Elvish
-    }
-    // Otherwise stay with alignment = 1 (Evil) for dark/evil themes
+### STYLE GUIDANCE
+Theme: ${theme}
+Tone: ${tone}
+Voice: ${voice}
 
-    console.log(
-      `Using alignment ${alignment} for theme: ${theme}, tone: ${tone}`,
-    );
+### TAROT CARDS
+${cardsFormatted}
+
+### SOURCE DATA
+Goal: ${seeds.goal}
+Gender: ${seeds.gender}
+Race: ${seeds.race}
+
+Return a single number (1-4) representing how this BBEG wants the public to perceive them:
+1 = Openly evil/threatening (dark names like "Skurlth", "Veyak")
+2 = Neutral/ambiguous (Slavic-style names like "Miroslav", "Katya")
+3 = Noble/respectable (Anglo-Saxon names like "Aelfric", "Godwin")
+4 = Ethereal/mystical (Elvish names like "Elrond", "Galadriel")
+
+Consider: Does this villain hide behind a facade of respectability? Are they a corrupt noble? A false prophet? Or do they embrace being feared?
+
+Return only the number (1, 2, 3, or 4):`;
+
+    const personaResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 10,
+      messages: [{ role: "user", content: personaPrompt }],
+    });
+
+    const alignment = parseInt(personaResponse.content[0].text?.trim() || "1");
+    console.log(`AI determined public persona alignment: ${alignment}`);
 
     const nameResult = await generateNames(alignment, 6);
     if (!nameResult.success) {
@@ -218,7 +217,7 @@ Tarot Spread:\n${cardsFormatted}
 4. **Select and enhance the BBEG name** from these pre-generated options:
    Generated Names: ${nameResult.names?.join(", ")}
 
-   ��� Choose the name that best fits the BBEG's character and the theme/tone
+   • Choose the name that best fits the BBEG's character and the theme/tone
    • Consider ease of pronunciation and memorability
    • If appropriate for this type of villain, add a title such as:
      - Lord/Lady [name] (for noble/aristocratic villains)
