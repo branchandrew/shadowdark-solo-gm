@@ -256,7 +256,7 @@ CREATE INDEX IF NOT EXISTS idx_game_sessions_updated_at ON game_sessions(updated
 CREATE INDEX IF NOT EXISTS idx_creatures_session_id ON creatures(session_id);
 CREATE INDEX IF NOT EXISTS idx_creatures_creature_type ON creatures(creature_type);
 CREATE INDEX IF NOT EXISTS idx_creatures_faction_id ON creatures(faction_id);
-CREATE INDEX IF NOT EXISTS idx_creatures_bbeg_minion_creature_id ON creatures(bbeg_minion_creature_id);
+CREATE INDEX IF NOT EXISTS idx_creatures_minion_creature_id ON creatures(minion_creature_id);
 CREATE INDEX IF NOT EXISTS idx_factions_session_id ON factions(session_id);
 CREATE INDEX IF NOT EXISTS idx_threads_session_id ON threads(session_id);
 CREATE INDEX IF NOT EXISTS idx_clues_session_id ON clues(session_id);
