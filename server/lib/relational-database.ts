@@ -3,6 +3,7 @@ import type {
   GameSession,
   AdventureArc,
   NPC,
+  Creature,
   Faction,
   Thread,
   Clue,
