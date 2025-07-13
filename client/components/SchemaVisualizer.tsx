@@ -175,7 +175,7 @@ const schemaDefinition: TableInfo[] = [
         description: "Only for BBEG creatures",
       },
       {
-        name: "bbeg_minion_creature_id",
+        name: "minion_creature_id",
         type: "string",
         required: false,
         isForeignKey: true,
