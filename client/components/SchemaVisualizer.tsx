@@ -216,7 +216,7 @@ const schemaDefinition: TableInfo[] = [
       },
 
       // Monster-specific fields
-      { name: "is_minion_of_bbeg", type: "boolean", required: false },
+      { name: "is_minion", type: "boolean", required: false },
       { name: "source", type: "'shadowdark_core' | 'custom'", required: false },
 
       // NPC-specific fields
