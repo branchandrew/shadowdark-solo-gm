@@ -306,7 +306,8 @@ Follow these steps using Mythic GME rules:
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
-• "bbeg_name" �� the chosen name (title optional)
+• "bbeg_name" – the chosen name (title optional)
+• "name_reasoning" – brief explanation of why this name was chosen from the options
 • "bbeg_hook" – the single sentence hook
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
