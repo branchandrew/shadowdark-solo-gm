@@ -308,14 +308,14 @@ Follow these steps using Mythic GME rules:
 
 
 7. **Generate exactly 2 Lieutenants** with the following requirements:
-   • Edintify one imortant feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Exmamples:
+   7.1 Edintify one imortant feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Exmamples:
     BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy 
     BBEG is a male > Lieutenants is a female
     BBEG leads hordes of creatures > Lieutenant acts alone. 
     
-
-   • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
-   • For each lieutenant:
+    7.2 
+  
+    7.3
      - Create a name that fits the theme
      - Use the SAME tarot cards provided for the BBEG, but interpret them differently, in this order:
        * Seed: What defines their core nature?
