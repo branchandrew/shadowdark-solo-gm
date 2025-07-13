@@ -21,6 +21,7 @@ export default function BTSPanel() {
   const [theme, setTheme] = useSessionState("bts_theme", "");
   const [tone, setTone] = useSessionState("bts_tone", "");
   const [voice, setVoice] = useSessionState("bts_voice", "");
+  const { updateData: updateAdventureLog } = useAdventureLog();
 
   // Save adventure arc to localStorage (no duplication)
   const saveAdventureToLocalStorage = (adventureData: AdventureArcDisplay) => {
