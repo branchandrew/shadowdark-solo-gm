@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS game_sessions (
     id TEXT PRIMARY KEY,
     user_id UUID REFERENCES auth.users(id) DEFAULT auth.uid(),
     character_data JSONB,
+    adventure_arc JSONB, -- Adventure arc data (BBEG, lieutenants, etc.)
+    campaign_elements JSONB, -- Campaign elements (creatures, factions, clues, etc.)
     chaos_factor INTEGER DEFAULT 5,
     scene_counter INTEGER DEFAULT 1,
     shadowdark_theme TEXT DEFAULT 'Dark Fantasy',
