@@ -619,6 +619,12 @@ ${adventureArc.faction.description}
           </CardContent>
         </Card>
       )}
+
+      {/* Cloud Sync */}
+      <CloudSync />
+
+      {/* Schema Visualizer */}
+      <SchemaVisualizer />
     </div>
   );
 }
