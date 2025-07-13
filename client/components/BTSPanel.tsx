@@ -48,47 +48,11 @@ export default function BTSPanel() {
         body: JSON.stringify(requestBody),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
-      console.log(
-        "Response content-type:",
-        response.headers.get("content-type"),
-      );
-
-      // Read the response body once and handle both success and error cases
-      let data;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType?.includes("application/json")) {
-        try {
-          data = await response.json();
-        } catch (parseError) {
-          console.error("Failed to parse JSON response:", parseError);
-          throw new Error(
-            `Server returned malformed JSON (${response.status}): ${response.statusText}`,
-          );
-        }
-      } else {
-        // Handle non-JSON responses (like HTML error pages)
-        try {
-          const textResponse = await response.text();
-          console.log("Non-JSON response:", textResponse.substring(0, 200));
-          data = { error: `Server error: ${response.statusText}` };
-        } catch (textError) {
-          console.error("Failed to read response text:", textError);
-          throw new Error(
-            `Unable to read server response (${response.status}): ${response.statusText}`,
-          );
-        }
-      }
+      const data = await response.json();
 
       if (!response.ok) {
-        const errorMessage =
-          data?.error ||
-          `Server error (${response.status}): ${response.statusText}`;
-        throw new Error(errorMessage);
+        throw new Error(data.error || `Server error: ${response.statusText}`);
       }
-      console.log("Received data:", data);
 
       if (data.success) {
         console.log("Adventure generation succeeded! BBEG:", data.bbeg_name);
