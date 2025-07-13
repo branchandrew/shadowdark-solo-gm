@@ -37,7 +37,7 @@ interface Lieutenant {
     location: string;
     why_protect: string;
     how_protect: string;
-    reward: string;
+    minions: string;
   };
 }
 
@@ -383,7 +383,7 @@ Follow these steps using Mythic GME rules:
     BBEG is a male > Lieutenant is a female
     BBEG leads hordes of creatures > Lieutenant acts alone.
 
-    7.3 
+    7.3
      - Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomlly. Then answer the following questions with this new order, with the Tarot cards:
        * Seed: What defines their core nature?
        * Background: What is their origin story?
@@ -393,7 +393,7 @@ Follow these steps using Mythic GME rules:
        * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead (if any, this is not required)
      - Keep each tarot interpretation to 1-2 sentences
      Do this TWICE, once for each lieutenant
-    
+
     7.4 Create names for each of the 2 lieutenants
 
 9. **Create the Faction** which most aligns with the BBEG. It should reinforce the tone and theme of the adventure. Answer the following questions about it to create its details:
