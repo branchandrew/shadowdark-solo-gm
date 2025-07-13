@@ -286,14 +286,14 @@ export default function CampaignElements() {
                 className="p-1 hover:bg-accent rounded transition-colors"
                 title={
                   showHiddenCharacters
-                    ? "Blur hidden elements"
-                    : "Unblur hidden elements"
+                    ? "Hide spoiler elements"
+                    : "Show spoiler elements"
                 }
               >
                 {showHiddenCharacters ? (
-                  <Eye className="h-4 w-4" />
-                ) : (
                   <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
                 )}
               </button>
             </CardTitle>
