@@ -218,10 +218,34 @@ async function gatherContextSnapshot(
   const characterData = character || (await getCharacterData(sessionId));
   const adventureLog = await getAdventureLogData(sessionId);
 
+  // Extract BBEG from creatures array if present
+  const bbeg =
+    campaignData.creatures?.find(
+      (creature: any) => creature.creature_type === "bbeg",
+    ) ||
+    campaignData.bbeg ||
+    null;
+
+  // Extract NPCs/Lieutenants from creatures array
+  const npcs =
+    campaignData.creatures?.filter(
+      (creature: any) =>
+        creature.creature_type === "npc" ||
+        creature.creature_type === "lieutenant",
+    ) ||
+    campaignData.npcs ||
+    [];
+
   return {
-    bbeg: campaignData.bbeg || null,
-    npcs: campaignData.npcs || [],
-    plot_threads: campaignData.plot_threads || [],
+    bbeg: bbeg
+      ? {
+          name: bbeg.name,
+          description: bbeg.description,
+          motivation: bbeg.bbeg_motivation || bbeg.motivation,
+        }
+      : null,
+    npcs: npcs,
+    plot_threads: campaignData.threads || campaignData.plot_threads || [],
     factions: campaignData.factions || [],
     adventure_log: adventureLog || [],
     character: characterData
