@@ -61,12 +61,134 @@ export default function BTSPanel() {
         await updateAdventureLog([]);
         console.log("Adventure log cleared for new adventure arc");
 
-        // The database will automatically update via real-time subscriptions
-        // No need to manually set data - the useDatabase hooks will receive updates
+        // Check if database was available or if we got fallback data
+        if (data.fallback) {
+          console.log(
+            "Database not available - processing data directly:",
+            data.message,
+          );
 
-        console.log(
-          "Adventure generation complete! Data will arrive via real-time updates.",
-        );
+          // Handle fallback: manually update local data
+          const newAdventure = {
+            id: `arc_${Date.now()}`,
+            bbeg: {
+              name: data.bbeg_name,
+              description: data.bbeg_detailed_description,
+              motivation: data.bbeg_motivation,
+              hook: data.bbeg_hook,
+            },
+            clues: data.clues || [],
+            highTowerSurprise: data.high_tower_surprise || "",
+            lieutenants: data.lieutenants || [],
+            faction: {
+              name: data.faction_name || "",
+              description: data.faction_description || "",
+            },
+            minions: data.minions || "",
+          };
+
+          await updateAdventureArc(newAdventure);
+
+          // Also update campaign elements
+          const bbegId = `creature_${Date.now()}_bbeg`;
+          const campaignElements = {
+            threads: [],
+            creatures: [
+              {
+                id: bbegId,
+                name: data.bbeg_name,
+                description: data.bbeg_detailed_description,
+                creature_type: "bbeg",
+                npc_disposition: "hostile",
+                bbeg_motivation: data.bbeg_motivation,
+                bbeg_hook: data.bbeg_hook,
+                hidden: true,
+              },
+              ...(data.minions && data.minions.trim()
+                ? [
+                    {
+                      id: `creature_${Date.now()}_bbeg_minion`,
+                      name: "BBEG Minions",
+                      description: data.minions,
+                      creature_type: "monster",
+                      npc_disposition: "hostile",
+                      is_minion: true,
+                      minion_creature_id: bbegId,
+                      hidden: true,
+                    },
+                  ]
+                : []),
+              ...(data.lieutenants || []).flatMap(
+                (lieutenant: any, index: number) => {
+                  const lieutenantId = `creature_${Date.now()}_lt_${index}`;
+                  const creatures = [
+                    {
+                      id: lieutenantId,
+                      name: lieutenant.name,
+                      description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
+                      creature_type: "lieutenant",
+                      npc_disposition: "hostile",
+                      lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
+                      lieutenant_tarot_background:
+                        lieutenant.tarot_spread?.background,
+                      lieutenant_tarot_location:
+                        lieutenant.tarot_spread?.location,
+                      lieutenant_tarot_why_protect:
+                        lieutenant.tarot_spread?.why_protect,
+                      lieutenant_tarot_how_protect:
+                        lieutenant.tarot_spread?.how_protect,
+                      hidden: true,
+                    },
+                  ];
+
+                  if (
+                    lieutenant.tarot_spread?.reward &&
+                    lieutenant.tarot_spread.reward.trim()
+                  ) {
+                    creatures.push({
+                      id: `creature_${Date.now()}_lt_${index}_minion`,
+                      name: `${lieutenant.name}'s Minions`,
+                      description: lieutenant.tarot_spread.reward,
+                      creature_type: "monster",
+                      npc_disposition: "hostile",
+                      is_minion: true,
+                      minion_creature_id: lieutenantId,
+                      hidden: true,
+                    });
+                  }
+
+                  return creatures;
+                },
+              ),
+            ],
+            factions: data.faction_name
+              ? [
+                  {
+                    id: `faction_${Date.now()}`,
+                    name: data.faction_name,
+                    description: data.faction_description || "",
+                    relationship: "opposed",
+                    influence: "moderate",
+                    hidden: true,
+                  },
+                ]
+              : [],
+            clues: (data.clues || []).map((clue: string, index: number) => ({
+              id: `clue_${Date.now()}_${index}`,
+              description: clue,
+              discovered: false,
+              importance: "moderate",
+            })),
+          };
+
+          await updateCampaignElements(campaignElements);
+          console.log("Adventure data updated via fallback mode");
+        } else {
+          // Database mode - data will arrive via real-time subscriptions
+          console.log(
+            "Adventure generation complete! Data will arrive via real-time updates.",
+          );
+        }
       } else {
         throw new Error(data.error || "Adventure generation failed");
       }
