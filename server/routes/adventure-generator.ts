@@ -569,6 +569,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
         hiddenElements.creatures.push({
           id: bbegId,
           name: villain.bbeg_name,
+          race_species: seeds.race,
           description: villain.bbeg_detailed_description,
           creature_type: "bbeg",
           npc_disposition: "hostile",
