@@ -37,29 +37,6 @@ export default function CampaignElements() {
   const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
   const [showHiddenFactions, setShowHiddenFactions] = useState(false);
 
-  // Simple debugging
-  console.log("CampaignElements data:", {
-    threads: threads.length,
-    creatures: creatures.length,
-    factions: factions.length,
-    clues: clues.length,
-  });
-
-  // Debug hidden status
-  console.log(
-    "Hidden creatures:",
-    creatures.filter((c) => c.hidden),
-  );
-  console.log(
-    "Hidden factions:",
-    factions.filter((f) => f.hidden),
-  );
-  console.log("Eye toggle states:", {
-    showHiddenThreads,
-    showHiddenCharacters,
-    showHiddenFactions,
-  });
-
   // Filter creatures by type for display
   const characters = creatures.filter(
     (c) =>
