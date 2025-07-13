@@ -25,6 +25,18 @@ export default function CampaignElements() {
   const factions = campaignData?.factions || [];
   const clues = campaignData?.clues || [];
 
+  // Modal state
+  const [selectedThread, setSelectedThread] = useState<Thread | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<Creature | null>(
+    null,
+  );
+  const [selectedFaction, setSelectedFaction] = useState<Faction | null>(null);
+
+  // Visibility toggles for hidden elements
+  const [showHiddenThreads, setShowHiddenThreads] = useState(false);
+  const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
+  const [showHiddenFactions, setShowHiddenFactions] = useState(false);
+
   // Simple debugging
   console.log("CampaignElements data:", {
     threads: threads.length,
@@ -47,18 +59,6 @@ export default function CampaignElements() {
     showHiddenCharacters,
     showHiddenFactions,
   });
-
-  // Modal state
-  const [selectedThread, setSelectedThread] = useState<Thread | null>(null);
-  const [selectedCharacter, setSelectedCharacter] = useState<Creature | null>(
-    null,
-  );
-  const [selectedFaction, setSelectedFaction] = useState<Faction | null>(null);
-
-  // Visibility toggles for hidden elements
-  const [showHiddenThreads, setShowHiddenThreads] = useState(false);
-  const [showHiddenCharacters, setShowHiddenCharacters] = useState(false);
-  const [showHiddenFactions, setShowHiddenFactions] = useState(false);
 
   // Filter creatures by type for display
   const characters = creatures.filter(
