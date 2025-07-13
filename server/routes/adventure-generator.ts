@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { spawn } from "child_process";
 import path from "path";
+import fs from "fs";
 import { relationalDB } from "../lib/relational-database";
 import type {
   AdventureGenerationRequest,
