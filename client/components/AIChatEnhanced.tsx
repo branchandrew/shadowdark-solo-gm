@@ -63,13 +63,13 @@ export default function AIChat() {
     // No auto-loading during development - always start with default
   }, []);
 
-  // Development mode: save only for current session
+  const { updateData: updateChaosFactor } = useDatabase("chaos_factor", 5);
+
+  // Development mode: save chaos factor to database
   useEffect(() => {
-    localStorage.setItem("shadowdark_chaos_factor", chaosFactor.toString());
-    console.log(
-      "AIChatEnhanced: Saved chaos factor to localStorage (session-only during development)",
-    );
-  }, [chaosFactor]);
+    updateChaosFactor(chaosFactor);
+    console.log("AIChatEnhanced: Saved chaos factor to database");
+  }, [chaosFactor, updateChaosFactor]);
 
   // Listen for external messages (like from BTS panel)
   useEffect(() => {
