@@ -127,7 +127,7 @@ export interface Creature {
   // BBEG-specific fields
   bbeg_motivation?: string;
   bbeg_hook?: string;
-  bbeg_minion_creature_id?: string; // FK to another Creature (the minion monster type)
+  minion_creature_id?: string; // FK to another Creature (the minion monster type)
 
   // Lieutenant-specific fields (no tarot_spread stored - generated then discarded)
   lieutenant_seed?: string;
