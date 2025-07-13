@@ -147,7 +147,7 @@ export default function BTSPanel() {
         const campaignElements = {
           threads: [], // Plot threads will be populated later
           creatures: [
-            // Add BBEG as a creature
+            // Add BBEG as a creature (hidden initially)
             {
               id: `creature_${Date.now()}_bbeg`,
               name: data.bbeg_name,
@@ -156,8 +156,9 @@ export default function BTSPanel() {
               npc_disposition: "hostile",
               bbeg_motivation: data.bbeg_motivation,
               bbeg_hook: data.bbeg_hook,
+              hidden: true,
             },
-            // Add lieutenants as creatures
+            // Add lieutenants as creatures (hidden initially)
             ...(data.lieutenants || []).map(
               (lieutenant: any, index: number) => ({
                 id: `creature_${Date.now()}_lt_${index}`,
@@ -174,6 +175,7 @@ export default function BTSPanel() {
                 lieutenant_tarot_how_protect:
                   lieutenant.tarot_spread?.how_protect,
                 lieutenant_tarot_reward: lieutenant.tarot_spread?.reward,
+                hidden: true,
               }),
             ),
           ],
@@ -185,6 +187,7 @@ export default function BTSPanel() {
                   description: data.faction_description || "",
                   relationship: "opposed",
                   influence: "moderate",
+                  hidden: true,
                 },
               ]
             : [],
