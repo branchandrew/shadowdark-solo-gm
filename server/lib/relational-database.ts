@@ -106,7 +106,7 @@ class RelationalDatabase {
 
   async addCreatures(
     sessionId: string,
-    creatures: Array<any>, // Omit<Creature, "session_id">[]
+    creatures: Omit<Creature, "session_id">[],
   ): Promise<void> {
     if (!this.supabase || creatures.length === 0) return;
 
