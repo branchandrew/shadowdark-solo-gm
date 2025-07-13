@@ -189,15 +189,26 @@ Return JSON:
     let alignment = 1;
     let alignmentReasoning = "Default to evil appearance";
 
+    const rawPersonaResponse = personaResponse.content[0].text?.trim() || "";
+    console.log("Raw persona response:", rawPersonaResponse);
+
     try {
-      const personaData = JSON.parse(
-        personaResponse.content[0].text?.trim() || "{}",
-      );
+      const personaData = JSON.parse(rawPersonaResponse);
       alignment = parseInt(personaData.alignment) || 1;
       alignmentReasoning = personaData.reasoning || "No reasoning provided";
+      console.log("Parsed persona data successfully:", personaData);
     } catch (e) {
-      // Fallback if JSON parsing fails
-      alignment = parseInt(personaResponse.content[0].text?.trim() || "1");
+      console.log("JSON parsing failed, trying fallback...");
+      // Fallback if JSON parsing fails - try to extract just a number
+      const numberMatch = rawPersonaResponse.match(/\d+/);
+      alignment = numberMatch ? parseInt(numberMatch[0]) : 1;
+      console.log("Fallback alignment:", alignment);
+    }
+
+    // Ensure alignment is valid (1-4)
+    if (isNaN(alignment) || alignment < 1 || alignment > 4) {
+      console.log("Invalid alignment detected, defaulting to 1");
+      alignment = 1;
     }
 
     console.log(`\n=== ALIGNMENT CHOICE ===`);
