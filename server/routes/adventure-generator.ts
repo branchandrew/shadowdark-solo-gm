@@ -312,6 +312,7 @@ Follow these steps using Mythic GME rules:
     BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy 
     BBEG is a male > Lieutenants is a female
     BBEG leads hordes of creatures > Lieutenant acts alone. 
+    Using the 
 
    • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
    • For each lieutenant:
