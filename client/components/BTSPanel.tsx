@@ -254,10 +254,9 @@ ${adventureArc.faction.description}
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  setAdventureArc(null);
-                  localStorage.removeItem("shadowdark_adventure_arc");
-                  localStorage.removeItem("shadowdark_campaign_elements");
+                onClick={async () => {
+                  await updateAdventureArc(null);
+                  await updateCampaignElements(null);
                 }}
                 className="text-xs"
               >
