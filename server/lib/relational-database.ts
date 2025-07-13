@@ -268,7 +268,7 @@ class RelationalDatabase {
     adventureArcId: string,
     elements: {
       npcs?: Omit<NPC, "session_id">[];
-      creatures?: Array<any>; // Omit<Creature, "session_id">[];
+      creatures?: Omit<Creature, "session_id">[];
       factions?: Omit<Faction, "session_id">[];
       threads?: Omit<Thread, "session_id">[];
       clues?: Omit<Clue, "session_id">[];
