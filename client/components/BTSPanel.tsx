@@ -209,6 +209,14 @@ export default function BTSPanel() {
 
         console.log("Campaign elements saved to localStorage");
 
+        // Clear adventure log for new adventure arc
+        await updateAdventureLog([]);
+        console.log("Adventure log cleared for new adventure arc");
+
+        // Clear current scene and reset scene number for new arc
+        localStorage.removeItem("shadowdark_current_scene");
+        localStorage.setItem("shadowdark_scene_number", "1");
+
         // Combine all the BBEG information for display
         const fullProfile = `${data.bbeg_detailed_description}\n\nMotivation: ${data.bbeg_motivation}\n\nAdventure Hook: ${data.bbeg_hook}`;
 
