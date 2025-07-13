@@ -312,7 +312,9 @@ export default function CampaignElements() {
               <div className="space-y-2">
                 {getVisibleCharacters().map((character) => {
                   const shouldBlur = character.hidden && !showHiddenCharacters;
-                  console.log(`Character ${character.name}: hidden=${character.hidden}, showHiddenCharacters=${showHiddenCharacters}, shouldBlur=${shouldBlur}`);
+                  console.log(
+                    `Character ${character.name}: hidden=${character.hidden}, showHiddenCharacters=${showHiddenCharacters}, shouldBlur=${shouldBlur}`,
+                  );
 
                   return (
                     <div
@@ -329,7 +331,7 @@ export default function CampaignElements() {
                           ? {
                               filter: "blur(8px) grayscale(100%)",
                               backgroundColor: "rgba(255, 0, 0, 0.3)",
-                              color: "transparent"
+                              color: "transparent",
                             }
                           : {}
                       }
@@ -342,36 +344,37 @@ export default function CampaignElements() {
                       <div className="text-sm font-medium mb-2">
                         {character.name}
                       </div>
-                    <div className="flex items-center gap-2">
-                      {character.creature_type === "bbeg" && (
-                        <Badge
-                          key="bbeg-badge"
-                          variant="destructive"
-                          className="text-xs"
-                        >
-                          BBEG
-                        </Badge>
-                      )}
-                      {character.creature_type === "lieutenant" && (
-                        <Badge
-                          key="lieutenant-badge"
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          Lieutenant
-                        </Badge>
-                      )}
-                      <Badge
-                        className={getDispositionColor(
-                          character.npc_disposition || "unknown",
+                      <div className="flex items-center gap-2">
+                        {character.creature_type === "bbeg" && (
+                          <Badge
+                            key="bbeg-badge"
+                            variant="destructive"
+                            className="text-xs"
+                          >
+                            BBEG
+                          </Badge>
                         )}
-                        variant="outline"
-                      >
-                        {character.npc_disposition || "unknown"}
-                      </Badge>
+                        {character.creature_type === "lieutenant" && (
+                          <Badge
+                            key="lieutenant-badge"
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            Lieutenant
+                          </Badge>
+                        )}
+                        <Badge
+                          className={getDispositionColor(
+                            character.npc_disposition || "unknown",
+                          )}
+                          variant="outline"
+                        >
+                          {character.npc_disposition || "unknown"}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
