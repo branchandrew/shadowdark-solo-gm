@@ -429,7 +429,7 @@ Follow these steps using Mythic GME rules:
 Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_name" – the chosen name (title optional)
 • "name_reasoning" – brief explanation of why this name was chosen from the options
-• "bbeg_hook" – the single sentence hook
+��� "bbeg_hook" – the single sentence hook
 • "bbeg_motivation" – one concise sentence
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
@@ -701,13 +701,29 @@ Return one clean JSON object and nothing else.  Keep values concise:
           },
         });
         console.log("Adventure arc written to database successfully");
+
+        // Simple success response when database is available
+        res.json({ success: true });
       } catch (error) {
         console.error("Failed to write adventure arc to database:", error);
+        // Fall back to returning data if database write fails
+        res.json({
+          ...villain,
+          success: true,
+          fallback: true,
+          message: "Database unavailable, returning data directly",
+        });
       }
+    } else {
+      console.log("Database not available - returning data directly");
+      // Fall back to returning data when no database
+      res.json({
+        ...villain,
+        success: true,
+        fallback: true,
+        message: "Database not configured, returning data directly",
+      });
     }
-
-    // Simple success response - data flows through database
-    res.json({ success: true });
   } catch (err) {
     console.error("Adventure generation error:", err);
 
