@@ -400,7 +400,11 @@ Follow these steps using Mythic GME rules:
 
        Here's when it would NOT make sense:
 
-       Lieutenant: 
+       lieutenant: The Grimoire of Endless Endings > No minions. 
+       lieutenant: Captain Ahab's Ghost > No minions.
+
+
+
      - Keep each tarot interpretation to 1-2 sentences
      Do this TWICE, once for each lieutenant
     
