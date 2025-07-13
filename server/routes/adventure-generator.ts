@@ -371,6 +371,12 @@ Follow these steps using Mythic GME rules:
    • IMPORTANT: Include your reasoning for the name choice in the "name_reasoning" field
 6. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
 
+7. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
+   • A creature type that fits thematically with the BBEG and theme
+   • Common enough to be encountered frequently
+   • Challenging but not overwhelming for regular encounters
+   • Reflect the BBEG's influence and corruption
+   • 2-3 sentences describing their nature, appearance, and capabilities
 
 7. **Generate exactly 2 Lieutenants** with the following requirements:
 
@@ -392,7 +398,8 @@ Follow these steps using Mythic GME rules:
        * How Protect: What methods do they use to serve/protect the BBEG?
        * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead?
        Note: it may not make sense for the Lieutenant to have minions. The first question you must ask is, "based on what we've created so far,
-       would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant lead the same type of minions as the BBEG. 
+       would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant associated with the same minions as the lieutenant.
+
        If not, then the second question you must ask is, does it make sense that this lieutenant would have ANY lieutenants? Here are some examples of when it would make sense, and what type:
 
        Lieutenant: Brog the Orc Ling > Yes. Minions = Orcs
@@ -416,12 +423,6 @@ Follow these steps using Mythic GME rules:
    • Is the faction loyal to the BBEG or do their motives just happen to align with it?
    • What sort of domain or territory does the faction control?
    • Provide a faction name and 2-3 sentence description that captures their nature, goals, and relationship to the BBEG
-10. **Define Common Minions** - Create a creature type that serves as the most likely minions for this BBEG that PCs will fight many of on their pathway toward defeating Lieutenants and the BBEG. This should be:
-   • A creature type that fits thematically with the BBEG and theme
-   • Common enough to be encountered frequently
-   • Challenging but not overwhelming for regular encounters
-   • Reflect the BBEG's influence and corruption
-   • 2-3 sentences describing their nature, appearance, and capabilities
 
 --- OUTPUT ---
 Return one clean JSON object and nothing else.  Keep values concise:
