@@ -65,9 +65,39 @@ export default function SceneManager() {
   const { data: adventureLog, updateData: updateAdventureLog } =
     useAdventureLog();
 
-  // Check if we have any adventure log entries
-  const hasAdventureLogEntries = () => {
-    return adventureLog && adventureLog.length > 0;
+  // Check if we have valid campaign elements to generate scenes from
+  const hasValidCampaignElements = () => {
+    const campaignElementsRaw = localStorage.getItem(
+      "shadowdark_campaign_elements",
+    );
+    const adventureArcRaw = localStorage.getItem("shadowdark_adventure_arc");
+
+    if (campaignElementsRaw) {
+      try {
+        const elements = JSON.parse(campaignElementsRaw);
+        return (
+          elements &&
+          elements.bbeg &&
+          elements.bbeg.name &&
+          elements.bbeg.name !== "Unknown BBEG"
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (adventureArcRaw) {
+      try {
+        const arc = JSON.parse(adventureArcRaw);
+        return (
+          arc && arc.bbeg && arc.bbeg.name && arc.bbeg.name !== "Unknown BBEG"
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
   };
 
   // Get current adventure arc ID
