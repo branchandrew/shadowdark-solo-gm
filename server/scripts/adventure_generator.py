@@ -123,21 +123,40 @@ def get_random_lieutenant_types(count=2):
     return random.sample(shadowdark_villain_types, count)
 
 if __name__ == "__main__":
-    goal, gender, race, cards = generate_reading()
-    card_positions = ["Seed", "Virtue", "Vice", "Rising Power", "Breaking Point", "Fate"]
+    import sys
 
-    # Format cards with positions for output
-    formatted_cards = []
-    for i, card in enumerate(cards):
-        formatted_cards.append({
-            "position": card_positions[i],
-            "card_text": card
-        })
+    # Check if command line argument for lieutenant types
+    if len(sys.argv) > 1 and sys.argv[1] == "lieutenant_types":
+        count = 2  # Default to 2 lieutenants
+        if len(sys.argv) > 2:
+            try:
+                count = int(sys.argv[2])
+            except ValueError:
+                count = 2
 
-    result = {
-        "goal": goal,
-        "gender": gender,
-        "race": race,
-        "cards": formatted_cards
-    }
-    print(json.dumps(result, indent=2))
+        lieutenant_types = get_random_lieutenant_types(count)
+        result = {
+            "success": True,
+            "lieutenant_types": lieutenant_types
+        }
+        print(json.dumps(result))
+    else:
+        # Default behavior - generate full reading
+        goal, gender, race, cards = generate_reading()
+        card_positions = ["Seed", "Virtue", "Vice", "Rising Power", "Breaking Point", "Fate"]
+
+        # Format cards with positions for output
+        formatted_cards = []
+        for i, card in enumerate(cards):
+            formatted_cards.append({
+                "position": card_positions[i],
+                "card_text": card
+            })
+
+        result = {
+            "goal": goal,
+            "gender": gender,
+            "race": race,
+            "cards": formatted_cards
+        }
+        print(json.dumps(result, indent=2))
