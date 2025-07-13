@@ -11,7 +11,53 @@ goal = [
 
 # ───────────────────────────────────────────────────────────
 # Races and Genders
-nimble_races = ["Human", "Elf", "Dwarf", "Halfling", "Gnome","Goblin", "Dragonborn", "Kobold", "Orc", "Fiendkin", "Bunbun",  "Birdfolk", "Celestial", "Changeling", "Crystalborn", "Half‑Giant", "Minotaur/Beastfolk", "Dryad/Shroomling", "Ratfolk", "Turtlefolk", "Wyrdling"]
+shadowdark_villain_types = [
+  "Human",
+  "Elf",
+  "Dwarf",
+  "Halfling",
+  "Hobgoblin",
+  "Drow",
+  "Duergar",
+  "Druid",
+  "Giant",
+  "Devil",
+  "Demon",
+  "Elemental",
+  "Fairy",
+  "Oni",
+  "Hag",
+  "Shadow",
+  "Principi Fallen Angel",
+  "Seraph Angel",
+  "Domini Angel",
+  "Aboleth",
+  "Naga",
+  "Couatl",
+  "Invisible Stalker",
+  "Medusa",
+  "Mummy",
+  "Efreeti",
+  "Phoenix",
+  "Frost Dragon",
+  "Sea Dragon",
+  "Swamp Dragon",
+  "Rime Walker",
+  "Ten-Eyed Oracle",
+  "Obe-Ixx of Azarumme",
+  "Mordanticus the Flayed",
+  "Rathgamnon",
+  "Imprisoned God",
+  "God of Storm / Destruction",
+  "Sentient Grimoire",
+  "An evil, scheming, intelligent relic or artifact",
+  "A powerful ghost, spirit, or shadow",
+  "A god, diety or power representing death",
+  "A chaos swarm",
+  "A malignant spell or curse",
+  "A hive mind corruption",
+  "World Consuming Darkness"
+]
 
 # Weighted list for gender: Male is 4 times more likely than Female
 genders = ["Male", "Female"] # Corrected gender list
@@ -56,12 +102,12 @@ def generate_reading():
     selected_gender = random.choices(genders, weights=[4, 1], k=1)[0] # Select one gender with weights
     # 50/50 chance for race to be the first race in array (should be Human) vs another type of race
     if (random.random() < 0.5):
-        selected_race = nimble_races[0]
+        selected_race = shadowdark_villain_types[0]
     else:
         # Highly weighted random selection for race (earlier elements more likely)
-        num_races = len(nimble_races)
+        num_races = len(shadowdark_villain_types)
         race_weights = [(num_races - i)**2 for i in range(num_races)]
-        selected_race = random.choices(nimble_races, weights=race_weights, k=1)[0] # Select one race with weights
+        selected_race = random.choices(shadowdark_villain_types, weights=race_weights, k=1)[0] # Select one race with weights
 
     drawn_cards = []
     for _ in range(6):
