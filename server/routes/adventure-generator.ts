@@ -78,6 +78,47 @@ const runPython = (scriptPath: string): Promise<PythonResult> =>
   });
 
 /**
+ * Generates names using the Python name generation script
+ */
+const generateNames = (
+  alignment: number,
+  numNames: number,
+): Promise<{ success: boolean; names?: string[]; error?: string }> =>
+  new Promise((resolve, reject) => {
+    const scriptPath = path.join(
+      process.cwd(),
+      "server",
+      "scripts",
+      "generate_name.py",
+    );
+    const proc = spawn("python3", [
+      scriptPath,
+      alignment.toString(),
+      numNames.toString(),
+    ]);
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (d) => (stdout += d));
+    proc.stderr.on("data", (d) => (stderr += d));
+
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        return reject(
+          new Error(stderr || `Name generation script exited with ${code}`),
+        );
+      }
+      try {
+        const result = JSON.parse(stdout.trim());
+        resolve(result);
+      } catch {
+        reject(new Error("Invalid JSON from name generation script"));
+      }
+    });
+  });
+
+/**
  * Express handler: creates a concise BBEG JSON object.
  */
 export const generateAdventure: RequestHandler = async (req, res) => {
@@ -124,7 +165,7 @@ Tarot Spread:\n${cardsFormatted}
 --- HIDDEN REASONING STEPS (do not expose) ---
 1. **Interpret each tarot card** in context of the villain's life.  Follow these shortcuts:
    • Major Arcana = fate‑shaping forces.  • Suits and Wands: ambition; Cups: emotion/loyalty; Swords: ideology/conflict; Pentacles: resources/influence.
-   • Numbers — Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
+   • Numbers��— Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
    • Reversed indicates blockage, secrecy, or excess.
 2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
 4. **Forge a compelling name** that embodies the style guidance
