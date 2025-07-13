@@ -323,11 +323,6 @@ ${adventureArc.faction.description}
 
   return (
     <div className="space-y-6">
-      {/* Cloud Sync */}
-      <CloudSync />
-
-      {/* Schema Visualizer */}
-      <SchemaVisualizer />
       {/* Adventure Generation */}
       <Card>
         <CardHeader>
