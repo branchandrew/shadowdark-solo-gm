@@ -320,6 +320,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
 
 {
   "bbeg_name": "",
+  "name_reasoning": "",
   "bbeg_hook": "",
   "bbeg_motivation": "",
   "bbeg_detailed_description": "",
