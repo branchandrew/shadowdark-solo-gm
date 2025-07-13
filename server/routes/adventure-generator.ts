@@ -287,6 +287,21 @@ Return JSON:
 
     console.log("Generated names:", nameResult.names);
 
+    /* ---------- 2.5. Generate lieutenant types ---------- */
+    console.log("Getting random lieutenant types...");
+
+    const lieutenantTypesResult = await getLieutenantTypes(2);
+    if (!lieutenantTypesResult.success) {
+      throw new Error(
+        `Lieutenant types generation failed: ${lieutenantTypesResult.error}`,
+      );
+    }
+
+    console.log(
+      "Generated lieutenant types:",
+      lieutenantTypesResult.lieutenant_types,
+    );
+
     /* ---------- 3. Claude call ---------- */
     const userPrompt =
       `You are a narrative��design assistant tasked with forging a memorable Big Bad Evil Guy (BBEG) for a TTRPG campaign.  Work through the hidden reasoning steps below, **but reveal ONLY the JSON object requested in the Output section.**
