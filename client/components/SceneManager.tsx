@@ -61,41 +61,42 @@ export default function SceneManager() {
   );
   const [character] = useSessionState("character", null);
   const [adventureArc] = useSessionState("bts_adventure_arc", null);
+  const { data: adventureLog, updateData: updateAdventureLog } =
+    useAdventureLog();
 
-  // Check if we have valid campaign elements
-  const hasValidCampaignElements = () => {
-    const campaignElementsRaw = localStorage.getItem(
-      "shadowdark_campaign_elements",
-    );
+  // Check if we have any adventure log entries
+  const hasAdventureLogEntries = () => {
+    return adventureLog && adventureLog.length > 0;
+  };
+
+  // Get current adventure arc ID
+  const getCurrentAdventureArcId = () => {
     const adventureArcRaw = localStorage.getItem("shadowdark_adventure_arc");
-
-    if (campaignElementsRaw) {
-      try {
-        const elements = JSON.parse(campaignElementsRaw);
-        return (
-          elements &&
-          elements.bbeg &&
-          elements.bbeg.name &&
-          elements.bbeg.name !== "Unknown BBEG"
-        );
-      } catch (e) {
-        return false;
-      }
-    }
-
     if (adventureArcRaw) {
       try {
         const arc = JSON.parse(adventureArcRaw);
-        return (
-          arc && arc.bbeg && arc.bbeg.name && arc.bbeg.name !== "Unknown BBEG"
-        );
+        return arc?.id;
       } catch (e) {
-        return false;
+        return null;
       }
     }
-
-    return false;
+    return null;
   };
+
+  // Clear scenes if they don't belong to current adventure arc
+  useEffect(() => {
+    const currentArcId = getCurrentAdventureArcId();
+    if (
+      currentArcId &&
+      currentScene &&
+      currentScene.adventure_arc_id !== currentArcId
+    ) {
+      // Clear scene if it belongs to a different adventure arc
+      setCurrentScene(null);
+      // Reset scene number
+      setSceneNumber(1);
+    }
+  }, [adventureArc, currentScene, setCurrentScene, setSceneNumber]);
 
   const generateNewScene = async () => {
     setIsGenerating(true);
