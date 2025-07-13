@@ -214,12 +214,6 @@ const schemaDefinition: TableInfo[] = [
         required: false,
         description: "Tarot result",
       },
-      {
-        name: "lieutenant_reward",
-        type: "string",
-        required: false,
-        description: "Tarot result",
-      },
 
       // Monster-specific fields
       { name: "is_minion_of_bbeg", type: "boolean", required: false },
