@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS creatures (
     -- BBEG-specific fields
     bbeg_motivation TEXT,
     bbeg_hook TEXT,
-    bbeg_minion_creature_id TEXT REFERENCES creatures(id) ON DELETE SET NULL, -- FK to minion creature
+    minion_creature_id TEXT REFERENCES creatures(id) ON DELETE SET NULL, -- FK to minion creature
 
     -- Lieutenant-specific fields (tarot spread results, not the spread itself)
     lieutenant_seed TEXT,
