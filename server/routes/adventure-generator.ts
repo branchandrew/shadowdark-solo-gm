@@ -308,7 +308,11 @@ Follow these steps using Mythic GME rules:
 
 
 7. **Generate exactly 2 Lieutenants** with the following requirements:
-   • **First Lieutenant**: Must be a massive contrast to the BBEG - an unlikely ally who serves them despite being fundamentally different in nature, methods, or motivation
+   • Edintify one imortant feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Exmamples:
+    BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy 
+    BBEG is a male > Lieutenants is a female
+    BBEG leads hordes of creatures > Lieutenant acts alone. 
+
    • **Second Lieutenant**: May be similar to the BBEG or may also contrast - your choice based on what makes the most interesting dynamic
    • For each lieutenant:
      - Create a name that fits the theme
