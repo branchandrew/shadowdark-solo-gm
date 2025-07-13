@@ -191,16 +191,8 @@ export default function SceneManager() {
         }
       }
 
-      // Validate we have a proper BBEG before proceeding
-      if (
-        !finalCampaignElements ||
-        !finalCampaignElements.bbeg ||
-        !finalCampaignElements.bbeg.name
-      ) {
-        console.log("No valid campaign elements found. Cannot generate scene.");
-        alert("Please generate an adventure arc first before creating scenes.");
-        return;
-      }
+      // Note: Allow scene generation even without campaign elements
+      // The server will handle fallback logic for missing data
 
       const requestBody = {
         session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
