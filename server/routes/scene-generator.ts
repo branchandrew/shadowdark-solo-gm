@@ -333,11 +333,16 @@ async function createSceneExpectations(
   const prompt = `You are a GM for a Shadowdark RPG solo session. Create scene expectations based on the story context and player intentions.
 
 CONTEXT:
-BBEG: ${contextSnapshot.bbeg.name} - ${contextSnapshot.bbeg.description}
+${
+  contextSnapshot.bbeg
+    ? `BBEG: ${contextSnapshot.bbeg.name} - ${contextSnapshot.bbeg.description}
 Motivation: ${contextSnapshot.bbeg.motivation}
 
 DEBUG_BBEG_NAME: ${contextSnapshot.bbeg.name}
-DEBUG_BBEG_CHECK: The BBEG for this scene is named "${contextSnapshot.bbeg.name}" and must be referenced in the response.
+DEBUG_BBEG_CHECK: The BBEG for this scene is named "${contextSnapshot.bbeg.name}" and must be referenced in the response.`
+    : `BBEG: None set - This is a general adventure scene without a specific Big Bad Evil Guy.
+DEBUG_BBEG_CHECK: No BBEG has been established for this adventure yet.`
+}
 
 Current Plot Threads:
 ${contextSnapshot.plot_threads.map((thread: any) => `- ${thread.description} (${thread.status})`).join("\n")}
