@@ -374,16 +374,15 @@ Follow these steps using Mythic GME rules:
 
 
 7. **Generate exactly 2 Lieutenants** with the following requirements:
-   7.1 Identify one important feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Examples:
-    BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy
-    BBEG is a male > Lieutenant is a female
-    BBEG leads hordes of creatures > Lieutenant acts alone.
 
-    7.2 Use these randomly selected creature types for the Lieutenants:
+    7.1 Use these randomly selected creature types for the Lieutenants:
     Lieutenant 1: ${lieutenantTypesResult.lieutenant_types?.[0] || "Human"}
     Lieutenant 2: ${lieutenantTypesResult.lieutenant_types?.[1] || "Elf"}
 
-    Make sure each Lieutenant fits their assigned creature type while also contrasting with the BBEG as described in 7.1.
+   7.2 Identify one important feature or aspect of the BBEG (one different for each Lieutenant) and make the lieutenant the opposite. Examples:
+    BBEG is hideous creature > Lieutenant is a gorgeous elf or fairy
+    BBEG is a male > Lieutenant is a female
+    BBEG leads hordes of creatures > Lieutenant acts alone.
 
     7.3
      - Create a name that fits the theme
