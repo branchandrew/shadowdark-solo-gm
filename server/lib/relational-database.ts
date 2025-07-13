@@ -38,6 +38,36 @@ class RelationalDatabase {
 
   // === ADVENTURE ARC OPERATIONS ===
 
+  async writeAdventureArcToSession(
+    sessionId: string,
+    data: {
+      adventure_arc: any;
+      campaign_elements: any;
+    },
+  ): Promise<void> {
+    if (!this.supabase) {
+      console.log("Supabase not available - skipping adventure arc write");
+      return;
+    }
+
+    try {
+      const { error } = await this.supabase.from("game_sessions").upsert({
+        id: sessionId,
+        adventure_arc: data.adventure_arc,
+        campaign_elements: data.campaign_elements,
+        updated_at: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error("Failed to write adventure arc to session:", error);
+      } else {
+        console.log("Adventure arc written to session successfully");
+      }
+    } catch (error) {
+      console.error("Database write error for adventure arc:", error);
+    }
+  }
+
   async writeAdventureArc(
     sessionId: string,
     adventureData: {
