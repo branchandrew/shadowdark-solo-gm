@@ -137,7 +137,7 @@ export interface Creature {
   lieutenant_how_protect?: string;
 
   // Monster-specific fields
-  is_minion_of_bbeg?: boolean;
+  is_minion?: boolean;
   source?: "shadowdark_core" | "custom"; // For monsters from official sources vs custom
 
   // NPC-specific fields
