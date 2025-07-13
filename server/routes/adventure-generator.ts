@@ -215,8 +215,16 @@ Tarot Spread:\n${cardsFormatted}
    • Numbers��— Ace‑4: beginnings; 5‑7: struggle; 8‑10: climax; Court: Page(scout), Knight(enforcer), Queen(strategist), King(ruler).
    • Reversed indicates blockage, secrecy, or excess.
 2. **Draft villain profile** (≈ 4 sentences): striking visual, core motivation, virtue‑vice contradiction, primary resource/lieutenant, hidden weakness, worst‑case future.
-4. **Forge a compelling name** that embodies the style guidance
-   • Capture core mood, element/domain, and cultural flavor within the specified theme.  • Build a phonetic palette (2‑3 consonant clusters, 1‑2 vowel sounds) that fits mood and tone.  • Select/construct a syllable template (e.g. CVC‑CVC) and blend morphemes to yield pronounceable candidates.  • Apply quality rules (pronounceability, tone match, distinctiveness).  • Choose the best.
+4. **Select and enhance the BBEG name** from these pre-generated options:
+   Generated Names: ${nameResult.names?.join(", ")}
+
+   • Choose the name that best fits the BBEG's character and the theme/tone
+   • Consider ease of pronunciation and memorability
+   • If appropriate for this type of villain, add a title such as:
+     - Lord/Lady [name] (for noble/aristocratic villains)
+     - [name] the [descriptor] (e.g., "the Destroyer", "the Corrupted", "the Shadow")
+     - Just [name] (for subtle or mysterious villains)
+   • Not all villains need titles - choose based on their nature and status
 5. **Write a one‑sentence adventure hook** for the GM to read aloud, using the specified voice.
 6. **Generate 8 investigative clues** that heroes might discover about this BBEG. These should include:
    • Clues pointing to the BBEG as the source of evil
