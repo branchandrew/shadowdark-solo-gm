@@ -101,6 +101,34 @@ class RelationalDatabase {
     }
   }
 
+  // === CREATURE OPERATIONS ===
+
+  async addCreatures(
+    sessionId: string,
+    creatures: Array<any>, // Omit<Creature, "session_id">[]
+  ): Promise<void> {
+    if (!this.supabase || creatures.length === 0) return;
+
+    try {
+      const creatureData = creatures.map((creature) => ({
+        ...creature,
+        session_id: sessionId,
+      }));
+
+      const { error } = await this.supabase
+        .from("creatures")
+        .insert(creatureData);
+
+      if (error) {
+        console.error("Failed to add creatures to database:", error);
+      } else {
+        console.log(`Added ${creatures.length} creatures to database`);
+      }
+    } catch (error) {
+      console.error("Database write error for creatures:", error);
+    }
+  }
+
   // === FACTION OPERATIONS ===
 
   async addFactions(
