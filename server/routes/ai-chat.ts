@@ -103,23 +103,11 @@ Respond as the GM would, describing what happens and asking for any necessary ro
   } catch (error) {
     console.error("Claude API Error:", error);
 
-    // Get fallback response from Python script
-    try {
-      const fallbackData = await runAIFallback();
-      const response: AIChatResponse = {
-        response: `${fallbackData.response} (AI temporarily unavailable - using fallback response)`,
-        suggestions: fallbackData.suggestions,
-      };
-      res.json(response);
-    } catch (fallbackError) {
-      // Ultimate fallback if even the Python script fails
-      const response: AIChatResponse = {
-        response:
-          "The GM pauses to consider the situation... (AI temporarily unavailable)",
-        suggestions: ["Roll d20", "Ask oracle question"],
-      };
-      res.json(response);
-    }
+    // Return a clear error instead of fallback
+    res.status(500).json({
+      success: false,
+      error: `AI Chat failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+    });
     return;
   }
 };
