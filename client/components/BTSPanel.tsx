@@ -128,6 +128,7 @@ export default function BTSPanel() {
                     {
                       id: lieutenantId,
                       name: lieutenant.name,
+                      race_species: data.lieutenant_types?.[index] || "Monster",
                       description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
                       creature_type: "lieutenant",
                       npc_disposition: "hostile",
