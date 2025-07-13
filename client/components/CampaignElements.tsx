@@ -289,9 +289,6 @@ export default function CampaignElements() {
               <div className="space-y-2">
                 {getVisibleCharacters().map((character) => {
                   const shouldBlur = character.hidden && !showHiddenCharacters;
-                  console.log(
-                    `Character ${character.name}: hidden=${character.hidden}, showHiddenCharacters=${showHiddenCharacters}, shouldBlur=${shouldBlur}`,
-                  );
 
                   return (
                     <div
