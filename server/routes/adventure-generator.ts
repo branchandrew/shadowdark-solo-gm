@@ -97,7 +97,7 @@ const generateNames = (
     console.log(
       `Executing Python script: python3 ${scriptPath} ${alignment} ${numNames}`,
     );
-    console.log(`Script path exists: ${require("fs").existsSync(scriptPath)}`);
+    console.log(`Script path exists: ${fs.existsSync(scriptPath)}`);
 
     const proc = spawn("python3", [
       scriptPath,
