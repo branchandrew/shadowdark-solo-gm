@@ -405,6 +405,15 @@ Return one clean JSON object and nothing else.  Keep values concise:
 
     console.log("Parsed villain:", villain);
 
+    // Output name reasoning to console
+    console.log(`\n=== NAME SELECTION ===`);
+    console.log(`Available names were: ${nameResult.names?.join(", ")}`);
+    console.log(`AI chose: ${villain.bbeg_name}`);
+    console.log(
+      `Reasoning: ${villain.name_reasoning || "No reasoning provided"}`,
+    );
+    console.log(`=======================\n`);
+
     /* ---------- 3. Response ---------- */
     // Write to database if session_id provided and database is available
     if (session_id && relationalDB.isAvailable()) {
