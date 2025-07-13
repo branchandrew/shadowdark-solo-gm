@@ -320,7 +320,7 @@ export default function SceneManager() {
 
             <Button
               onClick={generateNewScene}
-              disabled={isGenerating || !hasValidCampaignElements()}
+              disabled={isGenerating || !hasAdventureLogEntries()}
               className="flex-1"
             >
               {isGenerating ? (
@@ -328,10 +328,10 @@ export default function SceneManager() {
                   <RotateCcw className="h-4 w-4 mr-2 animate-spin" />
                   Generating Scene...
                 </>
-              ) : !hasValidCampaignElements() ? (
+              ) : !hasAdventureLogEntries() ? (
                 <>
                   <ChevronRight className="h-4 w-4 mr-2" />
-                  Generate Adventure Arc First
+                  Start Adventure Log First
                 </>
               ) : (
                 <>
