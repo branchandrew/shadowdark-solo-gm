@@ -149,7 +149,7 @@ export const generateAdventure: RequestHandler = async (req, res) => {
     /* ---------- 2. Generate names using Python script ---------- */
     console.log("Generating names for BBEG...");
 
-    // Determine alignment based on theme and tone
+    // Ask AI to determine BBEG's public persona for name generation
     let alignment = 1; // Default to evil
     const themeToUpper = theme.toUpperCase();
     const toneToUpper = tone.toUpperCase();
@@ -218,7 +218,7 @@ Tarot Spread:\n${cardsFormatted}
 4. **Select and enhance the BBEG name** from these pre-generated options:
    Generated Names: ${nameResult.names?.join(", ")}
 
-   • Choose the name that best fits the BBEG's character and the theme/tone
+   ��� Choose the name that best fits the BBEG's character and the theme/tone
    • Consider ease of pronunciation and memorability
    • If appropriate for this type of villain, add a title such as:
      - Lord/Lady [name] (for noble/aristocratic villains)
