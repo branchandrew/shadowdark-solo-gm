@@ -204,10 +204,34 @@ export default function BTSPanel() {
           campaignElements,
         );
 
+        // Verify hidden flags are set
+        console.log("BBEG hidden flag:", campaignElements.creatures[0]?.hidden);
+        console.log(
+          "Lieutenant hidden flags:",
+          campaignElements.creatures.slice(1).map((c) => c.hidden),
+        );
+        console.log(
+          "Faction hidden flag:",
+          campaignElements.factions[0]?.hidden,
+        );
+
         // Save to the correct key that the database hook expects (database.get adds shadowdark_ prefix)
         localStorage.setItem(
           "shadowdark_campaign_elements",
           JSON.stringify(campaignElements),
+        );
+
+        // Verify what was actually saved
+        const saved = JSON.parse(
+          localStorage.getItem("shadowdark_campaign_elements") || "{}",
+        );
+        console.log(
+          "Verification - saved BBEG hidden:",
+          saved.creatures?.[0]?.hidden,
+        );
+        console.log(
+          "Verification - saved faction hidden:",
+          saved.factions?.[0]?.hidden,
         );
 
         console.log("Campaign elements saved to localStorage");
