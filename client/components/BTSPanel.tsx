@@ -37,7 +37,7 @@ export default function BTSPanel() {
         session_id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       };
 
-      console.log("Making fetch request to /api/generate-adventure...");
+      console.log("Triggering adventure generation...");
       console.log("Request body:", requestBody);
 
       const response = await fetch("/api/generate-adventure", {
@@ -46,11 +46,6 @@ export default function BTSPanel() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
-      }).catch((networkError) => {
-        console.error("Network error:", networkError);
-        throw new Error(
-          `Network error: Unable to connect to server. Please check your connection.`,
-        );
       });
 
       console.log("Response status:", response.status);
