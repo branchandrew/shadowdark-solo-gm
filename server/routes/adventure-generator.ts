@@ -395,13 +395,16 @@ Follow these steps using Mythic GME rules:
        would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant lead the same type of minions as the BBEG. 
        If not, then the second question you must ask is, does it make sense that this lieutenant would have ANY lieutenants? Here are some examples of when it would make sense, and what type:
 
-       Lieutenant: Brog the Orc Captain > Yes. Minions = Orcs
-       Lieutenant: Sven the Theif Lord > Yes. Minions = theives 
+       Lieutenant: Brog the Orc Ling > Yes. Minions = Orcs
+       Lieutenant: Sven the Theif Lord > Yes. Minions = Theives 
+       lieutenant: Captain Charles of the Home Guard > Yes. Soldiers
+       lieutenant: Shakra the Giant Spider Queen > Yes. Giant spiders
 
-       Here's when it would NOT make sense:
+       Here's when it would NOT make sense (when a lieutenant is disembodied, reclusive, or would not naturally found in a power structure):
 
        lieutenant: The Grimoire of Endless Endings > No minions. 
        lieutenant: Captain Ahab's Ghost > No minions.
+       lieutenant: Scera the Assasin > No minions.
 
 
 
