@@ -821,6 +821,8 @@ Return one clean JSON object and nothing else.  Keep values concise:
       // Fall back to returning data when no database
       res.json({
         ...villain,
+        race: seeds.race,
+        lieutenant_types: lieutenantTypesResult.types,
         success: true,
         fallback: true,
         message: "Database not configured, returning data directly",
