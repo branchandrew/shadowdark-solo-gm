@@ -392,9 +392,6 @@ export default function CampaignElements() {
               <div className="space-y-2">
                 {getVisibleFactions().map((faction) => {
                   const shouldBlur = faction.hidden && !showHiddenFactions;
-                  console.log(
-                    `Faction ${faction.name}: hidden=${faction.hidden}, showHiddenFactions=${showHiddenFactions}, shouldBlur=${shouldBlur}`,
-                  );
 
                   return (
                     <div
