@@ -112,6 +112,16 @@ def generate_reading():
 
     return selected_goal, selected_gender, selected_race, drawn_cards
 
+def get_random_lieutenant_types(count=2):
+    """
+    Get random villain types for lieutenants, ensuring no duplicates.
+    """
+    if count > len(shadowdark_villain_types):
+        count = len(shadowdark_villain_types)
+
+    # Randomly select without replacement
+    return random.sample(shadowdark_villain_types, count)
+
 if __name__ == "__main__":
     goal, gender, race, cards = generate_reading()
     card_positions = ["Seed", "Virtue", "Vice", "Rising Power", "Breaking Point", "Fate"]
