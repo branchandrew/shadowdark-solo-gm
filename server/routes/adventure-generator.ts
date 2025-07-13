@@ -37,7 +37,7 @@ interface Lieutenant {
     location: string;
     why_protect: string;
     how_protect: string;
-    minions: string;
+    reward: string;
   };
 }
 
@@ -383,17 +383,27 @@ Follow these steps using Mythic GME rules:
     BBEG is a male > Lieutenant is a female
     BBEG leads hordes of creatures > Lieutenant acts alone.
 
-    7.3
+    7.3 
      - Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomlly. Then answer the following questions with this new order, with the Tarot cards:
        * Seed: What defines their core nature?
        * Background: What is their origin story?
        * Location (Occupation): What is the Lieutenant's occupation?
        * Why Protect: What motivates their loyalty to the BBEG?
        * How Protect: What methods do they use to serve/protect the BBEG?
-       * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead (if any, this is not required)
+       * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead?
+       Note: it may not make sense for the Lieutenant to have minions. The first question you must ask is, "based on what we've created so far,
+       would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant lead the same type of minions as the BBEG. 
+       If not, then the second question you must ask is, does it make sense that this lieutenant would have ANY lieutenants? Here are some examples of when it would make sense, and what type:
+
+       Lieutenant: Brog the Orc Captain > Yes. Minions = Orcs
+       Lieutenant: Sven the Theif Lord > Yes. Minions = theives 
+
+       Here's when it would NOT make sense:
+
+       Lieutenant: 
      - Keep each tarot interpretation to 1-2 sentences
      Do this TWICE, once for each lieutenant
-
+    
     7.4 Create names for each of the 2 lieutenants
 
 9. **Create the Faction** which most aligns with the BBEG. It should reinforce the tone and theme of the adventure. Answer the following questions about it to create its details:
@@ -439,7 +449,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
         "location": "",
         "why_protect": "",
         "how_protect": "",
-        "minions": ""
+        "reward": ""
       }
     }
   ],
@@ -647,7 +657,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
           lieutenant_tarot_location: lieutenant.tarot_spread.location,
           lieutenant_tarot_why_protect: lieutenant.tarot_spread.why_protect,
           lieutenant_tarot_how_protect: lieutenant.tarot_spread.how_protect,
-          lieutenant_tarot_minions: lieutenant.tarot_spread.minions,
+          lieutenant_tarot_reward: lieutenant.tarot_spread.reward,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })) || []),
