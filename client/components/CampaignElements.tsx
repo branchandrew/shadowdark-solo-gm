@@ -315,11 +315,16 @@ export default function CampaignElements() {
                     key={character.id}
                     className={`p-3 border rounded transition-colors ${
                       character.hidden && !showHiddenCharacters
-                        ? "bg-muted/50 blur-lg pointer-events-none select-none opacity-60"
+                        ? "bg-muted/50 blur-lg pointer-events-none select-none opacity-30 grayscale"
                         : character.hidden
                           ? "bg-muted/50 cursor-pointer hover:bg-accent/50"
                           : "cursor-pointer hover:bg-accent/50"
                     }`}
+                    style={
+                      character.hidden && !showHiddenCharacters
+                        ? { filter: "blur(4px) grayscale(100%)" }
+                        : {}
+                    }
                     onClick={
                       character.hidden && !showHiddenCharacters
                         ? undefined
