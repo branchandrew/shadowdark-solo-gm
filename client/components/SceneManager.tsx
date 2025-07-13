@@ -232,9 +232,14 @@ export default function SceneManager() {
       console.log("Received data:", data);
 
       if (data.success) {
-        setCurrentScene(data.scene);
+        // Add adventure arc ID to the scene
+        const sceneWithArcId = {
+          ...data.scene,
+          adventure_arc_id: getCurrentAdventureArcId(),
+        };
+        setCurrentScene(sceneWithArcId);
         setPlayerIntentions(""); // Clear intentions after use
-        console.log("Scene generated successfully:", data.scene);
+        console.log("Scene generated successfully:", sceneWithArcId);
       } else {
         console.error("Scene generation failed:", data.error);
         alert(
