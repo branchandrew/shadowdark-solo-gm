@@ -10,7 +10,7 @@ import { Eye, Crown, Skull, Users, RefreshCw } from "lucide-react";
 import CloudSync from "./CloudSync";
 import SchemaVisualizer from "./SchemaVisualizer";
 import { useSessionState } from "../hooks/useSessionState";
-import { useAdventureLog } from "../hooks/useDatabase";
+import { useAdventureLog, useDatabase } from "../hooks/useDatabase";
 
 import type { AdventureArcDisplay } from "../../shared/types";
 
