@@ -1,7 +1,9 @@
 import { RequestHandler } from "express";
-import { spawn } from "child_process";
-import path from "path";
 import { relationalDB } from "../lib/relational-database";
+import {
+  getVillainTypes,
+  SHADOWDARK_VILLAIN_TYPES,
+} from "../lib/adventure-utilities";
 
 /**
  * Gets creature types from Python script (source of truth)
