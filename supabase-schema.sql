@@ -21,6 +21,16 @@ CREATE TABLE IF NOT EXISTS creature_templates (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Global creature types (used for race/species lookup)
+CREATE TABLE IF NOT EXISTS creature_types (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    category TEXT DEFAULT 'shadowdark_villain' CHECK (category IN ('shadowdark_villain', 'custom')),
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- === SESSION-SPECIFIC TABLES ===
 
 -- Main game sessions
