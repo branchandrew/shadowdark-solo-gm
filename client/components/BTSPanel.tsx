@@ -116,7 +116,10 @@ export default function BTSPanel() {
                       id: `creature_${Date.now()}_bbeg_minion`,
                       name: "BBEG Minions",
                       race_species:
-                        extractRaceFromDescription(data.minions) || "Monster",
+                        extractRaceFromDescription(
+                          data.minions,
+                          creatureTypes,
+                        ) || "Monster",
                       description: data.minions,
                       creature_type: "monster",
                       npc_disposition: "hostile",
