@@ -8,6 +8,10 @@ import {
   generateNames as generateNamesTS,
   isValidAlignment,
 } from "../lib/name-generator";
+import {
+  getRandomLieutenantTypes,
+  getVillainTypes,
+} from "../lib/adventure-utilities";
 import type {
   AdventureGenerationRequest,
   AdventureGenerationResponse,
