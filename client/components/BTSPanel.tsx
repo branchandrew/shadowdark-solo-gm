@@ -132,7 +132,7 @@ export default function BTSPanel() {
               ...(data.lieutenants || []).flatMap(
                 (lieutenant: any, index: number) => {
                   const lieutenantId = `creature_${Date.now()}_lt_${index}`;
-                  const creatures = [
+                  return [
                     {
                       id: lieutenantId,
                       name: lieutenant.name,
@@ -149,32 +149,11 @@ export default function BTSPanel() {
                         lieutenant.tarot_spread?.why_protect,
                       lieutenant_tarot_how_protect:
                         lieutenant.tarot_spread?.how_protect,
+                      lieutenant_tarot_ability:
+                        lieutenant.tarot_spread?.ability,
                       hidden: true,
                     },
                   ];
-
-                  if (
-                    lieutenant.tarot_spread?.reward &&
-                    lieutenant.tarot_spread.reward.trim()
-                  ) {
-                    creatures.push({
-                      id: `creature_${Date.now()}_lt_${index}_minion`,
-                      name: `${lieutenant.name}'s Minions`,
-                      race_species:
-                        extractRaceFromDescription(
-                          lieutenant.tarot_spread.reward,
-                          creatureTypes,
-                        ) || "Monster",
-                      description: lieutenant.tarot_spread.reward,
-                      creature_type: "monster",
-                      npc_disposition: "hostile",
-                      is_minion: true,
-                      minion_creature_id: lieutenantId,
-                      hidden: true,
-                    });
-                  }
-
-                  return creatures;
                 },
               ),
             ],
