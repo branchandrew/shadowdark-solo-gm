@@ -241,22 +241,23 @@ export default function Map() {
   return (
     <div className="space-y-4 w-full">
       {/* Header with regenerate button */}
-      <div className="flex items-center justify-between bg-white rounded-lg border p-4">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <MapPin className="h-6 w-6" />
-          World Map
+      <div className="flex items-center justify-between bg-white rounded-lg border p-4 w-full max-w-full">
+        <h2 className="text-xl font-bold flex items-center gap-2 flex-1 min-w-0">
+          <MapPin className="h-5 w-5" />
+          <span>World Map</span>
         </h2>
         <Button
           onClick={generateHexMap}
           disabled={generating}
           size="sm"
           variant="default"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-2"
+          className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 ml-2 flex-shrink-0"
+          style={{ minWidth: "120px" }}
         >
           <RefreshCw
             className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
           />
-          {generating ? "Generating..." : "Regenerate Map"}
+          <span className="text-sm">Regenerate</span>
         </Button>
       </div>
 
