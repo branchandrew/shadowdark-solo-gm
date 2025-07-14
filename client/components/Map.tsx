@@ -239,44 +239,27 @@ export default function Map() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Regenerate Button - Always Visible */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <MapPin className="h-6 w-6" />
-          World Map
-        </h2>
-        <Button
-          onClick={generateHexMap}
-          disabled={generating}
-          size="default"
-          variant="default"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2"
-        >
-          <RefreshCw
-            className={`h-5 w-5 mr-2 ${generating ? "animate-spin" : ""}`}
-          />
-          {generating ? "Generating..." : "Regenerate Map"}
-        </Button>
-      </div>
-
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            <MapPin className="h-6 w-6" />
+            World Map
+          </CardTitle>
+          <Button
+            onClick={generateHexMap}
+            disabled={generating}
+            size="default"
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 flex-shrink-0"
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
+            />
+            {generating ? "Generating..." : "Regenerate Map"}
+          </Button>
+        </CardHeader>
         <CardContent>
-          {/* Temporary Button - Ensure Visibility */}
-          <div className="p-4 bg-white border-b flex justify-between items-center">
-            <span className="font-semibold">Hex Map Terrain Generator</span>
-            <button
-              onClick={generateHexMap}
-              disabled={generating}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
-              />
-              {generating ? "Generating..." : "Regenerate Map"}
-            </button>
-          </div>
-
           <div
             className="relative bg-blue-50 rounded-lg border overflow-auto"
             style={{ height: "600px" }}
