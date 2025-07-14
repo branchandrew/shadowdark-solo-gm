@@ -11,6 +11,7 @@ import {
 import {
   getRandomLieutenantTypes,
   getVillainTypes,
+  generateAdventureSeeds,
 } from "../lib/adventure-utilities";
 import type {
   AdventureGenerationRequest,
