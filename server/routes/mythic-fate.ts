@@ -1,6 +1,10 @@
 import { RequestHandler } from "express";
-import { spawn } from "child_process";
-import path from "path";
+import {
+  rollFateChart as rollFateChartTS,
+  FateChartResult,
+  getLikelihoodOptions,
+  isValidLikelihood,
+} from "../lib/mythic-fate-chart";
 
 interface MeaningTableResult {
   verb_roll: number;
