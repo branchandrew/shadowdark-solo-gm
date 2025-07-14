@@ -577,7 +577,7 @@ Follow these steps using Mythic GME rules:
     BBEG is a male > Lieutenant is a female
     BBEG leads hordes of creatures > Lieutenant acts alone.
 
-    8.3 Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomly. Then answer the following questions with this new order, using the Tarot cards:
+    8.3 Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomly. Then answer the following questions with this new order, using the Tarot cards to inspire your narrative answers:
        * Seed: What defines their core nature?
        * Background: What is their origin story?
        * Location (Occupation): What is the Lieutenant's occupation?
@@ -585,7 +585,7 @@ Follow these steps using Mythic GME rules:
        * How Protect: What methods do they use to serve/protect the BBEG?
        * Ability: What unique ability, skill, power, or weapon does this lieutenant have that makes it unique?
 
-     Keep each tarot interpretation to 1-2 sentences. Do this TWICE, once for each lieutenant.
+     IMPORTANT: Provide pure narrative answers without revealing the actual tarot card names. The player should see meaningful story explanations, not "Five of Swords" or "The Emperor". Keep each interpretation to 1-2 sentences of pure story content. Do this TWICE, once for each lieutenant.
 
     8.4 Create comprehensive lieutenant descriptions and minion assignments:
 
@@ -618,7 +618,7 @@ Follow these steps using Mythic GME rules:
           - Hermit Sage → Reclusive by nature
 
 9. **Create the Faction** which most aligns with the BBEG. It should reinforce the tone and theme of the adventure. Answer the following questions about it to create its details:
-   • The faction should align to at least one of the two Lieutenants. Which one? And why?
+   �� The faction should align to at least one of the two Lieutenants. Which one? And why?
    • Is the faction loyal to the BBEG or do their motives just happen to align with it?
    • What sort of domain or territory does the faction control?
    • Provide a faction name and 2-3 sentence description that captures their nature, goals, and relationship to the BBEG
