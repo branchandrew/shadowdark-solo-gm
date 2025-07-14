@@ -430,6 +430,36 @@ const isGenericDescription = (
 };
 
 /**
+ * Creates a comprehensive lieutenant description combining all tarot elements
+ */
+const createLieutenantDescription = (
+  lieutenant: Lieutenant,
+  race: string,
+  bbegName: string,
+  factionName?: string,
+): string => {
+  const tarot = lieutenant.tarot_spread;
+
+  // Build description parts
+  const parts = [
+    `${race} lieutenant serving ${bbegName}.`,
+    `Core Nature: ${tarot.seed}`,
+    `Background: ${tarot.background}`,
+    `Occupation: ${tarot.location}`,
+    `Loyalty: ${tarot.why_protect}`,
+    `Methods: ${tarot.how_protect}`,
+    `Special Ability: ${tarot.ability}`,
+  ];
+
+  // Add faction relationship if it exists
+  if (factionName && factionName.trim()) {
+    parts.push(`Connected to ${factionName}.`);
+  }
+
+  return parts.join(" ");
+};
+
+/**
  * Express handler: creates a concise BBEG JSON object.
  */
 export const generateAdventure: RequestHandler = async (req, res) => {
