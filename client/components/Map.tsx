@@ -272,15 +272,15 @@ export default function Map() {
           </div>
 
           <div
-            className="w-full overflow-auto bg-blue-50 rounded-lg border"
+            className="w-full overflow-auto bg-gray-800 rounded-lg border"
             style={{ height: "600px" }}
           >
             {/* Hex Grid Container */}
             <div
               className="relative"
               style={{
-                width: `${(hexMapData?.width || 15) * 70 + 100}px`,
-                height: `${(hexMapData?.height || 10) * 80 + 100}px`,
+                width: `${(hexMapData?.width || 15) * 53 + 80}px`,
+                height: `${(hexMapData?.height || 10) * 61 + 80}px`,
                 minWidth: "100%",
               }}
             >
