@@ -163,6 +163,7 @@ export default function BTSPanel() {
                       race_species:
                         extractRaceFromDescription(
                           lieutenant.tarot_spread.reward,
+                          creatureTypes,
                         ) || "Monster",
                       description: lieutenant.tarot_spread.reward,
                       creature_type: "monster",
