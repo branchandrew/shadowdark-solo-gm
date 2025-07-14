@@ -51,7 +51,26 @@ shadowdark_villain_types = [
   "A chaos swarm",
   "A malignant spell or curse",
   "A hive mind corruption",
-  "World consuming darkness"
+  "World consuming darkness",
+  "Orc",
+  "Goblin",
+  "Skeleton",
+  "Zombie",
+  "Ghost",
+  "Spirit",
+  "Wraith",
+  "Vampire",
+  "Werewolf",
+  "Troll",
+  "Ogre",
+  "Golem",
+  "Construct",
+  "Undead",
+  "Fiend",
+  "Celestial",
+  "Fey",
+  "Beast",
+  "Monstrosity"
 ]
 
 # Weighted list for gender: Male is 4 times more likely than Female
