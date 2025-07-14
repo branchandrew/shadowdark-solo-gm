@@ -52,24 +52,24 @@ function HexTile({ row, col, terrain }: HexTileProps) {
     }
   };
 
-  // Calculate hex position
-  const hexWidth = 80;
-  const hexHeight = 70;
-  const xOffset = col * (hexWidth * 0.75);
-  const yOffset = row * hexHeight + (col % 2) * (hexHeight / 2);
+  // Calculate hex position - maintaining 155:179 ratio but scaled down
+  const hexWidth = 93; // Scaled from 155 to fit better
+  const hexHeight = 107; // Scaled from 179 to maintain ratio
+  const xOffset = col * (hexWidth * 0.75); // 75% overlap for proper hex tiling
+  const yOffset = row * (hexHeight * 0.75) + (col % 2) * (hexHeight * 0.375); // Proper hex row offset
 
   return (
     <div
-      className="absolute cursor-pointer transition-all duration-200 hover:scale-110 hover:z-10"
+      className="absolute cursor-pointer transition-all duration-200 hover:scale-105 hover:z-10"
       style={{
         left: `${xOffset}px`,
         top: `${yOffset}px`,
         width: `${hexWidth}px`,
         height: `${hexHeight}px`,
         clipPath:
-          "polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)",
+          "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
         backgroundImage: `url(${getTerrainImage(terrain)})`,
-        backgroundSize: "cover",
+        backgroundSize: "120%", // Larger to reduce cropping from clipPath
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
