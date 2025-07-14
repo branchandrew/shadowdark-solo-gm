@@ -649,6 +649,8 @@ Follow these steps using Mythic GME rules:
        * Location (Occupation): What is the Lieutenant's occupation?
        * Why Protect: What motivates their loyalty to the BBEG?
        * How Protect: What methods do they use to serve/protect the BBEG?
+       * Ability: What unique ability, skill, power, or weapon does this lieutenant have that makes it unique?
+    8.4
        * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead?
        Note: it may not make sense for the Lieutenant to have minions. The first question you must ask is, "based on what we've created so far,
        would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant associated with the same minions as the lieutenant.
