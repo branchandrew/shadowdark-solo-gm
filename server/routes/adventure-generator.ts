@@ -517,6 +517,13 @@ Follow these steps using Mythic GME rules:
    • Reflect the BBEG's influence and corruption
    • 2-3 sentences describing their nature, appearance, and capabilities
 
+7.5. **Standardize Minions** - Review your minion description from step 7 and compare it with these official Shadowdark creature types: ${(await getCreatureTypes()).join(", ")}
+   • If your minion description closely matches any of these official types (e.g., you described "undead soldiers" and "Skeleton" is in the list), replace your description with the official type name
+   • If your description is similar but more specific (e.g., "frost-touched zombies" vs "Zombie"), keep your creative description
+   • If nothing in the official list is close to what you created, keep your original creative description
+   • The goal is to use official types when they fit, but preserve unique creative minions when they don't
+   • Simply state the final minion type/description you're using
+
 8. **Generate exactly 2 Lieutenants** with the following requirements:
 
     8.1 Use these randomly selected creature types for the Lieutenants:
