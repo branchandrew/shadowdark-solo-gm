@@ -323,6 +323,113 @@ const extractRaceFromDescription = async (
 };
 
 /**
+ * Standardizes minion descriptions by comparing with official creature types
+ */
+const standardizeMinions = (
+  minions: string,
+  creatureTypes: string[],
+): string => {
+  if (!minions || !minions.trim()) {
+    return minions;
+  }
+
+  const lowerMinions = minions.toLowerCase();
+
+  // Check for exact or close matches with official creature types
+  for (const creatureType of creatureTypes) {
+    const lowerType = creatureType.toLowerCase();
+
+    // Check for exact type name mention
+    if (lowerMinions.includes(lowerType)) {
+      // Check if it's a generic description that can be replaced
+      if (isGenericDescription(minions, creatureType)) {
+        console.log(
+          `Replacing generic minion description with official type: ${creatureType}`,
+        );
+        return creatureType;
+      }
+    }
+  }
+
+  // Check for common synonyms and patterns
+  const typeMapping: Record<string, string> = {
+    "undead soldiers": "Skeleton",
+    "undead warriors": "Skeleton",
+    zombified: "Zombie",
+    "animated corpses": "Zombie",
+    "walking dead": "Zombie",
+    skeletal: "Skeleton",
+    "bone warriors": "Skeleton",
+    "shadow creatures": "Wraith",
+    "dark spirits": "Spirit",
+    "evil spirits": "Spirit",
+    ghostly: "Ghost",
+    spectral: "Ghost",
+    "demonic beings": "Demon",
+    "hellish creatures": "Devil",
+    infernal: "Devil",
+    "elemental forces": "Elemental",
+    "nature spirits": "Elemental",
+    "corrupted beasts": "Beast",
+    "twisted animals": "Beast",
+    "monstrous creatures": "Monstrosity",
+    "aberrant beings": "Monstrosity",
+    "green-skinned brutes": "Orc",
+    "brutish humanoids": "Orc",
+    "small goblinoids": "Goblin",
+    "tiny creatures": "Goblin",
+  };
+
+  for (const [pattern, replacement] of Object.entries(typeMapping)) {
+    if (lowerMinions.includes(pattern)) {
+      // Only replace if the creature type exists in our official list
+      if (creatureTypes.includes(replacement)) {
+        console.log(
+          `Replacing "${pattern}" with official type: ${replacement}`,
+        );
+        return replacement;
+      }
+    }
+  }
+
+  // Keep original creative description if no good match found
+  return minions;
+};
+
+/**
+ * Checks if a minion description is generic enough to be replaced with an official type
+ */
+const isGenericDescription = (
+  description: string,
+  officialType: string,
+): boolean => {
+  const lowerDesc = description.toLowerCase();
+  const lowerType = officialType.toLowerCase();
+
+  // If the description is mostly just describing the creature type without much detail
+  const simplePatterns = [
+    `${lowerType}s`,
+    `${lowerType} minions`,
+    `${lowerType} servants`,
+    `${lowerType} followers`,
+    `${lowerType} troops`,
+    `${lowerType} warriors`,
+    `undead ${lowerType}`,
+    `corrupted ${lowerType}`,
+    `evil ${lowerType}`,
+    `dark ${lowerType}`,
+  ];
+
+  for (const pattern of simplePatterns) {
+    if (lowerDesc.includes(pattern) && description.length < 100) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
  * Express handler: creates a concise BBEG JSON object.
  */
 export const generateAdventure: RequestHandler = async (req, res) => {
