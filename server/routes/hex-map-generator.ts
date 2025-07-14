@@ -156,35 +156,17 @@ export const getHexMapTerrains: RequestHandler = async (req, res) => {
  */
 export const testHexMap: RequestHandler = async (req, res) => {
   try {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "hex_map_generator.py",
-    );
+    console.log("Generating test hex map...");
 
-    const proc = spawn("python3", [scriptPath, "test"]);
+    const result = generateTestMap();
 
-    let stdout = "";
-    let stderr = "";
+    if (!result.success) {
+      return res.status(500).json(result);
+    }
 
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
+    console.log("Generated test hex map successfully");
 
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return res.status(500).json({
-          success: false,
-          error: stderr || `Script exited with code ${code}`,
-        });
-      }
-
-      // Return the ASCII output for debugging
-      res.json({
-        success: true,
-        ascii_output: stdout,
-      });
-    });
+    res.json(result);
   } catch (error) {
     console.error("Error testing hex map:", error);
     res.status(500).json({
