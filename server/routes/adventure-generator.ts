@@ -722,7 +722,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
         if (villain.minions && villain.minions.trim()) {
           // Extract race from minions description or default to a generic type
           const minionsRace =
-            extractRaceFromDescription(villain.minions) || "Monster";
+            (await extractRaceFromDescription(villain.minions)) || "Monster";
 
           hiddenElements.creatures.push({
             id: `creature_${Date.now()}_bbeg_minion`,
@@ -740,7 +740,12 @@ Return one clean JSON object and nothing else.  Keep values concise:
         }
 
         // Add lieutenants as hidden creatures and create their minions
-        villain.lieutenants?.forEach((lieutenant, index) => {
+        for (
+          let index = 0;
+          index < (villain.lieutenants || []).length;
+          index++
+        ) {
+          const lieutenant = villain.lieutenants![index];
           const lieutenantId = `creature_${Date.now()}_lt_${index}`;
           // Get the lieutenant type from the generated types
           const lieutenantType =
@@ -770,8 +775,9 @@ Return one clean JSON object and nothing else.  Keep values concise:
           ) {
             // Extract race from lieutenant minions description or default to a generic type
             const lieutenantMinionsRace =
-              extractRaceFromDescription(lieutenant.tarot_spread.reward) ||
-              "Monster";
+              (await extractRaceFromDescription(
+                lieutenant.tarot_spread.reward,
+              )) || "Monster";
 
             hiddenElements.creatures.push({
               id: `creature_${Date.now()}_lt_${index}_minion`,
@@ -787,7 +793,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
               updated_at: new Date().toISOString(),
             });
           }
-        });
+        }
 
         // Add faction as hidden faction
         if (villain.faction_name) {
