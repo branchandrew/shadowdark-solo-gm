@@ -32,6 +32,8 @@ interface PythonResult {
 
 interface Lieutenant {
   name: string;
+  description?: string; // Comprehensive description from AI
+  minions?: string; // What minions they command (if any)
   tarot_spread: {
     seed: string;
     background: string;
