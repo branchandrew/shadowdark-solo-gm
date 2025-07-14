@@ -526,7 +526,6 @@ export class HexMapGenerator {
       mountains: "M",
       lake: "L",
       marshlands: "W",
-      quagmire: "Q",
       ruins: "R",
     };
 
