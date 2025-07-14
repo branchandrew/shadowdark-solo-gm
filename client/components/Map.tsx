@@ -243,22 +243,25 @@ export default function Map() {
       <Card className="w-full">
         <CardContent className="p-4">
           {/* Title and Button Row */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              World Map
+          <div className="flex items-center gap-4 mb-4 min-w-0">
+            <h2 className="text-xl font-bold flex items-center gap-2 flex-1 min-w-0">
+              <MapPin className="h-5 w-5 flex-shrink-0" />
+              <span className="truncate">World Map</span>
             </h2>
             <Button
               onClick={generateHexMap}
               disabled={generating}
               size="sm"
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 flex-shrink-0"
             >
               <RefreshCw
-                className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
+                className={`h-3 w-3 ${generating ? "animate-spin" : ""}`}
               />
-              {generating ? "Generating..." : "Regenerate"}
+              <span className="hidden sm:inline text-xs">
+                {generating ? "Generating..." : "Regenerate"}
+              </span>
+              <span className="sm:hidden text-xs">Regen</span>
             </Button>
           </div>
 
