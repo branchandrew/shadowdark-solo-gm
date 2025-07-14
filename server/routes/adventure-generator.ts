@@ -38,7 +38,7 @@ interface Lieutenant {
     location: string;
     why_protect: string;
     how_protect: string;
-    reward: string;
+    ability: string;
   };
 }
 
