@@ -112,16 +112,45 @@ export default function Map() {
     try {
       const response = await fetch("/api/generate-hex-map", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({ width: 15, height: 10 }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
       if (data.success) {
         setHexMapData(data);
+      } else {
+        console.error("Hex map generation failed:", data.error);
       }
     } catch (error) {
       console.error("Error generating hex map:", error);
+      // Fallback: generate a simple grid if API fails
+      const fallbackData = {
+        success: true,
+        width: 15,
+        height: 10,
+        hexes: [],
+      };
+
+      const terrains = ["plains", "forest", "hills", "mountains"];
+      for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 15; col++) {
+          fallbackData.hexes.push({
+            row,
+            col,
+            terrain: terrains[Math.floor(Math.random() * terrains.length)],
+            id: `${col}-${row}`,
+          });
+        }
+      }
+      setHexMapData(fallbackData);
     } finally {
       setGenerating(false);
     }
