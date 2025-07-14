@@ -45,8 +45,6 @@ function HexTile({ row, col, terrain }: HexTileProps) {
         return "bg-blue-300 border-blue-400";
       case "marshlands":
         return "bg-green-600 border-green-700";
-      case "quagmire":
-        return "bg-amber-800 border-amber-900 text-white";
       case "ruins":
         return "bg-stone-400 border-stone-500";
       default:
