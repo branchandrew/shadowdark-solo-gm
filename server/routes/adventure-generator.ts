@@ -154,7 +154,7 @@ const getLieutenantTypes = (
 let cachedCreatureTypes: string[] | null = null;
 
 /**
- * Gets creature types from Python script (with caching)
+ * Gets creature types from TypeScript implementation (with caching)
  */
 const getCreatureTypes = async (): Promise<string[]> => {
   if (cachedCreatureTypes) {
@@ -162,38 +162,16 @@ const getCreatureTypes = async (): Promise<string[]> => {
   }
 
   try {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "adventure_generator.py",
-    );
-
-    const proc = spawn("python3", [scriptPath, "get_villain_types"]);
-
-    let stdout = "";
-    let stderr = "";
-
-    await new Promise<void>((resolve, reject) => {
-      proc.stdout.on("data", (d) => (stdout += d));
-      proc.stderr.on("data", (d) => (stderr += d));
-
-      proc.on("close", (code) => {
-        if (code !== 0) {
-          return reject(
-            new Error(`Script failed: ${stderr || `exited with code ${code}`}`),
-          );
-        }
-        resolve();
-      });
-    });
-
-    const result = JSON.parse(stdout.trim());
-    cachedCreatureTypes = result.villain_types || [];
-    return cachedCreatureTypes;
+    const result = getVillainTypes();
+    if (result.success && result.villain_types) {
+      cachedCreatureTypes = result.villain_types;
+      return cachedCreatureTypes;
+    } else {
+      throw new Error(result.error || "Failed to get villain types");
+    }
   } catch (error) {
     console.warn(
-      "Failed to get creature types from Python, using fallback:",
+      "Failed to get creature types from TypeScript, using fallback:",
       error,
     );
     // Fallback types
