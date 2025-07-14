@@ -429,13 +429,7 @@ const createLieutenantDescription = (
 export const generateAdventure: RequestHandler = async (req, res) => {
   try {
     /* ---------- 1. Seed data from Python ---------- */
-    const pythonPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "adventure_generator.py",
-    );
-    const seeds = await runPython(pythonPath);
+    const seeds = generateAdventureSeeds();
 
     const {
       theme = "Dark Fantasy",
