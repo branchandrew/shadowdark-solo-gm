@@ -52,9 +52,9 @@ function HexTile({ row, col, terrain }: HexTileProps) {
     }
   };
 
-  // Calculate hex position - smaller tiles to show more image detail
-  const hexWidth = 70; // Smaller size to reduce cropping
-  const hexHeight = 81; // Maintains 155:179 ratio
+  // Calculate hex position - maintaining good hex tile size
+  const hexWidth = 93; // Good size for visibility
+  const hexHeight = 107; // Maintains 155:179 ratio
   const xOffset = col * (hexWidth * 0.75); // 75% overlap for proper hex tiling
   const yOffset = row * (hexHeight * 0.75) + (col % 2) * (hexHeight * 0.375); // Proper hex row offset
 
