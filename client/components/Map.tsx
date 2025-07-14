@@ -175,7 +175,6 @@ export default function Map() {
       mountains: "High peaks and rocky terrain",
       lake: "Bodies of fresh water",
       marshlands: "Wet, swampy areas",
-      quagmire: "Dangerous boggy terrain",
       ruins: "Ancient structures and remnants",
     };
     return descriptions[name] || "Unknown terrain";
