@@ -69,7 +69,7 @@ function HexTile({ row, col, terrain }: HexTileProps) {
         clipPath:
           "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
         backgroundImage: `url(${getTerrainImage(terrain)})`,
-        backgroundSize: "100%", // Fit the image better within the hex
+        backgroundSize: "75%", // Smaller image to fit better within hex and reduce cropping
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
