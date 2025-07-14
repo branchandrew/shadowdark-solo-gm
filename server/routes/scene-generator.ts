@@ -570,41 +570,21 @@ const runMeaningTable = (): Promise<any> => {
 };
 
 /**
- * Executes the Scene Generator Python script for scene setup
+ * Executes the Scene Generator using TypeScript implementation for scene setup
  */
-const runSceneSetup = (chaosFactor: number = 5): Promise<any> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "scene_generator.py",
+const runSceneSetup = (chaosFactor: number = 5): Promise<any> => {
+  try {
+    const { processSceneSetup } = require("../lib/scene-generator");
+    const result = processSceneSetup(chaosFactor);
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error ? error.message : "Scene setup error occurred",
+      ),
     );
-    const proc = spawn("python3", [
-      scriptPath,
-      "scene_setup",
-      chaosFactor.toString(),
-    ]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (data) => (stdout += data));
-    proc.stderr.on("data", (data) => (stderr += data));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(stderr || `Python script exited with code ${code}`),
-        );
-      }
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch (error) {
-        reject(new Error("Invalid JSON from Scene Generator script"));
-      }
-    });
-  });
+  }
+};
 
 /**
  * Executes the Scene Generator Python script for scene ID generation
