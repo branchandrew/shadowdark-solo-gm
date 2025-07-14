@@ -273,9 +273,37 @@ export default function Map() {
           </div>
 
           <div
-            className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border"
+            className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border relative"
             style={{ height: "600px" }}
           >
+            {/* Regenerate Button Overlay */}
+            <button
+              onClick={generateHexMap}
+              disabled={generating}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                backgroundColor: "#ff0000",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                zIndex: 1000,
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
+              />
+              REGEN
+            </button>
+
             {/* Hex Grid Container */}
             <div
               className="relative min-w-full"
