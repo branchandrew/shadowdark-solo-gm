@@ -41,9 +41,9 @@ function HexTile({ row, col, terrain }: HexTileProps) {
       case "dark_forest":
         return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Facc77c8d8fd5477b8b56b046488c8851?format=webp&width=800";
       case "hills":
-        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2F8331c1a0a00349b0a919d14a0ad18244?format=webp&width=800"; // Using plains for hills
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fc80e68478dee4827ac1f4fd63cbc4130?format=webp&width=800"; // Brown/orange hills (tile_hills.png)
       case "mountains":
-        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fc80e68478dee4827ac1f4fd63cbc4130?format=webp&width=800";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fb0bb0945feb349b5ab5412d8b7d2762e?format=webp&width=800"; // Blue/white snowy mountains (tile_mountains.png)
       case "lake":
         return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fe81b6e84886a4e2399fcb77392b0c2d1?format=webp&width=800";
       case "marshlands":
