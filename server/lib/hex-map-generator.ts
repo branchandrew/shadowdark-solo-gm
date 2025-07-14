@@ -14,7 +14,6 @@ export const DEFAULT_TERRAINS = [
   "mountains",
   "lake",
   "marshlands",
-  "quagmire",
   "ruins",
 ] as const;
 
