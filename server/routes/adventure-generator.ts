@@ -94,12 +94,6 @@ const generateNames = (
   numNames: number,
 ): Promise<{ success: boolean; names?: string[]; error?: string }> => {
   try {
-    // Import at the top level would be better, but this keeps the change minimal
-    const {
-      generateNames: generateNamesTS,
-      isValidAlignment,
-    } = require("../lib/name-generator");
-
     if (!isValidAlignment(alignment)) {
       return Promise.resolve({
         success: false,
