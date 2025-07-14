@@ -8,6 +8,11 @@ import { rollFateChart } from "./routes/mythic-fate";
 import { rollMeaningTable } from "./routes/mythic-meaning";
 import { getSessionData } from "./routes/session-data";
 import { getCreatureTypes } from "./routes/creature-types";
+import {
+  generateHexMapEndpoint,
+  getHexMapTerrains,
+  testHexMap,
+} from "./routes/hex-map-generator";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
