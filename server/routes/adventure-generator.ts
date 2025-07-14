@@ -710,7 +710,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
         "location": "",
         "why_protect": "",
         "how_protect": "",
-        "reward": ""
+        "ability": ""
       }
     }
   ],
