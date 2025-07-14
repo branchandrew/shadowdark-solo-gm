@@ -241,23 +241,37 @@ export default function Map() {
   return (
     <div className="space-y-4 w-full">
       {/* Header with regenerate button */}
-      <div className="flex items-center justify-between bg-white rounded-lg border p-4 w-full max-w-full">
-        <h2 className="text-xl font-bold flex items-center gap-2 flex-1 min-w-0">
+      <div
+        className="flex items-center justify-between bg-white rounded-lg border p-3"
+        style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
+      >
+        <h2
+          className="text-lg font-bold flex items-center gap-2"
+          style={{ minWidth: 0, flexShrink: 1 }}
+        >
           <MapPin className="h-5 w-5" />
-          <span>World Map</span>
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            World Map
+          </span>
         </h2>
         <Button
           onClick={generateHexMap}
           disabled={generating}
           size="sm"
           variant="default"
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 ml-2 flex-shrink-0"
-          style={{ minWidth: "120px" }}
+          className="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2"
+          style={{ flexShrink: 0, marginLeft: "8px" }}
         >
           <RefreshCw
-            className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
+            className={`h-4 w-4 mr-1 ${generating ? "animate-spin" : ""}`}
           />
-          <span className="text-sm">Regenerate</span>
+          <span className="text-xs">Regen</span>
         </Button>
       </div>
 
