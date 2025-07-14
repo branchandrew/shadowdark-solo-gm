@@ -64,7 +64,8 @@ export const getCreatureTypes: RequestHandler = async (req, res) => {
     res.json({
       success: true,
       creature_types: creatureTypes,
-      source: creatureTypes === FALLBACK_CREATURE_TYPES ? "fallback" : "python",
+      source:
+        creatureTypes === FALLBACK_CREATURE_TYPES ? "fallback" : "typescript",
     });
   } catch (error) {
     console.error("Error getting creature types:", error);
