@@ -15,37 +15,20 @@ interface MeaningTableResult {
 }
 
 /**
- * Executes the Mythic Meaning Table Python script and returns the result
+ * Executes the Mythic Meaning Table using TypeScript implementation
  */
-const runMeaningTable = (): Promise<MeaningTableResult> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "mythic_meaning_table.py",
+const runMeaningTable = (): Promise<MeaningTableResult> => {
+  try {
+    const result = rollMeaningTableTS();
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error ? error.message : "Meaning table error occurred",
+      ),
     );
-    const proc = spawn("python3", [scriptPath]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (data) => (stdout += data));
-    proc.stderr.on("data", (data) => (stderr += data));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(stderr || `Python script exited with code ${code}`),
-        );
-      }
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch (error) {
-        reject(new Error("Invalid JSON from Meaning Table script"));
-      }
-    });
-  });
+  }
+};
 
 /**
  * Express handler: rolls on the Mythic Meaning Table
