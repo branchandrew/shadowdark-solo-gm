@@ -185,18 +185,15 @@ export class HexMapGenerator {
       }
     }
 
-    // Left neighbor
+    // Left neighbor - CRITICAL for ruins constraint
     if (col > 0) {
       neighbors.push(this.mapGrid[row][col - 1]);
     }
 
-    // Add more weight to immediate neighbors by including them multiple times
-    // This increases clustering effect
+    // For clustering effect, add key neighbors multiple times
+    // But only add them once for ruins constraint to work properly
     if (row > 0) {
-      neighbors.push(this.mapGrid[row - 1][col]); // Add top neighbor again
-    }
-    if (col > 0) {
-      neighbors.push(this.mapGrid[row][col - 1]); // Add left neighbor again
+      neighbors.push(this.mapGrid[row - 1][col]); // Add top neighbor again for clustering
     }
 
     return neighbors;
