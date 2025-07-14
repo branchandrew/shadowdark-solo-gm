@@ -183,14 +183,40 @@ export class HexMapGenerator {
   private getNeighbors(row: number, col: number): string[] {
     const neighbors: string[] = [];
 
+    // In a hex grid, we have 6 neighbors, but since we're generating row by row,
+    // we can only consider already-generated neighbors (above and to the left)
+
+    // Top neighbor
+    if (row > 0) {
+      neighbors.push(this.mapGrid[row - 1][col]);
+    }
+
+    // Top-left neighbor (offset for hex grid)
+    if (row > 0 && col > 0) {
+      neighbors.push(this.mapGrid[row - 1][col - 1]);
+    }
+
+    // Top-right neighbor (offset for hex grid)
+    if (row > 0 && col < this.width - 1) {
+      // For hex grid, odd/even rows have different offsets
+      const offset = col % 2 === 0 ? 0 : 1;
+      if (col + offset < this.width) {
+        neighbors.push(this.mapGrid[row - 1][col + offset]);
+      }
+    }
+
     // Left neighbor
     if (col > 0) {
       neighbors.push(this.mapGrid[row][col - 1]);
     }
 
-    // Top neighbor
+    // Add more weight to immediate neighbors by including them multiple times
+    // This increases clustering effect
     if (row > 0) {
-      neighbors.push(this.mapGrid[row - 1][col]);
+      neighbors.push(this.mapGrid[row - 1][col]); // Add top neighbor again
+    }
+    if (col > 0) {
+      neighbors.push(this.mapGrid[row][col - 1]); // Add left neighbor again
     }
 
     return neighbors;
