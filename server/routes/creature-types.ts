@@ -26,44 +26,9 @@ const getCreatureTypesFromTS = (): Promise<string[]> => {
 };
 
 /**
- * Fallback creature types (in case Python script fails)
+ * Fallback creature types (in case TypeScript implementation fails)
  */
-const FALLBACK_CREATURE_TYPES = [
-  "Human",
-  "Elf",
-  "Dwarf",
-  "Halfling",
-  "Hobgoblin",
-  "Drow",
-  "Duergar",
-  "Giant",
-  "Devil",
-  "Demon",
-  "Elemental",
-  "Fairy",
-  "Oni",
-  "Hag",
-  "Dragon",
-  "Orc",
-  "Goblin",
-  "Skeleton",
-  "Zombie",
-  "Ghost",
-  "Spirit",
-  "Wraith",
-  "Vampire",
-  "Werewolf",
-  "Troll",
-  "Ogre",
-  "Golem",
-  "Construct",
-  "Undead",
-  "Fiend",
-  "Celestial",
-  "Fey",
-  "Beast",
-  "Monstrosity",
-];
+const FALLBACK_CREATURE_TYPES = [...SHADOWDARK_VILLAIN_TYPES];
 
 /**
  * GET /api/creature-types
