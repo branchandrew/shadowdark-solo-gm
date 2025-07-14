@@ -250,8 +250,9 @@ export default function Map() {
             <Button
               onClick={generateHexMap}
               disabled={generating}
-              size="sm"
+              size="default"
               variant="default"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
               <RefreshCw
                 className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
