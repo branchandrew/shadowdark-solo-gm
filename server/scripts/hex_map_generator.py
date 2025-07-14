@@ -112,19 +112,26 @@ class HexMapGenerator:
 
         weights = {}
         for terrain in self.terrains:
-            # Start with base weight
-            weight = 1.0
+            try:
+                # Start with base weight
+                weight = 1.0
 
-            # Multiply by compatibility with each neighbor
-            for neighbor in neighbors:
-                compatibility = TERRAIN_COMPATIBILITY.get(neighbor, {}).get(terrain, 1.0)
-                weight *= compatibility
+                # Multiply by compatibility with each neighbor
+                for neighbor in neighbors:
+                    if neighbor in TERRAIN_COMPATIBILITY and terrain in TERRAIN_COMPATIBILITY[neighbor]:
+                        compatibility = TERRAIN_COMPATIBILITY[neighbor][terrain]
+                    else:
+                        compatibility = 1.0  # Default compatibility
+                    weight *= compatibility
 
-            # Average the influence if multiple neighbors
-            if len(neighbors) > 1:
-                weight = weight ** (1.0 / len(neighbors))
+                # Average the influence if multiple neighbors
+                if len(neighbors) > 1:
+                    weight = weight ** (1.0 / len(neighbors))
 
-            weights[terrain] = weight
+                weights[terrain] = weight
+            except Exception as e:
+                # Fallback to equal weight if error
+                weights[terrain] = 1.0
 
         return weights
 
