@@ -888,11 +888,19 @@ Return one clean JSON object and nothing else.  Keep values concise:
           const lieutenantType =
             lieutenantTypesResult.types?.[index] || "Monster";
 
+          // Create comprehensive description combining all tarot elements and race
+          const comprehensiveDescription = createLieutenantDescription(
+            lieutenant,
+            lieutenantType,
+            villain.bbeg_name,
+            villain.faction_name,
+          );
+
           hiddenElements.creatures.push({
             id: lieutenantId,
             name: lieutenant.name,
             race_species: lieutenantType,
-            description: `Lieutenant of ${villain.bbeg_name}. ${lieutenant.tarot_spread.background}`,
+            description: comprehensiveDescription,
             creature_type: "lieutenant",
             npc_disposition: "hostile",
             hidden: true,
