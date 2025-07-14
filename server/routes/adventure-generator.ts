@@ -124,51 +124,28 @@ const generateNames = (
  */
 const getLieutenantTypes = (
   count: number = 2,
-): Promise<{ success: boolean; lieutenant_types?: string[]; error?: string }> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "adventure_generator.py",
-    );
+): Promise<{
+  success: boolean;
+  lieutenant_types?: string[];
+  error?: string;
+}> => {
+  try {
+    console.log(`Getting ${count} lieutenant types using TypeScript`);
 
-    console.log(
-      `Getting lieutenant types: python3 ${scriptPath} lieutenant_types ${count}`,
-    );
+    const result = getRandomLieutenantTypes(count);
+    console.log(`Generated lieutenant types:`, result.lieutenant_types);
 
-    const proc = spawn("python3", [
-      scriptPath,
-      "lieutenant_types",
-      count.toString(),
-    ]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      console.log(`Lieutenant types script exited with code: ${code}`);
-      console.log(`Lieutenant types stdout: ${stdout}`);
-      console.log(`Lieutenant types stderr: ${stderr}`);
-
-      if (code !== 0) {
-        return reject(
-          new Error(
-            `Lieutenant types script failed: ${stderr || `exited with code ${code}`}`,
-          ),
-        );
-      }
-      try {
-        const result = JSON.parse(stdout.trim());
-        resolve(result);
-      } catch {
-        reject(new Error("Invalid JSON from lieutenant types script"));
-      }
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.resolve({
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Lieutenant types generation failed",
     });
-  });
+  }
+};
 
 /**
  * Cache for creature types to avoid repeated Python calls
