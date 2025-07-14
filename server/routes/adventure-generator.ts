@@ -4,6 +4,10 @@ import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 import { relationalDB } from "../lib/relational-database";
+import {
+  generateNames as generateNamesTS,
+  isValidAlignment,
+} from "../lib/name-generator";
 import type {
   AdventureGenerationRequest,
   AdventureGenerationResponse,
