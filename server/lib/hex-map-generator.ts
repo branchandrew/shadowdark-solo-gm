@@ -293,6 +293,171 @@ export class HexMapGenerator {
     return terrainList[terrainList.length - 1] || this.terrains[0];
   }
 
+  private getAllNeighbors(
+    row: number,
+    col: number,
+  ): Array<{ row: number; col: number }> {
+    const neighbors: Array<{ row: number; col: number }> = [];
+
+    // All 6 hexagonal neighbors
+    const offsets = [
+      [-1, 0], // Top
+      [-1, -1], // Top-left
+      [-1, 1], // Top-right
+      [0, -1], // Left
+      [0, 1], // Right
+      [1, 0], // Bottom
+      [1, -1], // Bottom-left
+      [1, 1], // Bottom-right
+    ];
+
+    for (const [dr, dc] of offsets) {
+      const newRow = row + dr;
+      const newCol = col + dc;
+
+      if (
+        newRow >= 0 &&
+        newRow < this.height &&
+        newCol >= 0 &&
+        newCol < this.width
+      ) {
+        neighbors.push({ row: newRow, col: newCol });
+      }
+    }
+
+    return neighbors;
+  }
+
+  private fixIsolatedTiles(): void {
+    // Remove isolated single tiles by converting them to neighbor terrain
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        const currentTerrain = this.mapGrid[row][col];
+        const neighbors = this.getAllNeighbors(row, col);
+
+        // Count neighbors with same terrain
+        let sameTerrainCount = 0;
+        const differentTerrains: string[] = [];
+
+        for (const neighbor of neighbors) {
+          const neighborTerrain = this.mapGrid[neighbor.row][neighbor.col];
+          if (neighborTerrain === currentTerrain) {
+            sameTerrainCount++;
+          } else {
+            differentTerrains.push(neighborTerrain);
+          }
+        }
+
+        // If no same-terrain neighbors, convert to most common neighbor terrain
+        if (sameTerrainCount === 0 && differentTerrains.length > 0) {
+          const terrainCounts: Record<string, number> = {};
+          for (const terrain of differentTerrains) {
+            terrainCounts[terrain] = (terrainCounts[terrain] || 0) + 1;
+          }
+
+          let mostCommon = differentTerrains[0];
+          let maxCount = 0;
+          for (const [terrain, count] of Object.entries(terrainCounts)) {
+            if (count > maxCount) {
+              maxCount = count;
+              mostCommon = terrain;
+            }
+          }
+
+          this.mapGrid[row][col] = mostCommon;
+        }
+      }
+    }
+  }
+
+  private findConnectedGroup(
+    startRow: number,
+    startCol: number,
+    terrain: string,
+    visited: boolean[][],
+  ): Array<{ row: number; col: number }> {
+    const group: Array<{ row: number; col: number }> = [];
+    const stack = [{ row: startRow, col: startCol }];
+
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      const { row, col } = current;
+
+      if (visited[row][col] || this.mapGrid[row][col] !== terrain) {
+        continue;
+      }
+
+      visited[row][col] = true;
+      group.push(current);
+
+      // Add unvisited same-terrain neighbors to stack
+      const neighbors = this.getAllNeighbors(row, col);
+      for (const neighbor of neighbors) {
+        if (
+          !visited[neighbor.row][neighbor.col] &&
+          this.mapGrid[neighbor.row][neighbor.col] === terrain
+        ) {
+          stack.push(neighbor);
+        }
+      }
+    }
+
+    return group;
+  }
+
+  private ensureMinimumGroups(): void {
+    // Find all connected groups
+    const visited: boolean[][] = Array(this.height)
+      .fill(null)
+      .map(() => Array(this.width).fill(false));
+    const groups: Array<{
+      terrain: string;
+      positions: Array<{ row: number; col: number }>;
+    }> = [];
+
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        if (!visited[row][col]) {
+          const terrain = this.mapGrid[row][col];
+          const group = this.findConnectedGroup(row, col, terrain, visited);
+          if (group.length >= 3) {
+            groups.push({ terrain, positions: group });
+          }
+        }
+      }
+    }
+
+    // If we don't have at least 3 groups of 3+, create them
+    if (groups.length < 3) {
+      const targetTerrains = this.terrains.slice(0, 3); // Use first 3 terrain types
+
+      for (let i = groups.length; i < 3; i++) {
+        const terrain = targetTerrains[i % targetTerrains.length];
+
+        // Find a good spot to place a 3+ group
+        let placed = false;
+        for (let attempts = 0; attempts < 20 && !placed; attempts++) {
+          const centerRow = Math.floor(Math.random() * this.height);
+          const centerCol = Math.floor(Math.random() * this.width);
+
+          // Try to place a 3-hex group around this center
+          const groupPositions = [
+            { row: centerRow, col: centerCol },
+            { row: centerRow, col: Math.max(0, centerCol - 1) },
+            { row: Math.max(0, centerRow - 1), col: centerCol },
+          ].filter((pos) => pos.row < this.height && pos.col < this.width);
+
+          if (groupPositions.length >= 3) {
+            for (const pos of groupPositions) {
+              this.mapGrid[pos.row][pos.col] = terrain;
+            }
+            placed = true;
+          }
+        }
+      }
+    }
+  }
+
   public generateMap(seed?: number): string[][] {
     try {
       if (seed !== undefined) {
@@ -326,6 +491,11 @@ export class HexMapGenerator {
 
         this.mapGrid.push(currentRow);
       }
+
+      // Post-processing for better clustering
+      this.fixIsolatedTiles();
+      this.fixIsolatedTiles(); // Run twice for better results
+      this.ensureMinimumGroups();
 
       return this.mapGrid;
     } catch (error) {
