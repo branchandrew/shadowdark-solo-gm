@@ -239,38 +239,36 @@ export default function Map() {
   }
 
   return (
-    <div className="space-y-4 w-full">
-      <Card className="w-full">
-        <CardContent className="p-4">
-          {/* Title and Button Row */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              World Map
-            </h2>
-            <button
-              onClick={generateHexMap}
-              disabled={generating}
-              style={{
-                backgroundColor: "#ff0000",
-                color: "white",
-                padding: "12px 20px",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <RefreshCw
-                className={`h-5 w-5 ${generating ? "animate-spin" : ""}`}
-              />
-              {generating ? "Generating..." : "REGENERATE MAP"}
-            </button>
-          </div>
+    <>
+      {/* TEST BUTTON - Should be visible at top */}
+      <div style={{
+        position: 'fixed',
+        top: '10px',
+        right: '10px',
+        zIndex: 9999,
+        backgroundColor: '#ff0000',
+        color: 'white',
+        padding: '20px',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        border: '3px solid yellow',
+        borderRadius: '10px'
+      }}>
+        <button onClick={generateHexMap} style={{ background: 'none', border: 'none', color: 'white', fontSize: '16px', fontWeight: 'bold' }}>
+          TEST REGEN BUTTON
+        </button>
+      </div>
+
+      <div className="space-y-4 w-full">
+        <Card className="w-full">
+          <CardContent className="p-4">
+            {/* Title */}
+            <div className="mb-4">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                World Map
+              </h2>
+            </div>
 
           <div
             className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border relative"
@@ -281,21 +279,21 @@ export default function Map() {
               onClick={generateHexMap}
               disabled={generating}
               style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                backgroundColor: "#ff0000",
-                color: "white",
-                padding: "8px 16px",
-                border: "none",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: "bold",
-                cursor: "pointer",
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                backgroundColor: '#ff0000',
+                color: 'white',
+                padding: '8px 16px',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
                 zIndex: 1000,
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
               }}
             >
               <RefreshCw
