@@ -360,6 +360,47 @@ export class HexMapGenerator {
     }
   }
 
+  private fixAdjacentRuins(): void {
+    // Fix any ruins that ended up adjacent to other ruins
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        if (this.mapGrid[row][col] === "ruins") {
+          const neighbors = this.getAllNeighbors(row, col);
+
+          // Check if any neighbors are also ruins
+          const hasRuinsNeighbor = neighbors.some(
+            (neighbor) => this.mapGrid[neighbor.row][neighbor.col] === "ruins",
+          );
+
+          if (hasRuinsNeighbor) {
+            // Convert this ruins to the most common non-ruins neighbor terrain
+            const nonRuinsNeighbors = neighbors
+              .map((neighbor) => this.mapGrid[neighbor.row][neighbor.col])
+              .filter((terrain) => terrain !== "ruins");
+
+            if (nonRuinsNeighbors.length > 0) {
+              const terrainCounts: Record<string, number> = {};
+              for (const terrain of nonRuinsNeighbors) {
+                terrainCounts[terrain] = (terrainCounts[terrain] || 0) + 1;
+              }
+
+              let mostCommon = nonRuinsNeighbors[0];
+              let maxCount = 0;
+              for (const [terrain, count] of Object.entries(terrainCounts)) {
+                if (count > maxCount) {
+                  maxCount = count;
+                  mostCommon = terrain;
+                }
+              }
+
+              this.mapGrid[row][col] = mostCommon;
+            }
+          }
+        }
+      }
+    }
+  }
+
   private findConnectedGroup(
     startRow: number,
     startCol: number,
