@@ -108,6 +108,8 @@ export default function Map() {
   };
 
   const generateHexMap = async () => {
+    if (generating) return; // Prevent multiple simultaneous calls
+
     setGenerating(true);
     try {
       const response = await fetch("/api/generate-hex-map", {
