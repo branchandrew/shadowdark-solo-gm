@@ -73,21 +73,8 @@ function HexTile({ row, col, terrain }: HexTileProps) {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
-      title={`Hex ${col},${row} - ${terrain.replace("_", " ")}`}
-    >
-      <div className="w-full h-full flex items-center justify-center relative">
-        <span
-          className="text-xs font-mono font-bold px-1 py-0.5 rounded"
-          style={{
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            color: "white",
-            textShadow: "1px 1px 1px rgba(0, 0, 0, 0.8)",
-          }}
-        >
-          {col},{row}
-        </span>
-      </div>
-    </div>
+      title={`${terrain.replace("_", " ").toUpperCase()} (${col},${row})`}
+    ></div>
   );
 }
 
