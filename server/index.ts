@@ -38,6 +38,7 @@ export function createServer() {
   app.post("/api/roll-fate", rollFateChart);
   app.post("/api/roll-meaning", rollMeaningTable);
   app.post("/api/get-session-data", getSessionData);
+  app.get("/api/creature-types", getCreatureTypes);
 
   return app;
 }
