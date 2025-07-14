@@ -68,30 +68,6 @@ interface VillainJson {
 }
 
 /**
- * Executes the Python helper script and returns its JSON payload.
- */
-const runPython = (scriptPath: string): Promise<PythonResult> =>
-  new Promise((resolve, reject) => {
-    const proc = spawn("python3", [scriptPath]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      if (code !== 0)
-        return reject(new Error(stderr || `Python exited with ${code}`));
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch {
-        reject(new Error("Invalid JSON from Python script"));
-      }
-    });
-  });
-
-/**
  * Generates names using the TypeScript name generation implementation
  */
 const generateNames = (
