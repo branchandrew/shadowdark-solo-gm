@@ -53,11 +53,18 @@ export default function BTSPanel() {
         body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || `Server error: ${response.statusText}`);
+        let errorMessage = `Server error: ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // If response.json() fails, use the status text
+        }
+        throw new Error(errorMessage);
       }
+
+      const data = await response.json();
 
       if (data.success) {
         console.log("Adventure generation triggered successfully!");
