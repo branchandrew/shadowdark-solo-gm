@@ -189,7 +189,6 @@ export default function Map() {
       mountains: "M",
       lake: "L",
       marshlands: "W",
-      quagmire: "Q",
       ruins: "R",
     };
     return symbols[name] || "?";
