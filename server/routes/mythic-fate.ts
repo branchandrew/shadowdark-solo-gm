@@ -80,18 +80,18 @@ export const rollFateChart: RequestHandler = async (req, res) => {
 
     console.log("Fate Chart result:", result);
 
-    // Ensure all required fields are present
+    // Ensure all required fields are present and match expected format
     const response = {
       success: true,
-      roll: result.roll || 0,
-      threshold: result.threshold || 0,
-      result_success: result.success || false, // Renamed to avoid conflict with API success
-      exceptional: result.exceptional || false,
-      result: result.result || "Unknown",
-      likelihood: result.likelihood || likelihood,
-      chaos_factor: result.chaos_factor || validChaosFactor,
-      likelihood_index: result.likelihood_index || 0,
-      doubles: result.doubles || false,
+      roll: result.roll,
+      threshold: result.threshold,
+      result_success: result.success, // Renamed to avoid conflict with API success
+      exceptional: result.exceptional,
+      result: result.result,
+      likelihood: result.likelihood,
+      chaos_factor: result.chaos_factor,
+      likelihood_index: result.likelihood_index,
+      doubles: result.doubles,
       random_event: result.random_event || null,
       timestamp: new Date().toISOString(),
     };
