@@ -926,19 +926,21 @@ Return one clean JSON object and nothing else.  Keep values concise:
           const lieutenantType =
             lieutenantTypesResult.types?.[index] || "Monster";
 
-          // Create comprehensive description combining all tarot elements and race
-          const comprehensiveDescription = createLieutenantDescription(
-            lieutenant,
-            lieutenantType,
-            villain.bbeg_name,
-            villain.faction_name,
-          );
+          // Use AI-provided description or create fallback
+          const description =
+            lieutenant.description ||
+            createLieutenantDescription(
+              lieutenant,
+              lieutenantType,
+              villain.bbeg_name,
+              villain.faction_name,
+            );
 
           hiddenElements.creatures.push({
             id: lieutenantId,
             name: lieutenant.name,
             race_species: lieutenantType,
-            description: comprehensiveDescription,
+            description: description,
             creature_type: "lieutenant",
             npc_disposition: "hostile",
             hidden: true,
@@ -951,6 +953,27 @@ Return one clean JSON object and nothing else.  Keep values concise:
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           });
+
+          // Create lieutenant minions if specified
+          if (lieutenant.minions && lieutenant.minions.trim()) {
+            const lieutenantMinionsRace =
+              (await extractRaceFromDescription(lieutenant.minions)) ||
+              "Monster";
+
+            hiddenElements.creatures.push({
+              id: `creature_${Date.now()}_lt_${index}_minion`,
+              name: `${lieutenant.name}'s Minions`,
+              race_species: lieutenantMinionsRace,
+              description: lieutenant.minions,
+              creature_type: "monster",
+              npc_disposition: "hostile",
+              hidden: true,
+              is_minion: true,
+              minion_creature_id: lieutenantId,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            });
+          }
         }
 
         // Add faction as hidden faction
