@@ -14,9 +14,10 @@ import { useAdventureLog, useDatabase } from "../hooks/useDatabase";
 
 import type { AdventureArcDisplay } from "../../shared/types";
 
-// Helper function to extract race from description
+// Helper function to extract race from description using Shadowdark villain types
+// This array matches shadowdark_villain_types from adventure_generator.py
 const extractRaceFromDescription = (description: string): string | null => {
-  const commonRaces = [
+  const shadowdarkVillainTypes = [
     "Human",
     "Elf",
     "Dwarf",
@@ -24,6 +25,7 @@ const extractRaceFromDescription = (description: string): string | null => {
     "Hobgoblin",
     "Drow",
     "Duergar",
+    "Druid",
     "Giant",
     "Devil",
     "Demon",
@@ -31,7 +33,31 @@ const extractRaceFromDescription = (description: string): string | null => {
     "Fairy",
     "Oni",
     "Hag",
+    "Principi Fallen Angel",
+    "Aboleth",
+    "Naga",
+    "Couatl",
+    "Invisible Stalker",
+    "Medusa",
+    "Mummy",
+    "Efreeti",
+    "Phoenix",
     "Dragon",
+    "Rime Walker",
+    "Ten-Eyed Oracle",
+    "Obe-Ixx of Azarumme",
+    "Mordanticus the Flayed",
+    "Rathgamnon",
+    "Imprisoned God",
+    "God of Storm / Destruction",
+    "Sentient Grimoire",
+    "An evil, scheming, intelligent relic or artifact",
+    "A ghost, spirit, or shadow",
+    "A god, diety or power representing death",
+    "A chaos swarm",
+    "A malignant spell or curse",
+    "A hive mind corruption",
+    "World consuming darkness",
     "Orc",
     "Goblin",
     "Skeleton",
@@ -55,8 +81,8 @@ const extractRaceFromDescription = (description: string): string | null => {
 
   const lowerDescription = description.toLowerCase();
 
-  // Look for explicit race mentions
-  for (const race of commonRaces) {
+  // Look for explicit race mentions using shadowdark villain types
+  for (const race of shadowdarkVillainTypes) {
     if (lowerDescription.includes(race.toLowerCase())) {
       return race;
     }
