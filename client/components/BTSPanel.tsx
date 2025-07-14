@@ -23,6 +23,7 @@ export default function BTSPanel() {
     useDatabase<AdventureArcDisplay | null>("adventure_arc", null);
   const { data: campaignElements, updateData: updateCampaignElements } =
     useDatabase("campaign_elements", null);
+  const { creatureTypes } = useCreatureTypes();
   const [isGenerating, setIsGenerating] = useState(false);
   const [theme, setTheme] = useSessionState("bts_theme", "");
   const [tone, setTone] = useSessionState("bts_tone", "");
