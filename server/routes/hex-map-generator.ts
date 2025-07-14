@@ -40,7 +40,7 @@ const generateHexMap = async (
 };
 
 /**
- * Gets available terrain types from database or fallback to Python script
+ * Gets available terrain types from database or fallback to TypeScript defaults
  */
 const getTerrainTypes = async (): Promise<{
   success: boolean;
@@ -70,43 +70,14 @@ const getTerrainTypes = async (): Promise<{
       }
     }
 
-    // Fallback to Python script
-    return new Promise((resolve) => {
-      const scriptPath = path.join(
-        __dirname,
-        "..",
-        "scripts",
-        "hex_map_generator.py",
-      );
-
-      const proc = spawn("python3", [scriptPath, "terrains"]);
-
-      let stdout = "";
-      let stderr = "";
-
-      proc.stdout.on("data", (d) => (stdout += d));
-      proc.stderr.on("data", (d) => (stderr += d));
-
-      proc.on("close", (code) => {
-        if (code !== 0) {
-          return resolve({
-            success: false,
-            error: stderr || `Script exited with code ${code}`,
-          });
-        }
-
-        try {
-          const result = JSON.parse(stdout.trim());
-          result.source = "python";
-          resolve(result);
-        } catch {
-          resolve({
-            success: false,
-            error: "Invalid JSON from terrain types script",
-          });
-        }
-      });
-    });
+    // Fallback to TypeScript implementation
+    const result = getTerrainTypesTS();
+    return {
+      success: result.success,
+      terrains: result.terrains,
+      compatibility_matrix: (result as any).compatibility_matrix,
+      source: "typescript",
+    };
   } catch (error) {
     return {
       success: false,
