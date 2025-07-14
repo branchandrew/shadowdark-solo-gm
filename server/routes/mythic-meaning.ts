@@ -4,16 +4,6 @@ import {
   MeaningTableResult,
 } from "../lib/mythic-meaning-table";
 
-interface MeaningTableResult {
-  verb_roll: number;
-  verb: string;
-  verb_index: number;
-  subject_roll: number;
-  subject: string;
-  subject_index: number;
-  meaning: string;
-}
-
 /**
  * Executes the Mythic Meaning Table using TypeScript implementation
  */
