@@ -242,12 +242,13 @@ export class HexMapGenerator {
         for (const neighbor of neighbors) {
           const compatibility =
             (TERRAIN_COMPATIBILITY as any)[neighbor]?.[terrain] ?? 1.0;
-          weight *= compatibility;
+          // Square the compatibility to increase clustering bias
+          weight *= Math.pow(compatibility, 1.5);
         }
 
-        // Average the influence if multiple neighbors
+        // Use geometric mean but with less averaging to maintain clustering
         if (neighbors.length > 1) {
-          weight = Math.pow(weight, 1.0 / neighbors.length);
+          weight = Math.pow(weight, 0.8 / neighbors.length);
         }
 
         weights[terrain] = weight;
