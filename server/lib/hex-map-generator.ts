@@ -218,17 +218,30 @@ export class HexMapGenerator {
         // Start with base weight
         let weight = 1.0;
 
-        // Multiply by compatibility with each neighbor
-        for (const neighbor of neighbors) {
-          const compatibility =
-            (TERRAIN_COMPATIBILITY as any)[neighbor]?.[terrain] ?? 1.0;
-          // Square the compatibility to increase clustering bias
-          weight *= Math.pow(compatibility, 1.5);
+        // Special rule: Ruins can never be adjacent to other ruins
+        if (terrain === "ruins") {
+          const hasRuinsNeighbor = neighbors.some(
+            (neighbor) => neighbor === "ruins",
+          );
+          if (hasRuinsNeighbor) {
+            weight = 0.0; // Completely prevent ruins next to ruins
+          }
         }
 
-        // Use geometric mean but with less averaging to maintain clustering
-        if (neighbors.length > 1) {
-          weight = Math.pow(weight, 0.8 / neighbors.length);
+        // Skip compatibility calculation if weight is already 0
+        if (weight > 0) {
+          // Multiply by compatibility with each neighbor
+          for (const neighbor of neighbors) {
+            const compatibility =
+              (TERRAIN_COMPATIBILITY as any)[neighbor]?.[terrain] ?? 1.0;
+            // Square the compatibility to increase clustering bias
+            weight *= Math.pow(compatibility, 1.5);
+          }
+
+          // Use geometric mean but with less averaging to maintain clustering
+          if (neighbors.length > 1) {
+            weight = Math.pow(weight, 0.8 / neighbors.length);
+          }
         }
 
         weights[terrain] = weight;
