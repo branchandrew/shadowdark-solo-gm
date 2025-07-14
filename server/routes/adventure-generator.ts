@@ -671,6 +671,18 @@ Return one clean JSON object and nothing else.  Keep values concise:
 
     console.log("Parsed villain:", villain);
 
+    // Standardize minions by comparing with official creature types
+    const creatureTypes = await getCreatureTypes();
+    const originalMinions = villain.minions;
+    villain.minions = standardizeMinions(villain.minions, creatureTypes);
+
+    if (originalMinions !== villain.minions) {
+      console.log(`\n=== MINION STANDARDIZATION ===`);
+      console.log(`Original: ${originalMinions}`);
+      console.log(`Standardized: ${villain.minions}`);
+      console.log(`===============================\n`);
+    }
+
     // Output name reasoning to console
     console.log(`\n=== NAME SELECTION ===`);
     console.log(`Available names were: ${nameResult.names?.join(", ")}`);
