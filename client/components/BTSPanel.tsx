@@ -11,115 +11,12 @@ import CloudSync from "./CloudSync";
 import SchemaVisualizer from "./SchemaVisualizer";
 import { useSessionState } from "../hooks/useSessionState";
 import { useAdventureLog, useDatabase } from "../hooks/useDatabase";
+import {
+  useCreatureTypes,
+  extractRaceFromDescription,
+} from "../hooks/useCreatureTypes";
 
 import type { AdventureArcDisplay } from "../../shared/types";
-
-// Helper function to extract race from description using Shadowdark villain types
-// This array matches shadowdark_villain_types from adventure_generator.py
-const extractRaceFromDescription = (description: string): string | null => {
-  const shadowdarkVillainTypes = [
-    "Human",
-    "Elf",
-    "Dwarf",
-    "Halfling",
-    "Hobgoblin",
-    "Drow",
-    "Duergar",
-    "Druid",
-    "Giant",
-    "Devil",
-    "Demon",
-    "Elemental",
-    "Fairy",
-    "Oni",
-    "Hag",
-    "Principi Fallen Angel",
-    "Aboleth",
-    "Naga",
-    "Couatl",
-    "Invisible Stalker",
-    "Medusa",
-    "Mummy",
-    "Efreeti",
-    "Phoenix",
-    "Dragon",
-    "Rime Walker",
-    "Ten-Eyed Oracle",
-    "Obe-Ixx of Azarumme",
-    "Mordanticus the Flayed",
-    "Rathgamnon",
-    "Imprisoned God",
-    "God of Storm / Destruction",
-    "Sentient Grimoire",
-    "An evil, scheming, intelligent relic or artifact",
-    "A ghost, spirit, or shadow",
-    "A god, diety or power representing death",
-    "A chaos swarm",
-    "A malignant spell or curse",
-    "A hive mind corruption",
-    "World consuming darkness",
-    "Orc",
-    "Goblin",
-    "Skeleton",
-    "Zombie",
-    "Ghost",
-    "Spirit",
-    "Wraith",
-    "Vampire",
-    "Werewolf",
-    "Troll",
-    "Ogre",
-    "Golem",
-    "Construct",
-    "Undead",
-    "Fiend",
-    "Celestial",
-    "Fey",
-    "Beast",
-    "Monstrosity",
-  ];
-
-  const lowerDescription = description.toLowerCase();
-
-  // Look for explicit race mentions using shadowdark villain types
-  for (const race of shadowdarkVillainTypes) {
-    if (lowerDescription.includes(race.toLowerCase())) {
-      return race;
-    }
-  }
-
-  // Look for common descriptive terms that indicate race
-  if (
-    lowerDescription.includes("squire") ||
-    lowerDescription.includes("knight") ||
-    lowerDescription.includes("soldier")
-  ) {
-    return "Human";
-  }
-  if (
-    lowerDescription.includes("frost") ||
-    lowerDescription.includes("ice") ||
-    lowerDescription.includes("cold")
-  ) {
-    return "Elemental";
-  }
-  if (
-    lowerDescription.includes("shadow") ||
-    lowerDescription.includes("dark") ||
-    lowerDescription.includes("soul")
-  ) {
-    return "Undead";
-  }
-  if (
-    lowerDescription.includes("trader") ||
-    lowerDescription.includes("merchant") ||
-    lowerDescription.includes("crystal")
-  ) {
-    return "Human";
-  }
-
-  return null;
-};
 
 export default function BTSPanel() {
   const { data: adventureArc, updateData: updateAdventureArc } =
