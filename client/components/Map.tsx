@@ -29,6 +29,9 @@ interface TerrainType {
 }
 
 function HexTile({ row, col, terrain }: HexTileProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
   const getTerrainImage = (terrain: string) => {
     switch (terrain.toLowerCase()) {
       case "plains":
@@ -52,6 +55,19 @@ function HexTile({ row, col, terrain }: HexTileProps) {
     }
   };
 
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    setShowTooltip(true);
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
   // Calculate hex position - maintaining good hex tile size
   const hexWidth = 93; // Good size for visibility
   const hexHeight = 107; // Maintains 155:179 ratio
@@ -59,22 +75,39 @@ function HexTile({ row, col, terrain }: HexTileProps) {
   const yOffset = row * (hexHeight * 0.6); // Closer vertical spacing to eliminate row gaps
 
   return (
-    <div
-      className="absolute cursor-pointer transition-all duration-200 hover:scale-105 hover:z-10"
-      style={{
-        left: `${xOffset}px`,
-        top: `${yOffset}px`,
-        width: `${hexWidth}px`,
-        height: `${hexHeight}px`,
-        clipPath:
-          "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-        backgroundImage: `url(${getTerrainImage(terrain)})`,
-        backgroundSize: "75%", // Smaller image to fit better within hex and reduce cropping
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-      title={`${terrain.replace("_", " ").toUpperCase()} (${col},${row})`}
-    ></div>
+    <>
+      <div
+        className="absolute cursor-pointer transition-all duration-200 hover:scale-105 hover:z-10"
+        style={{
+          left: `${xOffset}px`,
+          top: `${yOffset}px`,
+          width: `${hexWidth}px`,
+          height: `${hexHeight}px`,
+          clipPath:
+            "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+          backgroundImage: `url(${getTerrainImage(terrain)})`,
+          backgroundSize: "75%", // Smaller image to fit better within hex and reduce cropping
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      ></div>
+
+      {/* Custom Tooltip */}
+      {showTooltip && (
+        <div
+          className="fixed z-50 px-2 py-1 text-sm font-medium text-white bg-gray-900 rounded shadow-lg pointer-events-none"
+          style={{
+            left: `${mousePos.x + 10}px`,
+            top: `${mousePos.y - 30}px`,
+          }}
+        >
+          {terrain.replace("_", " ").toUpperCase()} ({col},{row})
+        </div>
+      )}
+    </>
   );
 }
 
