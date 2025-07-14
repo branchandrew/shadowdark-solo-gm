@@ -44,6 +44,9 @@ export function createServer() {
   app.post("/api/roll-meaning", rollMeaningTable);
   app.post("/api/get-session-data", getSessionData);
   app.get("/api/creature-types", getCreatureTypes);
+  app.post("/api/generate-hex-map", generateHexMapEndpoint);
+  app.get("/api/hex-map-terrains", getHexMapTerrains);
+  app.get("/api/test-hex-map", testHexMap);
 
   return app;
 }
