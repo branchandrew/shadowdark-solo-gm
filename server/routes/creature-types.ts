@@ -38,15 +38,15 @@ export const getCreatureTypes: RequestHandler = async (req, res) => {
   try {
     let creatureTypes: string[] = [];
 
-    // Try to get from Python script first (source of truth)
+    // Try to get from TypeScript implementation first (source of truth)
     try {
-      creatureTypes = await getCreatureTypesFromPython();
+      creatureTypes = await getCreatureTypesFromTS();
       console.log(
-        `Loaded ${creatureTypes.length} creature types from Python script`,
+        `Loaded ${creatureTypes.length} creature types from TypeScript`,
       );
     } catch (error) {
       console.warn(
-        "Failed to get creature types from Python script, using fallback:",
+        "Failed to get creature types from TypeScript implementation, using fallback:",
         error,
       );
       creatureTypes = FALLBACK_CREATURE_TYPES;
