@@ -185,77 +185,105 @@ const getLieutenantTypes = (
   });
 
 /**
- * Extracts race/species from a description text using Shadowdark villain types
- * This array matches shadowdark_villain_types from adventure_generator.py
+ * Cache for creature types to avoid repeated Python calls
  */
-const extractRaceFromDescription = (description: string): string | null => {
-  // Shadowdark villain types - keep this synchronized with adventure_generator.py
-  const shadowdarkVillainTypes = [
-    "Human",
-    "Elf",
-    "Dwarf",
-    "Halfling",
-    "Hobgoblin",
-    "Drow",
-    "Duergar",
-    "Druid",
-    "Giant",
-    "Devil",
-    "Demon",
-    "Elemental",
-    "Fairy",
-    "Oni",
-    "Hag",
-    "Principi Fallen Angel",
-    "Aboleth",
-    "Naga",
-    "Couatl",
-    "Invisible Stalker",
-    "Medusa",
-    "Mummy",
-    "Efreeti",
-    "Phoenix",
-    "Dragon",
-    "Rime Walker",
-    "Ten-Eyed Oracle",
-    "Obe-Ixx of Azarumme",
-    "Mordanticus the Flayed",
-    "Rathgamnon",
-    "Imprisoned God",
-    "God of Storm / Destruction",
-    "Sentient Grimoire",
-    "An evil, scheming, intelligent relic or artifact",
-    "A ghost, spirit, or shadow",
-    "A god, diety or power representing death",
-    "A chaos swarm",
-    "A malignant spell or curse",
-    "A hive mind corruption",
-    "World consuming darkness",
-    "Orc",
-    "Goblin",
-    "Skeleton",
-    "Zombie",
-    "Ghost",
-    "Spirit",
-    "Wraith",
-    "Vampire",
-    "Werewolf",
-    "Troll",
-    "Ogre",
-    "Golem",
-    "Construct",
-    "Undead",
-    "Fiend",
-    "Celestial",
-    "Fey",
-    "Beast",
-    "Monstrosity",
-  ];
+let cachedCreatureTypes: string[] | null = null;
 
+/**
+ * Gets creature types from Python script (with caching)
+ */
+const getCreatureTypes = async (): Promise<string[]> => {
+  if (cachedCreatureTypes) {
+    return cachedCreatureTypes;
+  }
+
+  try {
+    const scriptPath = path.join(
+      __dirname,
+      "..",
+      "scripts",
+      "adventure_generator.py",
+    );
+
+    const proc = spawn("python3", [scriptPath, "get_villain_types"]);
+
+    let stdout = "";
+    let stderr = "";
+
+    await new Promise<void>((resolve, reject) => {
+      proc.stdout.on("data", (d) => (stdout += d));
+      proc.stderr.on("data", (d) => (stderr += d));
+
+      proc.on("close", (code) => {
+        if (code !== 0) {
+          return reject(
+            new Error(`Script failed: ${stderr || `exited with code ${code}`}`),
+          );
+        }
+        resolve();
+      });
+    });
+
+    const result = JSON.parse(stdout.trim());
+    cachedCreatureTypes = result.villain_types || [];
+    return cachedCreatureTypes;
+  } catch (error) {
+    console.warn(
+      "Failed to get creature types from Python, using fallback:",
+      error,
+    );
+    // Fallback types
+    cachedCreatureTypes = [
+      "Human",
+      "Elf",
+      "Dwarf",
+      "Halfling",
+      "Hobgoblin",
+      "Drow",
+      "Duergar",
+      "Giant",
+      "Devil",
+      "Demon",
+      "Elemental",
+      "Fairy",
+      "Oni",
+      "Hag",
+      "Dragon",
+      "Orc",
+      "Goblin",
+      "Skeleton",
+      "Zombie",
+      "Ghost",
+      "Spirit",
+      "Wraith",
+      "Vampire",
+      "Werewolf",
+      "Troll",
+      "Ogre",
+      "Golem",
+      "Construct",
+      "Undead",
+      "Fiend",
+      "Celestial",
+      "Fey",
+      "Beast",
+      "Monstrosity",
+    ];
+    return cachedCreatureTypes;
+  }
+};
+
+/**
+ * Extracts race/species from a description text using creature types from Python
+ */
+const extractRaceFromDescription = async (
+  description: string,
+): Promise<string | null> => {
+  const creatureTypes = await getCreatureTypes();
   const lowerDescription = description.toLowerCase();
 
-  // Look for explicit race mentions using shadowdark villain types
-  for (const race of shadowdarkVillainTypes) {
+  // Look for explicit race mentions
+  for (const race of creatureTypes) {
     if (lowerDescription.includes(race.toLowerCase())) {
       return race;
     }
