@@ -80,7 +80,6 @@ export const TERRAIN_COMPATIBILITY: Record<
     plains: 2.0,
     forest: 2.5,
     marshlands: 3.5,
-    quagmire: 2.5,
     hills: 1.2,
     mountains: 1.5,
     dark_forest: 0.3,
