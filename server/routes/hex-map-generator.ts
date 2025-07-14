@@ -67,49 +67,80 @@ const generateHexMap = (
   });
 
 /**
- * Gets available terrain types from the Python script
+ * Gets available terrain types from database or fallback to Python script
  */
-const getTerrainTypes = (): Promise<{
+const getTerrainTypes = async (): Promise<{
   success: boolean;
   terrains?: string[];
   compatibility_matrix?: any;
   error?: string;
-}> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "hex_map_generator.py",
-    );
+}> => {
+  try {
+    // Try to get terrain types from database first
+    if (relationalDB.supabase) {
+      const { data, error } = await relationalDB.supabase
+        .from("terrain_types")
+        .select("name, description, symbol, compatibility_data")
+        .eq("category", "shadowdark_standard")
+        .order("name");
 
-    const proc = spawn("python3", [scriptPath, "terrains"]);
+      if (!error && data && data.length > 0) {
+        const terrains = data.map((t) => t.name);
+        console.log(`Loaded ${terrains.length} terrain types from database`);
 
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return resolve({
-          success: false,
-          error: stderr || `Script exited with code ${code}`,
-        });
+        return {
+          success: true,
+          terrains,
+          compatibility_matrix: {}, // TODO: Build from database data
+          source: "database",
+        };
       }
+    }
 
-      try {
-        const result = JSON.parse(stdout.trim());
-        resolve(result);
-      } catch {
-        resolve({
-          success: false,
-          error: "Invalid JSON from terrain types script",
-        });
-      }
+    // Fallback to Python script
+    return new Promise((resolve) => {
+      const scriptPath = path.join(
+        __dirname,
+        "..",
+        "scripts",
+        "hex_map_generator.py",
+      );
+
+      const proc = spawn("python3", [scriptPath, "terrains"]);
+
+      let stdout = "";
+      let stderr = "";
+
+      proc.stdout.on("data", (d) => (stdout += d));
+      proc.stderr.on("data", (d) => (stderr += d));
+
+      proc.on("close", (code) => {
+        if (code !== 0) {
+          return resolve({
+            success: false,
+            error: stderr || `Script exited with code ${code}`,
+          });
+        }
+
+        try {
+          const result = JSON.parse(stdout.trim());
+          result.source = "python";
+          resolve(result);
+        } catch {
+          resolve({
+            success: false,
+            error: "Invalid JSON from terrain types script",
+          });
+        }
+      });
     });
-  });
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};
 
 /**
  * POST /api/generate-hex-map
