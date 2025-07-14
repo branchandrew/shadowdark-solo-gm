@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
-import { spawn } from "child_process";
-import path from "path";
+import {
+  rollMeaningTable as rollMeaningTableTS,
+  MeaningTableResult,
+} from "../lib/mythic-meaning-table";
 
 interface MeaningTableResult {
   verb_roll: number;
