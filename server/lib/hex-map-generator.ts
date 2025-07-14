@@ -73,7 +73,6 @@ export const TERRAIN_COMPATIBILITY: Record<
     lake: 1.5,
     plains: 1.2,
     marshlands: 0.2,
-    quagmire: 0.1,
     ruins: 2.2,
   },
   lake: {
