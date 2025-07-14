@@ -1,7 +1,11 @@
 import { RequestHandler } from "express";
-import { spawn } from "child_process";
-import path from "path";
 import { relationalDB } from "../lib/relational-database";
+import {
+  generateHexMap as generateHexMapTS,
+  getTerrainTypes as getTerrainTypesTS,
+  generateTestMap,
+  DEFAULT_TERRAINS,
+} from "../lib/hex-map-generator";
 
 export interface HexMapResponse {
   success: boolean;
