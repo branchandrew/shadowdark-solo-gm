@@ -29,26 +29,26 @@ interface TerrainType {
 }
 
 function HexTile({ row, col, terrain }: HexTileProps) {
-  const getTerrainColor = (terrain: string) => {
+  const getTerrainImage = (terrain: string) => {
     switch (terrain.toLowerCase()) {
       case "plains":
-        return "bg-green-100 border-green-200";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2F8331c1a0a00349b0a919d14a0ad18244?format=webp&width=800";
       case "forest":
-        return "bg-green-300 border-green-400";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fcce3aa333e7046f49e09c7385e04e7c3?format=webp&width=800";
       case "dark_forest":
-        return "bg-green-800 border-green-900 text-white";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Facc77c8d8fd5477b8b56b046488c8851?format=webp&width=800";
       case "hills":
-        return "bg-yellow-200 border-yellow-300";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2F8331c1a0a00349b0a919d14a0ad18244?format=webp&width=800"; // Using plains for hills
       case "mountains":
-        return "bg-amber-200 border-amber-300";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fc80e68478dee4827ac1f4fd63cbc4130?format=webp&width=800";
       case "lake":
-        return "bg-blue-300 border-blue-400";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fe81b6e84886a4e2399fcb77392b0c2d1?format=webp&width=800";
       case "marshlands":
-        return "bg-green-600 border-green-700";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2Fcdb00a0f668448968ef40ac08a9ee7aa?format=webp&width=800";
       case "ruins":
-        return "bg-stone-400 border-stone-500";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2F3a3f0a1f0cc44e69894c7233efa1aa33?format=webp&width=800";
       default:
-        return "bg-green-100 border-green-200";
+        return "https://cdn.builder.io/api/v1/image/assets%2Fc15718245902463f92daca7d09c24b29%2F8331c1a0a00349b0a919d14a0ad18244?format=webp&width=800"; // Default to plains
     }
   };
 
@@ -60,7 +60,7 @@ function HexTile({ row, col, terrain }: HexTileProps) {
 
   return (
     <div
-      className={`absolute cursor-pointer transition-all duration-200 hover:scale-110 hover:z-10 ${getTerrainColor(terrain)}`}
+      className="absolute cursor-pointer transition-all duration-200 hover:scale-110 hover:z-10"
       style={{
         left: `${xOffset}px`,
         top: `${yOffset}px`,
@@ -68,11 +68,22 @@ function HexTile({ row, col, terrain }: HexTileProps) {
         height: `${hexHeight}px`,
         clipPath:
           "polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)",
+        backgroundImage: `url(${getTerrainImage(terrain)})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
       title={`Hex ${col},${row} - ${terrain.replace("_", " ")}`}
     >
-      <div className="w-full h-full flex items-center justify-center">
-        <span className="text-xs font-mono text-gray-600">
+      <div className="w-full h-full flex items-center justify-center relative">
+        <span
+          className="text-xs font-mono font-bold px-1 py-0.5 rounded"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            textShadow: "1px 1px 1px rgba(0, 0, 0, 0.8)",
+          }}
+        >
           {col},{row}
         </span>
       </div>
