@@ -22,53 +22,22 @@ export interface HexMapResponse {
 }
 
 /**
- * Generates a hex map using the Python script
+ * Generates a hex map using the TypeScript implementation
  */
-const generateHexMap = (
+const generateHexMap = async (
   width: number = 15,
   height: number = 10,
   seed?: number,
-): Promise<HexMapResponse> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "hex_map_generator.py",
-    );
-
-    const args = ["generate", width.toString(), height.toString()];
-    if (seed !== undefined) {
-      args.push(seed.toString());
-    }
-
-    const proc = spawn("python3", [scriptPath, ...args]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return resolve({
-          success: false,
-          error: stderr || `Script exited with code ${code}`,
-        });
-      }
-
-      try {
-        const result = JSON.parse(stdout.trim());
-        resolve(result);
-      } catch {
-        resolve({
-          success: false,
-          error: "Invalid JSON from hex map generator script",
-        });
-      }
-    });
-  });
+): Promise<HexMapResponse> => {
+  try {
+    return generateHexMapTS(width, height, seed);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};
 
 /**
  * Gets available terrain types from database or fallback to Python script
