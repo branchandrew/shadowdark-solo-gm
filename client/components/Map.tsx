@@ -240,43 +240,28 @@ export default function Map() {
 
   return (
     <div className="space-y-4 w-full">
-      {/* Header with regenerate button */}
-      <div
-        className="flex items-center justify-between bg-white rounded-lg border p-3"
-        style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
-      >
-        <h2
-          className="text-lg font-bold flex items-center gap-2"
-          style={{ minWidth: 0, flexShrink: 1 }}
-        >
-          <MapPin className="h-5 w-5" />
-          <span
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            World Map
-          </span>
-        </h2>
-        <Button
-          onClick={generateHexMap}
-          disabled={generating}
-          size="sm"
-          variant="default"
-          className="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2"
-          style={{ flexShrink: 0, marginLeft: "8px" }}
-        >
-          <RefreshCw
-            className={`h-4 w-4 mr-1 ${generating ? "animate-spin" : ""}`}
-          />
-          <span className="text-xs">Regen</span>
-        </Button>
-      </div>
-
       <Card className="w-full">
-        <CardContent className="p-0">
+        <CardContent className="p-4">
+          {/* Title and Button Row */}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              World Map
+            </h2>
+            <Button
+              onClick={generateHexMap}
+              disabled={generating}
+              size="sm"
+              variant="default"
+              className="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2"
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-1 ${generating ? "animate-spin" : ""}`}
+              />
+              Regen
+            </Button>
+          </div>
+
           <div
             className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border"
             style={{ height: "600px" }}
