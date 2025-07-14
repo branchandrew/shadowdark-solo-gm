@@ -587,37 +587,23 @@ const runSceneSetup = (chaosFactor: number = 5): Promise<any> => {
 };
 
 /**
- * Executes the Scene Generator Python script for scene ID generation
+ * Executes the Scene Generator using TypeScript implementation for scene ID generation
  */
-const runSceneIdGenerator = (): Promise<any> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "scene_generator.py",
+const runSceneIdGenerator = (): Promise<any> => {
+  try {
+    const { generateSceneId } = require("../lib/scene-generator");
+    const sceneId = generateSceneId();
+    return Promise.resolve({ scene_id: sceneId });
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error
+          ? error.message
+          : "Scene ID generation error occurred",
+      ),
     );
-    const proc = spawn("python3", [scriptPath, "scene_id"]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (data) => (stdout += data));
-    proc.stderr.on("data", (data) => (stderr += data));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(stderr || `Python script exited with code ${code}`),
-        );
-      }
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch (error) {
-        reject(new Error("Invalid JSON from Scene Generator script"));
-      }
-    });
-  });
+  }
+};
 
 async function establishSceneGoals(
   sceneExpectations: any,
