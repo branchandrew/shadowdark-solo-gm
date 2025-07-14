@@ -514,10 +514,10 @@ ${adventureArc.faction.description}
                         </div>
                         <div className="space-y-1">
                           <Badge variant="outline" className="text-xs">
-                            Minions
+                            Ability
                           </Badge>
                           <p className="text-sm text-muted-foreground">
-                            {lieutenant.tarot_spread.reward}
+                            {lieutenant.tarot_spread.ability}
                           </p>
                         </div>
                       </div>
