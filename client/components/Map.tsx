@@ -271,21 +271,21 @@ export default function Map() {
               onClick={generateHexMap}
               disabled={generating}
               style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                backgroundColor: '#ff0000',
-                color: 'white',
-                padding: '8px 16px',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                backgroundColor: "#ff0000",
+                color: "white",
+                padding: "8px 16px",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: "bold",
+                cursor: "pointer",
                 zIndex: 1000,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
               }}
             >
               <RefreshCw
@@ -330,6 +330,5 @@ export default function Map() {
         </CardContent>
       </Card>
     </div>
-    </>
   );
 }
