@@ -494,6 +494,31 @@ ${adventureArc.faction.description}
                       <h5 className="font-medium text-primary text-lg">
                         {lieutenant.name}
                       </h5>
+
+                      {/* Comprehensive Description */}
+                      {lieutenant.description && (
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Description
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.description}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Minions */}
+                      {lieutenant.minions && lieutenant.minions.trim() && (
+                        <div className="space-y-1">
+                          <Badge variant="outline" className="text-xs">
+                            Commands
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            {lieutenant.minions}
+                          </p>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="space-y-1">
                           <Badge variant="outline" className="text-xs">
