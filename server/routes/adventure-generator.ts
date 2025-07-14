@@ -91,7 +91,10 @@ const generateNames = (
 ): Promise<{ success: boolean; names?: string[]; error?: string }> => {
   try {
     // Import at the top level would be better, but this keeps the change minimal
-    const { generateNames: generateNamesTS, isValidAlignment } = require("../lib/name-generator");
+    const {
+      generateNames: generateNamesTS,
+      isValidAlignment,
+    } = require("../lib/name-generator");
 
     if (!isValidAlignment(alignment)) {
       return Promise.resolve({
@@ -106,23 +109,13 @@ const generateNames = (
     console.log(`Name generation result:`, result);
 
     return Promise.resolve(result);
-      console.log(`Python script stderr: ${stderr}`);
-
-      if (code !== 0) {
-        return reject(
-          new Error(
-            `Name generation script failed: ${stderr || `exited with code ${code}`}`,
-          ),
-        );
-      }
-      try {
-        const result = JSON.parse(stdout.trim());
-        resolve(result);
-      } catch {
-        reject(new Error("Invalid JSON from name generation script"));
-      }
+  } catch (error) {
+    return Promise.resolve({
+      success: false,
+      error: error instanceof Error ? error.message : "Name generation failed",
     });
-  });
+  }
+};
 
 /**
  * Gets random lieutenant types from the Python adventure generator script
