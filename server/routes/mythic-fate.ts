@@ -42,44 +42,23 @@ interface FateRollRequest {
 }
 
 /**
- * Executes the Mythic Fate Chart Python script and returns the result
+ * Executes the Mythic Fate Chart using TypeScript implementation
  */
 const runFateChart = (
   likelihood: string = "50/50",
   chaosFactor: number = 5,
-): Promise<FateRollResult> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "mythic_fate_chart.py",
+): Promise<FateChartResult> => {
+  try {
+    const result = rollFateChartTS(likelihood, chaosFactor);
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error ? error.message : "Fate chart error occurred",
+      ),
     );
-    const proc = spawn("python3", [
-      scriptPath,
-      likelihood,
-      chaosFactor.toString(),
-    ]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (data) => (stdout += data));
-    proc.stderr.on("data", (data) => (stderr += data));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(stderr || `Python script exited with code ${code}`),
-        );
-      }
-      try {
-        resolve(JSON.parse(stdout.trim()));
-      } catch (error) {
-        reject(new Error("Invalid JSON from Fate Chart script"));
-      }
-    });
-  });
+  }
+};
 
 /**
  * Express handler: rolls on the Mythic Fate Chart
