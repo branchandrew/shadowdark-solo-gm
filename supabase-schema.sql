@@ -52,7 +52,6 @@ INSERT INTO terrain_types (name, category, description, symbol) VALUES
 ('mountains', 'shadowdark_standard', 'High peaks and rocky terrain', 'M'),
 ('lake', 'shadowdark_standard', 'Bodies of fresh water', 'L'),
 ('marshlands', 'shadowdark_standard', 'Wet, swampy areas', 'W'),
-('quagmire', 'shadowdark_standard', 'Dangerous boggy terrain', 'Q'),
 ('ruins', 'shadowdark_standard', 'Ancient structures and remnants', 'R')
 ON CONFLICT (name) DO NOTHING;
 
