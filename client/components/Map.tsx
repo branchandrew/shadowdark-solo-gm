@@ -1,23 +1,54 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MapPin, RefreshCw } from "lucide-react";
 
 interface HexTileProps {
-  x: number;
-  y: number;
-  terrain?: string;
+  row: number;
+  col: number;
+  terrain: string;
 }
 
-function HexTile({ x, y, terrain = "grass" }: HexTileProps) {
+interface HexMapData {
+  success: boolean;
+  width?: number;
+  height?: number;
+  terrains?: string[];
+  hexes?: Array<{
+    row: number;
+    col: number;
+    terrain: string;
+    id: string;
+  }>;
+}
+
+interface TerrainType {
+  name: string;
+  description: string;
+  symbol: string;
+}
+
+function HexTile({ row, col, terrain }: HexTileProps) {
   const getTerrainColor = (terrain: string) => {
-    switch (terrain) {
-      case "water":
-        return "bg-blue-200 border-blue-300";
-      case "mountain":
-        return "bg-gray-300 border-gray-400";
+    switch (terrain.toLowerCase()) {
+      case "plains":
+        return "bg-green-100 border-green-200";
       case "forest":
-        return "bg-green-200 border-green-300";
-      case "desert":
+        return "bg-green-300 border-green-400";
+      case "dark_forest":
+        return "bg-green-800 border-green-900 text-white";
+      case "hills":
         return "bg-yellow-200 border-yellow-300";
+      case "mountains":
+        return "bg-gray-400 border-gray-500";
+      case "lake":
+        return "bg-blue-300 border-blue-400";
+      case "marshlands":
+        return "bg-green-600 border-green-700";
+      case "quagmire":
+        return "bg-amber-800 border-amber-900 text-white";
+      case "ruins":
+        return "bg-stone-400 border-stone-500";
       default:
         return "bg-green-100 border-green-200";
     }
@@ -26,8 +57,8 @@ function HexTile({ x, y, terrain = "grass" }: HexTileProps) {
   // Calculate hex position
   const hexWidth = 80;
   const hexHeight = 70;
-  const xOffset = x * (hexWidth * 0.75);
-  const yOffset = y * hexHeight + (x % 2) * (hexHeight / 2);
+  const xOffset = col * (hexWidth * 0.75);
+  const yOffset = row * hexHeight + (col % 2) * (hexHeight / 2);
 
   return (
     <div
@@ -40,11 +71,11 @@ function HexTile({ x, y, terrain = "grass" }: HexTileProps) {
         clipPath:
           "polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)",
       }}
-      title={`Hex ${x},${y} - ${terrain}`}
+      title={`Hex ${col},${row} - ${terrain.replace("_", " ")}`}
     >
       <div className="w-full h-full flex items-center justify-center">
         <span className="text-xs font-mono text-gray-600">
-          {x},{y}
+          {col},{row}
         </span>
       </div>
     </div>
@@ -52,28 +83,151 @@ function HexTile({ x, y, terrain = "grass" }: HexTileProps) {
 }
 
 export default function Map() {
-  // Generate random terrain for each hex
-  const terrainTypes = ["grass", "forest", "water", "mountain", "desert"];
-  const getRandomTerrain = () =>
-    terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
+  const [hexMapData, setHexMapData] = useState<HexMapData | null>(null);
+  const [terrainTypes, setTerrainTypes] = useState<TerrainType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
 
-  // Generate hex grid (15x10 hexes)
-  const hexes = [];
-  for (let x = 0; x < 15; x++) {
-    for (let y = 0; y < 10; y++) {
-      const terrain = Math.random() > 0.7 ? getRandomTerrain() : "grass";
-      hexes.push(<HexTile key={`${x}-${y}`} x={x} y={y} terrain={terrain} />);
+  const fetchTerrainTypes = async () => {
+    try {
+      const response = await fetch("/api/hex-map-terrains");
+      const data = await response.json();
+
+      if (data.success && data.terrains) {
+        // Convert terrain names to proper format for display
+        const formattedTerrains = data.terrains.map((name: string) => ({
+          name,
+          description: getTerrainDescription(name),
+          symbol: getTerrainSymbol(name),
+        }));
+        setTerrainTypes(formattedTerrains);
+      }
+    } catch (error) {
+      console.error("Error fetching terrain types:", error);
     }
+  };
+
+  const generateHexMap = async () => {
+    setGenerating(true);
+    try {
+      const response = await fetch("/api/generate-hex-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ width: 15, height: 10 }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setHexMapData(data);
+      }
+    } catch (error) {
+      console.error("Error generating hex map:", error);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  useEffect(() => {
+    const initializeMap = async () => {
+      await fetchTerrainTypes();
+      await generateHexMap();
+      setLoading(false);
+    };
+
+    initializeMap();
+  }, []);
+
+  const getTerrainDescription = (name: string): string => {
+    const descriptions: Record<string, string> = {
+      plains: "Open grasslands and fields",
+      forest: "Dense woodland areas",
+      dark_forest: "Corrupted or haunted forests",
+      hills: "Rolling hills and elevated terrain",
+      mountains: "High peaks and rocky terrain",
+      lake: "Bodies of fresh water",
+      marshlands: "Wet, swampy areas",
+      quagmire: "Dangerous boggy terrain",
+      ruins: "Ancient structures and remnants",
+    };
+    return descriptions[name] || "Unknown terrain";
+  };
+
+  const getTerrainSymbol = (name: string): string => {
+    const symbols: Record<string, string> = {
+      plains: "P",
+      forest: "F",
+      dark_forest: "D",
+      hills: "H",
+      mountains: "M",
+      lake: "L",
+      marshlands: "W",
+      quagmire: "Q",
+      ruins: "R",
+    };
+    return symbols[name] || "?";
+  };
+
+  const getTerrainColor = (terrain: string) => {
+    switch (terrain.toLowerCase()) {
+      case "plains":
+        return "bg-green-100 border-green-200";
+      case "forest":
+        return "bg-green-300 border-green-400";
+      case "dark_forest":
+        return "bg-green-800 border-green-900";
+      case "hills":
+        return "bg-yellow-200 border-yellow-300";
+      case "mountains":
+        return "bg-gray-400 border-gray-500";
+      case "lake":
+        return "bg-blue-300 border-blue-400";
+      case "marshlands":
+        return "bg-green-600 border-green-700";
+      case "quagmire":
+        return "bg-amber-800 border-amber-900";
+      case "ruins":
+        return "bg-stone-400 border-stone-500";
+      default:
+        return "bg-green-100 border-green-200";
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+              <p className="mt-2 text-gray-600">Loading map...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            World Map
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              World Map
+            </CardTitle>
+            <Button
+              onClick={generateHexMap}
+              disabled={generating}
+              size="sm"
+              variant="outline"
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
+              />
+              {generating ? "Generating..." : "New Map"}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div
@@ -85,31 +239,32 @@ export default function Map() {
               className="relative"
               style={{ width: "1200px", height: "800px" }}
             >
-              {hexes}
+              {hexMapData?.hexes?.map((hex) => (
+                <HexTile
+                  key={hex.id}
+                  row={hex.row}
+                  col={hex.col}
+                  terrain={hex.terrain}
+                />
+              ))}
             </div>
           </div>
 
           {/* Legend */}
-          <div className="mt-4 flex flex-wrap gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-100 border border-green-200 rounded" />
-              <span>Grassland</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-200 border border-green-300 rounded" />
-              <span>Forest</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-200 border border-blue-300 rounded" />
-              <span>Water</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-300 border border-gray-400 rounded" />
-              <span>Mountain</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-200 border border-yellow-300 rounded" />
-              <span>Desert</span>
+          <div className="mt-4">
+            <h4 className="font-medium mb-2">Terrain Types:</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+              {terrainTypes.map((terrain) => (
+                <div key={terrain.name} className="flex items-center gap-2">
+                  <div
+                    className={`w-4 h-4 rounded ${getTerrainColor(terrain.name).replace("border-", "border ")}`}
+                  />
+                  <span className="font-mono text-xs">{terrain.symbol}</span>
+                  <span className="capitalize">
+                    {terrain.name.replace("_", " ")}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </CardContent>
