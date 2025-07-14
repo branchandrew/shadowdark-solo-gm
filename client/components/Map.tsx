@@ -209,7 +209,7 @@ export default function Map() {
       case "hills":
         return "bg-yellow-200 border-yellow-300";
       case "mountains":
-        return "bg-gray-400 border-gray-500";
+        return "bg-amber-200 border-amber-300";
       case "lake":
         return "bg-blue-300 border-blue-400";
       case "marshlands":
