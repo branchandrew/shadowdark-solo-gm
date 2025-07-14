@@ -239,116 +239,97 @@ export default function Map() {
   }
 
   return (
-    <>
-      {/* TEST BUTTON - Should be visible at top */}
-      <div
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-          zIndex: 9999,
-          backgroundColor: "#ff0000",
-          color: "white",
-          padding: "20px",
-          fontSize: "16px",
-          fontWeight: "bold",
-          border: "3px solid yellow",
-          borderRadius: "10px",
-        }}
-      >
-        <button
-          onClick={generateHexMap}
-          style={{
-            background: "none",
-            border: "none",
-            color: "white",
-            fontSize: "16px",
-            fontWeight: "bold",
-          }}
-        >
-          TEST REGEN BUTTON
-        </button>
-      </div>
-
-      <div className="space-y-4 w-full">
-        <Card className="w-full">
-          <CardContent className="p-4">
-            {/* Title */}
-            <div className="mb-4">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                World Map
-              </h2>
-            </div>
-
-            <div
-              className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border relative"
-              style={{ height: "600px" }}
+    <div className="space-y-4 w-full">
+      <Card className="w-full">
+        <CardContent className="p-4">
+          {/* Title and Button Row */}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              World Map
+            </h2>
+            <Button
+              onClick={generateHexMap}
+              disabled={generating}
+              size="sm"
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              {/* Regenerate Button Overlay */}
-              <button
-                onClick={generateHexMap}
-                disabled={generating}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  backgroundColor: "#ff0000",
-                  color: "white",
-                  padding: "8px 16px",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  zIndex: 1000,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
+              <RefreshCw
+                className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
+              />
+              {generating ? "Generating..." : "Regenerate"}
+            </Button>
+          </div>
+
+          <div
+            className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border relative"
+            style={{ height: "600px" }}
+          >
+            {/* Regenerate Button Overlay */}
+            <button
+              onClick={generateHexMap}
+              disabled={generating}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                backgroundColor: '#ff0000',
+                color: 'white',
+                padding: '8px 16px',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${generating ? "animate-spin" : ""}`}
+              />
+              REGEN
+            </button>
+
+            {/* Hex Grid Container */}
+            <div
+              className="relative min-w-full"
+              style={{ width: "1200px", height: "800px" }}
+            >
+              {hexMapData?.hexes?.map((hex) => (
+                <HexTile
+                  key={hex.id}
+                  row={hex.row}
+                  col={hex.col}
+                  terrain={hex.terrain}
                 />
-                REGEN
-              </button>
+              ))}
+            </div>
+          </div>
 
-              {/* Hex Grid Container */}
-              <div
-                className="relative min-w-full"
-                style={{ width: "1200px", height: "800px" }}
-              >
-                {hexMapData?.hexes?.map((hex) => (
-                  <HexTile
-                    key={hex.id}
-                    row={hex.row}
-                    col={hex.col}
-                    terrain={hex.terrain}
+          {/* Legend */}
+          <div className="mt-4">
+            <h4 className="font-medium mb-2">Terrain Types:</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+              {terrainTypes.map((terrain) => (
+                <div key={terrain.name} className="flex items-center gap-2">
+                  <div
+                    className={`w-4 h-4 rounded ${getTerrainColor(terrain.name).replace("border-", "border ")}`}
                   />
-                ))}
-              </div>
+                  <span className="font-mono text-xs">{terrain.symbol}</span>
+                  <span className="capitalize">
+                    {terrain.name.replace("_", " ")}
+                  </span>
+                </div>
+              ))}
             </div>
-
-            {/* Legend */}
-            <div className="mt-4">
-              <h4 className="font-medium mb-2">Terrain Types:</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                {terrainTypes.map((terrain) => (
-                  <div key={terrain.name} className="flex items-center gap-2">
-                    <div
-                      className={`w-4 h-4 rounded ${getTerrainColor(terrain.name).replace("border-", "border ")}`}
-                    />
-                    <span className="font-mono text-xs">{terrain.symbol}</span>
-                    <span className="capitalize">
-                      {terrain.name.replace("_", " ")}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
     </>
   );
 }
