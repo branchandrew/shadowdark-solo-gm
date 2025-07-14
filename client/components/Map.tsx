@@ -261,12 +261,12 @@ export default function Map() {
         </CardHeader>
         <CardContent>
           <div
-            className="relative bg-blue-50 rounded-lg border overflow-auto"
+            className="w-full overflow-x-auto overflow-y-auto bg-blue-50 rounded-lg border"
             style={{ height: "600px" }}
           >
             {/* Hex Grid Container */}
             <div
-              className="relative"
+              className="relative min-w-full"
               style={{ width: "1200px", height: "800px" }}
             >
               {hexMapData?.hexes?.map((hex) => (
