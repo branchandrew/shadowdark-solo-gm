@@ -159,6 +159,13 @@ if __name__ == "__main__":
             "lieutenant_types": lieutenant_types
         }
         print(json.dumps(result))
+    elif len(sys.argv) > 1 and sys.argv[1] == "get_villain_types":
+        # Return all villain types
+        result = {
+            "success": True,
+            "villain_types": shadowdark_villain_types
+        }
+        print(json.dumps(result))
     else:
         # Default behavior - generate full reading
         goal, gender, race, cards = generate_reading()
