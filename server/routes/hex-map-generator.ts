@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { spawn } from "child_process";
 import path from "path";
+import { relationalDB } from "../lib/relational-database";
 
 export interface HexMapResponse {
   success: boolean;
