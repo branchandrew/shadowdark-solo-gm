@@ -262,7 +262,7 @@ ${adventureArc.lieutenants
 - Occupation: ${lt.tarot_spread.location}
 - Why Protect: ${lt.tarot_spread.why_protect}
 - How Protect: ${lt.tarot_spread.how_protect}
-- Minions: ${lt.tarot_spread.reward}`,
+- Ability: ${lt.tarot_spread.ability}`,
   )
   .join("\n")}
 
