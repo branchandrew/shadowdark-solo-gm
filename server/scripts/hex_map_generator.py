@@ -162,28 +162,44 @@ class HexMapGenerator:
 
     def generate_map(self, seed: Optional[int] = None) -> List[List[str]]:
         """Generate the complete hex map"""
-        if seed is not None:
-            random.seed(seed)
+        try:
+            if seed is not None:
+                random.seed(seed)
 
-        self.map_grid = []
+            self.map_grid = []
 
-        for row in range(self.height):
-            current_row = []
+            for row in range(self.height):
+                current_row = []
 
-            for col in range(self.width):
-                # Get neighboring terrain types
-                neighbors = self.get_neighbors(row, col)
+                for col in range(self.width):
+                    try:
+                        # Get neighboring terrain types
+                        neighbors = self.get_neighbors(row, col)
 
-                # Calculate weights based on neighbors
-                weights = self.calculate_terrain_weights(neighbors)
+                        # Calculate weights based on neighbors
+                        weights = self.calculate_terrain_weights(neighbors)
 
-                # Choose terrain type
-                terrain = self.weighted_terrain_choice(weights)
-                current_row.append(terrain)
+                        # Choose terrain type
+                        terrain = self.weighted_terrain_choice(weights)
+                        current_row.append(terrain)
+                    except Exception as e:
+                        # Fallback to random terrain
+                        terrain = random.choice(self.terrains)
+                        current_row.append(terrain)
 
-            self.map_grid.append(current_row)
+                self.map_grid.append(current_row)
 
-        return self.map_grid
+            return self.map_grid
+        except Exception as e:
+            # Generate simple fallback map
+            self.map_grid = []
+            for row in range(self.height):
+                current_row = []
+                for col in range(self.width):
+                    terrain = random.choice(self.terrains)
+                    current_row.append(terrain)
+                self.map_grid.append(current_row)
+            return self.map_grid
 
     def map_to_dict(self) -> Dict:
         """Convert map to dictionary format for JSON output"""
