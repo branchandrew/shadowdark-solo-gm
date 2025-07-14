@@ -261,7 +261,6 @@ export default function Map() {
       </div>
 
       <Card>
-        <CardContent className="p-0">
         <CardContent>
           <div
             className="relative bg-blue-50 rounded-lg border overflow-auto"
