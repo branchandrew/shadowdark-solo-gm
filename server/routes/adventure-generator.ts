@@ -745,6 +745,8 @@ Return one clean JSON object and nothing else.  Keep values concise:
   "lieutenants": [
     {
       "name": "",
+      "description": "",
+      "minions": "",
       "tarot_spread": {
         "seed": "",
         "background": "",
