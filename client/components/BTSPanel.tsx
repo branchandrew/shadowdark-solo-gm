@@ -280,12 +280,14 @@ ${adventureArc.lieutenants
   .map(
     (lt, index) => `
 **${lt.name}**
+${lt.description ? `Description: ${lt.description}` : ""}
 - Background: ${lt.tarot_spread.background}
 - Nature: ${lt.tarot_spread.seed}
 - Occupation: ${lt.tarot_spread.location}
 - Why Protect: ${lt.tarot_spread.why_protect}
 - How Protect: ${lt.tarot_spread.how_protect}
-- Ability: ${lt.tarot_spread.ability}`,
+- Ability: ${lt.tarot_spread.ability}
+${lt.minions ? `- Commands: ${lt.minions}` : ""}`,
   )
   .join("\n")}
 
