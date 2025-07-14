@@ -6,40 +6,24 @@ import {
 } from "../lib/adventure-utilities";
 
 /**
- * Gets creature types from Python script (source of truth)
+ * Gets creature types from TypeScript implementation (source of truth)
  */
-const getCreatureTypesFromPython = (): Promise<string[]> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      __dirname,
-      "..",
-      "scripts",
-      "adventure_generator.py",
+const getCreatureTypesFromTS = (): Promise<string[]> => {
+  try {
+    const result = getVillainTypes();
+    if (result.success && result.villain_types) {
+      return Promise.resolve(result.villain_types);
+    } else {
+      return Promise.reject(
+        new Error(result.error || "Failed to get villain types"),
+      );
+    }
+  } catch (error) {
+    return Promise.reject(
+      new Error(error instanceof Error ? error.message : "Unknown error"),
     );
-
-    const proc = spawn("python3", [scriptPath, "get_villain_types"]);
-
-    let stdout = "";
-    let stderr = "";
-
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      if (code !== 0) {
-        return reject(
-          new Error(`Script failed: ${stderr || `exited with code ${code}`}`),
-        );
-      }
-
-      try {
-        const result = JSON.parse(stdout.trim());
-        resolve(result.villain_types || []);
-      } catch {
-        reject(new Error("Invalid JSON from villain types script"));
-      }
-    });
-  });
+  }
+};
 
 /**
  * Fallback creature types (in case Python script fails)
