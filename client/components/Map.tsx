@@ -279,8 +279,8 @@ export default function Map() {
             <div
               className="relative"
               style={{
-                width: `${(hexMapData?.width || 15) * 53 + 80}px`,
-                height: `${(hexMapData?.height || 10) * 61 + 80}px`,
+                width: `${(hexMapData?.width || 15) * 70 + 100}px`,
+                height: `${(hexMapData?.height || 10) * 80 + 100}px`,
                 minWidth: "100%",
               }}
             >
