@@ -240,27 +240,28 @@ export default function Map() {
 
   return (
     <div className="space-y-6">
+      {/* Regenerate Button - Always Visible */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <MapPin className="h-6 w-6" />
+          World Map
+        </h2>
+        <Button
+          onClick={generateHexMap}
+          disabled={generating}
+          size="default"
+          variant="default"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2"
+        >
+          <RefreshCw
+            className={`h-5 w-5 mr-2 ${generating ? "animate-spin" : ""}`}
+          />
+          {generating ? "Generating..." : "Regenerate Map"}
+        </Button>
+      </div>
+
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              World Map
-            </CardTitle>
-            <Button
-              onClick={generateHexMap}
-              disabled={generating}
-              size="default"
-              variant="default"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
-              />
-              {generating ? "Generating..." : "Regenerate Map"}
-            </Button>
-          </div>
-        </CardHeader>
+        <CardContent className="p-0">
         <CardContent>
           <div
             className="relative bg-blue-50 rounded-lg border overflow-auto"
