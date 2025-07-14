@@ -526,6 +526,7 @@ export class HexMapGenerator {
       // Post-processing for better clustering
       this.fixIsolatedTiles();
       this.fixIsolatedTiles(); // Run twice for better results
+      this.fixAdjacentRuins(); // Ensure no ruins are adjacent
       this.ensureMinimumGroups();
 
       return this.mapGrid;
