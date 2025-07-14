@@ -56,7 +56,7 @@ function HexTile({ row, col, terrain }: HexTileProps) {
   const hexWidth = 93; // Good size for visibility
   const hexHeight = 107; // Maintains 155:179 ratio
   const xOffset = col * (hexWidth * 0.75) + (row % 2) * (hexWidth * 0.375); // Offset every other row horizontally
-  const yOffset = row * (hexHeight * 0.75); // Simple vertical spacing between rows
+  const yOffset = row * (hexHeight * 0.6); // Closer vertical spacing to eliminate row gaps
 
   return (
     <div
