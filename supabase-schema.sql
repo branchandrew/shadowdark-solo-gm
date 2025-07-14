@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS creatures (
     lieutenant_background TEXT,
     lieutenant_why_protect TEXT,
     lieutenant_how_protect TEXT,
+    lieutenant_tarot_ability TEXT,
 
     -- Monster-specific fields
     is_minion BOOLEAN DEFAULT FALSE,
