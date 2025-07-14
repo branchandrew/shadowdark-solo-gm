@@ -239,24 +239,27 @@ export default function Map() {
   }
 
   return (
-    <div className="space-y-6 w-full max-w-full overflow-hidden">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <MapPin className="h-6 w-6" />
-            World Map
+    <div className="space-y-6 w-full">
+      <Card className="w-full">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 px-6 py-4">
+          <CardTitle className="text-2xl font-bold flex items-center gap-2 flex-1 min-w-0">
+            <MapPin className="h-6 w-6 flex-shrink-0" />
+            <span className="truncate">World Map</span>
           </CardTitle>
           <Button
             onClick={generateHexMap}
             disabled={generating}
-            size="default"
+            size="sm"
             variant="default"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 flex-shrink-0"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-2 flex-shrink-0 ml-4"
           >
             <RefreshCw
               className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
             />
-            {generating ? "Generating..." : "Regenerate Map"}
+            <span className="hidden sm:inline">
+              {generating ? "Generating..." : "Regenerate Map"}
+            </span>
+            <span className="sm:hidden">Regen</span>
           </Button>
         </CardHeader>
         <CardContent>
