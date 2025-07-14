@@ -31,6 +31,31 @@ CREATE TABLE IF NOT EXISTS creature_types (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Global terrain types (used for hex map generation)
+CREATE TABLE IF NOT EXISTS terrain_types (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    category TEXT DEFAULT 'shadowdark_standard' CHECK (category IN ('shadowdark_standard', 'custom')),
+    description TEXT,
+    symbol TEXT, -- Single character symbol for ASCII display
+    compatibility_data JSONB, -- Terrain compatibility weights
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default terrain types
+INSERT INTO terrain_types (name, category, description, symbol) VALUES
+('plains', 'shadowdark_standard', 'Open grasslands and fields', 'P'),
+('forest', 'shadowdark_standard', 'Dense woodland areas', 'F'),
+('dark_forest', 'shadowdark_standard', 'Corrupted or haunted forests', 'D'),
+('hills', 'shadowdark_standard', 'Rolling hills and elevated terrain', 'H'),
+('mountains', 'shadowdark_standard', 'High peaks and rocky terrain', 'M'),
+('lake', 'shadowdark_standard', 'Bodies of fresh water', 'L'),
+('marshlands', 'shadowdark_standard', 'Wet, swampy areas', 'W'),
+('quagmire', 'shadowdark_standard', 'Dangerous boggy terrain', 'Q'),
+('ruins', 'shadowdark_standard', 'Ancient structures and remnants', 'R')
+ON CONFLICT (name) DO NOTHING;
+
 -- === SESSION-SPECIFIC TABLES ===
 
 -- Main game sessions
