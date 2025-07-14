@@ -251,12 +251,12 @@ export default function Map() {
               onClick={generateHexMap}
               disabled={generating}
               size="sm"
-              variant="outline"
+              variant="default"
             >
               <RefreshCw
                 className={`h-4 w-4 mr-2 ${generating ? "animate-spin" : ""}`}
               />
-              {generating ? "Generating..." : "New Map"}
+              {generating ? "Generating..." : "Regenerate Map"}
             </Button>
           </div>
         </CardHeader>
