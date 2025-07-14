@@ -604,14 +604,38 @@ ${adventureArc.faction.description}
             <Separator />
 
             {/* Minions */}
-            {adventureArc.minions && (
+            {(adventureArc.minions ||
+              (adventureArc.lieutenants &&
+                adventureArc.lieutenants.some(
+                  (lt: any) => lt.minions && lt.minions.trim(),
+                ))) && (
               <div className="space-y-3">
                 <h4 className="font-semibold">Minions</h4>
-                <div className="p-3 border rounded">
-                  <p className="text-sm whitespace-pre-wrap">
-                    {adventureArc.minions}
-                  </p>
-                </div>
+
+                {/* BBEG Minions */}
+                {adventureArc.minions && (
+                  <div className="p-3 border rounded">
+                    <h5 className="font-medium text-sm mb-2">BBEG Minions</h5>
+                    <p className="text-sm whitespace-pre-wrap">
+                      {adventureArc.minions}
+                    </p>
+                  </div>
+                )}
+
+                {/* Lieutenant Minions */}
+                {adventureArc.lieutenants &&
+                  adventureArc.lieutenants
+                    .filter((lt: any) => lt.minions && lt.minions.trim())
+                    .map((lieutenant: any, index: number) => (
+                      <div key={index} className="p-3 border rounded">
+                        <h5 className="font-medium text-sm mb-2">
+                          {lieutenant.name}'s Minions
+                        </h5>
+                        <p className="text-sm whitespace-pre-wrap">
+                          {lieutenant.minions}
+                        </p>
+                      </div>
+                    ))}
               </div>
             )}
           </CardContent>
