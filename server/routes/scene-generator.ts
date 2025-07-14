@@ -436,10 +436,12 @@ Please ensure this is a completely fresh scene generation, not a cached response
 
   console.log("=== FINAL PROMPT BEING SENT TO ANTHROPIC ===");
   console.log("Prompt length:", promptWithRandomization.length);
-  console.log("BBEG name from context:", contextSnapshot.bbeg.name);
+  console.log("BBEG name from context:", contextSnapshot.bbeg?.name || "null");
   console.log(
     "Contains BBEG name:",
-    promptWithRandomization.includes(contextSnapshot.bbeg.name),
+    contextSnapshot.bbeg?.name
+      ? promptWithRandomization.includes(contextSnapshot.bbeg.name)
+      : false,
   );
 
   // Find and extract the BBEG line specifically
