@@ -729,7 +729,11 @@ Return one clean JSON object and nothing else.  Keep values concise:
 • "bbeg_detailed_description" – 3‑4 vivid sentences
 • "clues" – array of exactly 8 strings, each a different type of clue
 • "high_tower_surprise" ��� the major plot twist (2-3 sentences)
-• "lieutenants" – array of 1-3 lieutenant objects, each with name and tarot_spread
+• "lieutenants" – array of exactly 2 lieutenant objects, each with:
+  - "name": lieutenant's name
+  - "description": comprehensive 3-4 sentence description integrating race, tarot elements, and relationships
+  - "minions": description of what creatures they command (or empty string if none)
+  - "tarot_spread": object with seed, background, location, why_protect, how_protect, ability
 • "faction_name" – name of the aligned faction
 • "faction_description" – description of faction (2-3 sentences)
 • "minions" – description of common minion creature type (2-3 sentences)
