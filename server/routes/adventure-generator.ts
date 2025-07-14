@@ -642,36 +642,45 @@ Follow these steps using Mythic GME rules:
     BBEG is a male > Lieutenant is a female
     BBEG leads hordes of creatures > Lieutenant acts alone.
 
-    8.3
-     - Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomlly. Then answer the following questions with this new order, with the Tarot cards:
+    8.3 Use the SAME tarot cards provided for the BBEG, but interpret each of the two Lieutenants differently. To do this, take the 6 tarot cards from the BBEG and re-order them randomly. Then answer the following questions with this new order, using the Tarot cards:
        * Seed: What defines their core nature?
        * Background: What is their origin story?
        * Location (Occupation): What is the Lieutenant's occupation?
        * Why Protect: What motivates their loyalty to the BBEG?
        * How Protect: What methods do they use to serve/protect the BBEG?
        * Ability: What unique ability, skill, power, or weapon does this lieutenant have that makes it unique?
-    8.4
-       * Minions: What sort of creatures, races, animals, monsters, beings etc does this lieutenant lead?
-       Note: it may not make sense for the Lieutenant to have minions. The first question you must ask is, "based on what we've created so far,
-       would it make sense for this lieutenant to lead the same type of minions the BBBEG leads (if any)? If so, then have this lieutenant associated with the same minions as the lieutenant.
 
-       If not, then the second question you must ask is, does it make sense that this lieutenant would have ANY lieutenants? Here are some examples of when it would make sense, and what type:
+     Keep each tarot interpretation to 1-2 sentences. Do this TWICE, once for each lieutenant.
 
-       Lieutenant: Brog the Orc Ling > Yes. Minions = Orcs
-       Lieutenant: Sven the Theif Lord > Yes. Minions = Theives
-       lieutenant: Captain Charles of the Home Guard > Yes. Soldiers
-       lieutenant: Shakra the Giant Spider Queen > Yes. Giant spiders
+    8.4 Create comprehensive lieutenant descriptions and minion assignments:
 
-       Here's when it would NOT make sense (when a lieutenant is disembodied, reclusive, or would not naturally found in a power structure):
+       A. **Names**: Create evocative names for each of the 2 lieutenants that reflect their race and nature
 
-       lieutenant: The Grimoire of Endless Endings > No minions.
-       lieutenant: Captain Ahab's Ghost > No minions.
-       lieutenant: Scera the Assasin > No minions.
+       B. **Detailed Descriptions**: For each lieutenant, create a comprehensive description (3-4 sentences) that weaves together:
+          • Their race/species and how it influences their appearance and abilities
+          • All elements from their tarot reading (seed, background, occupation, motivations, methods, ability)
+          • Their relationship to the BBEG (loyalty, fear, alliance, etc.)
+          • Their role within the faction (if they're connected to it)
+          • How their unique ability manifests and aids the BBEG's goals
 
-     - Keep each tarot interpretation to 1-2 sentences
-     Do this TWICE, once for each lieutenant
+       C. **Minion Leadership Analysis**: For each lieutenant, analyze whether they should lead minions:
+          • Consider their race, occupation, and role
+          • Ask: "Would this lieutenant naturally command others?"
+          • If YES: What type of creatures would follow them? (Same as BBEG's minions, their own race, or something thematic to their ability?)
+          • If NO: Why don't they have followers? (Solitary nature, ghost/incorporeal, assassin, etc.)
+          • Provide clear reasoning for your decision
 
-    8.4 Create names for each of the 2 lieutenants
+          Examples of lieutenants who WOULD have minions:
+          - Orc Warlord → Commands Orcs
+          - Thief Lord → Leads Thieves
+          - Guard Captain → Commands Soldiers
+          - Spider Queen → Controls Giant Spiders
+
+          Examples who would NOT have minions:
+          - Ancient Grimoire → Disembodied artifact
+          - Assassin → Works alone
+          - Ghost → Cannot command living beings
+          - Hermit Sage → Reclusive by nature
 
 9. **Create the Faction** which most aligns with the BBEG. It should reinforce the tone and theme of the adventure. Answer the following questions about it to create its details:
    • The faction should align to at least one of the two Lieutenants. Which one? And why?
