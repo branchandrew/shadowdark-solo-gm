@@ -32,13 +32,6 @@ interface TarotCard {
   card_text: string;
 }
 
-interface PythonResult {
-  goal: string;
-  gender: string;
-  race: string;
-  cards: TarotCard[];
-}
-
 interface Lieutenant {
   name: string;
   description?: string; // Comprehensive description from AI
