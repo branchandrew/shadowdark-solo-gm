@@ -132,12 +132,14 @@ export default function BTSPanel() {
               ...(data.lieutenants || []).flatMap(
                 (lieutenant: any, index: number) => {
                   const lieutenantId = `creature_${Date.now()}_lt_${index}`;
-                  return [
+                  const creatures = [
                     {
                       id: lieutenantId,
                       name: lieutenant.name,
                       race_species: data.lieutenant_types?.[index] || "Monster",
-                      description: `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
+                      description:
+                        lieutenant.description ||
+                        `Lieutenant. ${lieutenant.tarot_spread?.background || "A trusted lieutenant."}`,
                       creature_type: "lieutenant",
                       npc_disposition: "hostile",
                       lieutenant_tarot_seed: lieutenant.tarot_spread?.seed,
@@ -154,6 +156,27 @@ export default function BTSPanel() {
                       hidden: true,
                     },
                   ];
+
+                  // Add lieutenant minions if they exist
+                  if (lieutenant.minions && lieutenant.minions.trim()) {
+                    creatures.push({
+                      id: `creature_${Date.now()}_lt_${index}_minion`,
+                      name: `${lieutenant.name}'s Minions`,
+                      race_species:
+                        extractRaceFromDescription(
+                          lieutenant.minions,
+                          creatureTypes,
+                        ) || "Monster",
+                      description: lieutenant.minions,
+                      creature_type: "monster",
+                      npc_disposition: "hostile",
+                      is_minion: true,
+                      minion_creature_id: lieutenantId,
+                      hidden: true,
+                    });
+                  }
+
+                  return creatures;
                 },
               ),
             ],
