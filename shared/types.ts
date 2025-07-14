@@ -135,7 +135,7 @@ export interface Creature {
   lieutenant_background?: string;
   lieutenant_why_protect?: string;
   lieutenant_how_protect?: string;
-  lieutenant_tarot_minions?: string;
+  lieutenant_tarot_ability?: string;
 
   // Monster-specific fields
   is_minion?: boolean;
