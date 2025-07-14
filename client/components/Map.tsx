@@ -248,18 +248,28 @@ export default function Map() {
               <MapPin className="h-5 w-5" />
               World Map
             </h2>
-            <Button
+            <button
               onClick={generateHexMap}
               disabled={generating}
-              size="sm"
-              variant="default"
-              className="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2"
+              style={{
+                backgroundColor: "#ff0000",
+                color: "white",
+                padding: "12px 20px",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
               <RefreshCw
-                className={`h-4 w-4 mr-1 ${generating ? "animate-spin" : ""}`}
+                className={`h-5 w-5 ${generating ? "animate-spin" : ""}`}
               />
-              Regen
-            </Button>
+              {generating ? "Generating..." : "REGENERATE MAP"}
+            </button>
           </div>
 
           <div
