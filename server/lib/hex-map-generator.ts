@@ -33,7 +33,6 @@ export const TERRAIN_COMPATIBILITY: Record<
     dark_forest: 0.5,
     mountains: 1.0,
     marshlands: 1.5,
-    quagmire: 0.3,
     ruins: 2.0,
   },
   forest: {
