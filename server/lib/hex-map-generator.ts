@@ -95,17 +95,6 @@ export const TERRAIN_COMPATIBILITY: Record<
     mountains: 0.2,
     ruins: 2.0,
   },
-  quagmire: {
-    quagmire: 5.0,
-    marshlands: 4.0,
-    dark_forest: 3.0,
-    lake: 2.5,
-    ruins: 3.0,
-    forest: 0.2,
-    plains: 0.3,
-    hills: 0.2,
-    mountains: 0.1,
-  },
   ruins: {
     ruins: 3.0,
     dark_forest: 3.5,
