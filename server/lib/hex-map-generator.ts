@@ -87,7 +87,6 @@ export const TERRAIN_COMPATIBILITY: Record<
   },
   marshlands: {
     marshlands: 5.0,
-    quagmire: 4.0,
     lake: 3.5,
     dark_forest: 3.5,
     forest: 1.2,
