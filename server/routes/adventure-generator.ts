@@ -83,40 +83,29 @@ const runPython = (scriptPath: string): Promise<PythonResult> =>
   });
 
 /**
- * Generates names using the Python name generation script
+ * Generates names using the TypeScript name generation implementation
  */
 const generateNames = (
   alignment: number,
   numNames: number,
-): Promise<{ success: boolean; names?: string[]; error?: string }> =>
-  new Promise((resolve, reject) => {
-    const scriptPath = path.join(
-      process.cwd(),
-      "server",
-      "scripts",
-      "generate_name.py",
-    );
+): Promise<{ success: boolean; names?: string[]; error?: string }> => {
+  try {
+    // Import at the top level would be better, but this keeps the change minimal
+    const { generateNames: generateNamesTS, isValidAlignment } = require("../lib/name-generator");
 
-    console.log(
-      `Executing Python script: python3 ${scriptPath} ${alignment} ${numNames}`,
-    );
-    console.log(`Script path exists: ${fs.existsSync(scriptPath)}`);
+    if (!isValidAlignment(alignment)) {
+      return Promise.resolve({
+        success: false,
+        error: "Alignment must be between 1 and 4",
+      });
+    }
 
-    const proc = spawn("python3", [
-      scriptPath,
-      alignment.toString(),
-      numNames.toString(),
-    ]);
+    console.log(`Generating ${numNames} names with alignment ${alignment}`);
 
-    let stdout = "";
-    let stderr = "";
+    const result = generateNamesTS(alignment, numNames);
+    console.log(`Name generation result:`, result);
 
-    proc.stdout.on("data", (d) => (stdout += d));
-    proc.stderr.on("data", (d) => (stderr += d));
-
-    proc.on("close", (code) => {
-      console.log(`Python script exited with code: ${code}`);
-      console.log(`Python script stdout: ${stdout}`);
+    return Promise.resolve(result);
       console.log(`Python script stderr: ${stderr}`);
 
       if (code !== 0) {
