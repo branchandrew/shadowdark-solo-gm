@@ -55,8 +55,8 @@ function HexTile({ row, col, terrain }: HexTileProps) {
   // Calculate hex position - maintaining good hex tile size
   const hexWidth = 93; // Good size for visibility
   const hexHeight = 107; // Maintains 155:179 ratio
-  const xOffset = col * (hexWidth * 0.75); // 75% overlap for proper hex tiling
-  const yOffset = row * (hexHeight * 0.75) + (col % 2) * (hexHeight * 0.375); // Proper hex row offset
+  const xOffset = col * (hexWidth * 0.75) + (row % 2) * (hexWidth * 0.375); // Offset every other row horizontally
+  const yOffset = row * (hexHeight * 0.75); // Simple vertical spacing between rows
 
   return (
     <div
