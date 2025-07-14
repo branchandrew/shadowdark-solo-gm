@@ -892,35 +892,10 @@ Return one clean JSON object and nothing else.  Keep values concise:
             lieutenant_occupation: lieutenant.tarot_spread.location,
             lieutenant_why_protect: lieutenant.tarot_spread.why_protect,
             lieutenant_how_protect: lieutenant.tarot_spread.how_protect,
+            lieutenant_tarot_ability: lieutenant.tarot_spread.ability,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           });
-
-          // Add lieutenant minions as creatures if they exist
-          if (
-            lieutenant.tarot_spread.reward &&
-            lieutenant.tarot_spread.reward.trim()
-          ) {
-            // Extract race from lieutenant minions description or default to a generic type
-            const lieutenantMinionsRace =
-              (await extractRaceFromDescription(
-                lieutenant.tarot_spread.reward,
-              )) || "Monster";
-
-            hiddenElements.creatures.push({
-              id: `creature_${Date.now()}_lt_${index}_minion`,
-              name: `${lieutenant.name}'s Minions`,
-              race_species: lieutenantMinionsRace,
-              description: lieutenant.tarot_spread.reward,
-              creature_type: "monster",
-              npc_disposition: "hostile",
-              hidden: true,
-              is_minion: true,
-              minion_creature_id: lieutenantId,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            });
-          }
         }
 
         // Add faction as hidden faction
