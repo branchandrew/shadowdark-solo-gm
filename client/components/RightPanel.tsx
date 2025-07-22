@@ -21,7 +21,7 @@ export default function RightPanel() {
       onValueChange={setActiveTab}
       className="h-full flex flex-col"
     >
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
           Character
@@ -33,6 +33,10 @@ export default function RightPanel() {
         <TabsTrigger value="elements" className="flex items-center gap-2">
           <Network className="h-4 w-4" />
           Campaign Elements
+        </TabsTrigger>
+        <TabsTrigger value="npc" className="flex items-center gap-2">
+          <Users className="h-4 w-4" />
+          NPC Generator
         </TabsTrigger>
         <TabsTrigger value="map" className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
