@@ -67,7 +67,40 @@ export const OCCUPATIONS: string[] = [
 ];
 
 export const MOTIVATIONS: string[] = [
-  // TODO: Add motivation values
+  "Becoming an adventurer", "Being famous", "Being powerful", "Being respected", "Being rich",
+  "Being self-sufficient", "Bringing peace to the world", "Buying a big property", "Changing of occupation",
+  "Discovering something new", "Dominating others", "Finding true love", "Helping others",
+  "Living a peaceful life", "Living elsewhere", "Organizing an event", "Starting a family",
+  "Touring the world", "Writing a book", "Writing their memoirs", "Avenging a destroyed village",
+  "Avenging the death of a loved one", "Becoming a champion fistfighter", "Becoming a great warrior",
+  "Becoming a model for the underrealm's top fashion brand", "Becoming a respected miner like their father",
+  "Breaking into the royal treasury", "Bringing inspiration and excitement to life",
+  "Bringing medical aid to someone in need", "Bringing someone to the top of undermountain",
+  "Building a vessel that can move underwater", "Collecting romance novels", "Converting people to their religion",
+  "Creating a new economic theory", "Discovering a new bat species", "Escaping poverty",
+  "Escorting someone to a destination", "Exploring a legendary black tower", "Fighting in the Great Cliff Dive",
+  "Finding a cure before it's too late", "Finding inspiration and excitement", "Finding someone to marry",
+  "Finding the royal family", "Finding treasure", "Fitting into high society",
+  "Following a crystal ball's instructions", "Following a marked treasure map", "Following the right tunnel",
+  "Funding a startup", "Getting a painting into a museum", "Gaining entrance to high society",
+  "Gaining the ear of the queen", "Getting married", "Getting medical attention for disease",
+  "Getting revenge on goblins", "Getting vengeance for a village attack", "Helping a cursed individual",
+  "Hunting a thief who burglarized their home", "Investigating magical card rumors",
+  "Joining a royal family", "Keeping a mine running", "Killing a sorcerer who cursed them",
+  "Living a peaceful life", "Looking for a comfortable cavern", "Making ends meet through begging",
+  "Making money with a red dragon and a pipe organ", "Making the best cheese and pie",
+  "Modeling for CavernGuy", "Needing a hug", "Opening a bakery", "Opening the first subterranean skyport",
+  "Owning a house in the poshest area", "Performing quickie weddings", "Publishing a memoir",
+  "Reclaiming lost memory", "Rescuing a kidnapped sister", "Rescuing friends from the shadow plane",
+  "Researching bat droppings", "Returning to civilization", "Running a clinic trial",
+  "Searching for the legendary black tower", "Searching for trouble", "Searching for investors",
+  "Searching for the royal family", "Seeking father's respect as a miner", "Seeking the truth about the heir",
+  "Speaking with demons", "Speaking with the dead", "Stamping out evil", "Starting a family",
+  "Swimming in a golden pond", "Talking to anything humanoid", "Talking to the dead",
+  "Talking to someone", "Tracking a goblin tribe", "Traveling to regain memory",
+  "Trying to collect all romance novels", "Trying to get promoted", "Trying to infiltrate a fortress",
+  "Trying to open the royal vault", "Trying to reach high society", "Trying to rescue someone",
+  "Trying to speak to the dead", "Trying to survive", "Unloading a cursed dagger", "Winning a fistfight tournament"
 ];
 
 export const SECRETS: string[] = [
