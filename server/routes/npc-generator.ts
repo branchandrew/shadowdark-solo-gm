@@ -95,8 +95,13 @@ Please create a compelling narrative that:
 3. Explains their quirk and how it affects their daily life
 4. Creates a cohesive backstory that connects their secret, motivation, economic status, occupation, and competence level
 5. Makes the character feel like a real person with depth and believable motivations
+6. If any details seem contradictory or don't make logical sense together, feel free to modify them or reinterpret them in a way that creates a more believable character
 
-Write this as a 2-3 paragraph character description that a GM could use to roleplay this NPC effectively. Focus on personality, background, and how all these elements work together to create a memorable character.`;
+Write this as a 2-3 paragraph character description that a GM could use to roleplay this NPC effectively. Focus on personality, background, and how all these elements work together to create a memorable character.
+
+Then, in a separate section below the character description, add:
+
+**GM Notes:** If you modified, reinterpreted, or left out any of the provided details to create a more coherent character, explain what changes you made and why. If all details worked well together as-is, simply state "All provided details were incorporated as given."`;
 
     const response = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
