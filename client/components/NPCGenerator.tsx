@@ -168,65 +168,42 @@ export default function NPCGenerator() {
         </CardContent>
       </Card>
 
-      {/* Generated NPC Display */}
-      {npc && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Generated NPC</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4">
-              {NPC_STEPS.map(({ key, label, icon: Icon, description }) => (
-                <div key={key} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Icon className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <div className="font-medium">{label}</div>
-                      <div className="text-sm text-muted-foreground">{description}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="font-mono">
-                      {npc[key as keyof GeneratedNPC]}
-                    </Badge>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => generateNPCStep(key as keyof GeneratedNPC)}
-                      disabled={generatingStep === key}
-                    >
-                      <Dice1 className={`h-4 w-4 ${generatingStep === key ? "animate-spin" : ""}`} />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Step-by-Step Generation */}
+      {/* NPC Editor */}
       <Card>
         <CardHeader>
-          <CardTitle>Step-by-Step Generation</CardTitle>
+          <CardTitle>NPC Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2">
+          <div className="grid gap-4">
             {NPC_STEPS.map(({ key, label, icon: Icon, description }) => (
-              <div key={key} className="flex items-center justify-between p-3 border rounded">
-                <div className="flex items-center gap-3">
+              <div key={key} className="space-y-2">
+                <div className="flex items-center gap-2">
                   <Icon className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="font-medium text-sm">{label}</div>
-                    <div className="text-xs text-muted-foreground">{description}</div>
-                  </div>
+                  <label className="font-medium text-sm">{label}</label>
                 </div>
                 <div className="flex items-center gap-2">
-                  {npc && (
-                    <Badge variant="outline" className="text-xs">
-                      {npc[key as keyof GeneratedNPC]}
-                    </Badge>
-                  )}
+                  <Input
+                    placeholder={description}
+                    value={npc?.[key as keyof GeneratedNPC] || ''}
+                    onChange={(e) => {
+                      if (!npc) {
+                        setNpc({
+                          race: '',
+                          occupation: '',
+                          motivation: '',
+                          secret: '',
+                          physicalAppearance: '',
+                          economicStatus: '',
+                          quirk: '',
+                          competence: '',
+                          firstName: '',
+                          lastName: '',
+                        });
+                      }
+                      handleInputChange(key as keyof GeneratedNPC, e.target.value);
+                    }}
+                    className="flex-1"
+                  />
                   <Button
                     size="sm"
                     variant="outline"
@@ -248,8 +225,9 @@ export default function NPCGenerator() {
                       generateNPCStep(key as keyof GeneratedNPC);
                     }}
                     disabled={generatingStep === key}
+                    title={`Generate random ${label.toLowerCase()}`}
                   >
-                    <Dice1 className={`h-3 w-3 ${generatingStep === key ? "animate-spin" : ""}`} />
+                    <Dice1 className={`h-4 w-4 ${generatingStep === key ? "animate-spin" : ""}`} />
                   </Button>
                 </div>
               </div>
