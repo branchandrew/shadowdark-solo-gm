@@ -5,7 +5,7 @@ import { generateNPC, generateNPCStep, GeneratedNPC } from "../lib/npc-generator
 export function generateCompleteNPC(req: Request, res: Response) {
   try {
     const npc = generateNPC();
-    
+
     res.json({
       success: true,
       npc: npc,
@@ -23,7 +23,7 @@ export function generateCompleteNPC(req: Request, res: Response) {
 export function generateNPCStepRoute(req: Request, res: Response) {
   try {
     const { step } = req.body;
-    
+
     if (!step) {
       return res.status(400).json({
         success: false,
@@ -32,8 +32,9 @@ export function generateNPCStepRoute(req: Request, res: Response) {
     }
 
     const validSteps: (keyof GeneratedNPC)[] = [
-      'race', 'occupation', 'motivation', 'secret', 
-      'physicalAppearance', 'economicStatus', 'quirk', 'level'
+      'race', 'occupation', 'motivation', 'secret',
+      'physicalAppearance', 'economicStatus', 'quirk', 'competence',
+      'firstName', 'lastName'
     ];
 
     if (!validSteps.includes(step)) {
@@ -44,7 +45,7 @@ export function generateNPCStepRoute(req: Request, res: Response) {
     }
 
     const result = generateNPCStep(step as keyof GeneratedNPC);
-    
+
     res.json({
       success: true,
       step: step,
