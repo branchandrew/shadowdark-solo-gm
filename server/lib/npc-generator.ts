@@ -37,6 +37,14 @@ export const LEVELS: string[] = [
   // TODO: Add level values
 ];
 
+export const FIRST_NAMES: string[] = [
+  // TODO: Add first name values
+];
+
+export const LAST_NAMES: string[] = [
+  // TODO: Add last name values
+];
+
 export interface GeneratedNPC {
   race: string;
   occupation: string;
@@ -46,6 +54,8 @@ export interface GeneratedNPC {
   economicStatus: string;
   quirk: string;
   level: string;
+  firstName: string;
+  lastName: string;
 }
 
 export class NPCGenerator {
