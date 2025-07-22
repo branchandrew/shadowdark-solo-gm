@@ -212,6 +212,8 @@ export default function NPCGenerator() {
                           economicStatus: '',
                           quirk: '',
                           level: '',
+                          firstName: '',
+                          lastName: '',
                         });
                       }
                       generateNPCStep(key as keyof GeneratedNPC);
