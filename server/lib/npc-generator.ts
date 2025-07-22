@@ -556,11 +556,11 @@ export class NPCGenerator {
     return this.getRandomElement(QUIRKS);
   }
 
-  private generateLevel(): string {
-    if (LEVELS.length === 0) {
-      return "Level 1"; // Fallback
+  private generateCompetence(): string {
+    if (COMPETENCE.length === 0) {
+      return "Competent"; // Fallback
     }
-    return this.getRandomElement(LEVELS);
+    return this.getRandomElement(COMPETENCE);
   }
 
   private generateFirstName(): string {
