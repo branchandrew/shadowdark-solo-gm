@@ -66,6 +66,12 @@ export default function RightPanel() {
         </div>
       </TabsContent>
 
+      <TabsContent value="npc" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+          <NPCGenerator />
+        </ScrollArea>
+      </TabsContent>
+
       <TabsContent value="map" className="flex-1 mt-4">
         <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <Map />
