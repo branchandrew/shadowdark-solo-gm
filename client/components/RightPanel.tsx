@@ -5,7 +5,8 @@ import AdventureLog from "./AdventureLog";
 import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
 import Map from "./Map";
-import { User, BookOpen, Network, Eye, MapPin } from "lucide-react";
+import NPCGenerator from "./NPCGenerator";
+import { User, BookOpen, Network, Eye, MapPin, Users } from "lucide-react";
 import { useSessionState } from "../hooks/useSessionState";
 
 export default function RightPanel() {
