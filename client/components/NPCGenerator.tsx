@@ -133,9 +133,40 @@ export default function NPCGenerator() {
     }
   };
 
+  const generateNarrative = async () => {
+    if (!npc) return;
+
+    setGeneratingNarrative(true);
+    try {
+      const response = await fetch("/api/generate-npc-narrative", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ npc }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setNarrative(data.narrative);
+      } else {
+        console.error("Narrative generation failed:", data.error);
+      }
+    } catch (error) {
+      console.error("Error generating narrative:", error);
+    } finally {
+      setGeneratingNarrative(false);
+    }
+  };
+
   const resetNPC = () => {
     setNpc(null);
     setUserValues({});
+    setNarrative("");
   };
 
   return (
