@@ -385,7 +385,43 @@ export const ECONOMIC_STATUSES: string[] = [
 ];
 
 export const QUIRKS: string[] = [
-  // TODO: Add quirk values
+  "Insecure, racist, or xenophobic",
+  "Addict (sweets, drugs, sex, etc.)",
+  "Phobia (spiders, fire, darkness, etc.)",
+  "Allergic, asthmatic, or chronically ill",
+  "Skeptic or paranoid",
+  "Superstitious, devout, or fanatical",
+  "Miser or pack-rat",
+  "Spendthrift or wastrel",
+  "Smart aleck or know-it-all",
+  "Artistic, dreamer, or delusional",
+  "Naive or idealistic",
+  "Roll twice, reroll any 12 result",
+  "Eccentric hairstyle",
+  "Piercings",
+  "Rare eye color",
+  "Scar(s)",
+  "Tattoo(s)",
+  "Talks to themselves constantly",
+  "Never finishes their sentences",
+  "Over-explains everything",
+  "Laughs at inappropriate moments",
+  "Avoids eye contact entirely",
+  "Overly touchy with strangers",
+  "Overly formal speech",
+  "Constantly gives unsolicited advice",
+  "Uses made-up slang",
+  "Mimics others' accents unconsciously",
+  "Walks with an exaggerated swagger",
+  "Has an unusual laugh (wheeze, cackle, snort)",
+  "Always covered in glitter, soot, or chalk",
+  "Refuses to wear shoes",
+  "Always wears gloves, even when inappropriate",
+  "Dresses like they're from a different century",
+  "Keeps a live insect or animal in their pocket",
+  "Avoids being touched at all costs",
+  "Becomes eerily calm in stressful situations",
+  "Laughs when they're about to cry"
 ];
 
 export const LEVELS: string[] = [
