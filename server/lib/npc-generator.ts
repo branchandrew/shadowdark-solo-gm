@@ -123,6 +123,20 @@ export class NPCGenerator {
     return this.getRandomElement(LEVELS);
   }
 
+  private generateFirstName(): string {
+    if (FIRST_NAMES.length === 0) {
+      return "John"; // Fallback
+    }
+    return this.getRandomElement(FIRST_NAMES);
+  }
+
+  private generateLastName(): string {
+    if (LAST_NAMES.length === 0) {
+      return "Smith"; // Fallback
+    }
+    return this.getRandomElement(LAST_NAMES);
+  }
+
   public generateNPC(): GeneratedNPC {
     try {
       return {
