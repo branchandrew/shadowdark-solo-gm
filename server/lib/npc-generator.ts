@@ -587,7 +587,7 @@ export class NPCGenerator {
         physicalAppearance: this.generatePhysicalAppearance(),
         economicStatus: this.generateEconomicStatus(),
         quirk: this.generateQuirk(),
-        level: this.generateLevel(),
+        competence: this.generateCompetence(),
         firstName: this.generateFirstName(),
         lastName: this.generateLastName(),
       };
