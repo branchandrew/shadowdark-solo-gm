@@ -148,6 +148,8 @@ export class NPCGenerator {
         economicStatus: this.generateEconomicStatus(),
         quirk: this.generateQuirk(),
         level: this.generateLevel(),
+        firstName: this.generateFirstName(),
+        lastName: this.generateLastName(),
       };
     } catch (error) {
       // Fallback NPC if generation fails
@@ -160,6 +162,8 @@ export class NPCGenerator {
         economicStatus: "Middle Class",
         quirk: "Has an Unusual Hobby",
         level: "Level 1",
+        firstName: "John",
+        lastName: "Smith",
       };
     }
   }
