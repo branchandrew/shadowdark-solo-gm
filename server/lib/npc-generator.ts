@@ -624,8 +624,8 @@ export class NPCGenerator {
         return this.generateEconomicStatus();
       case 'quirk':
         return this.generateQuirk();
-      case 'level':
-        return this.generateLevel();
+      case 'competence':
+        return this.generateCompetence();
       case 'firstName':
         return this.generateFirstName();
       case 'lastName':
