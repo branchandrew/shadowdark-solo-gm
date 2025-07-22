@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { generateNPC, generateNPCStep, GeneratedNPC } from "../lib/npc-generator.js";
+import { generateResponse } from "../lib/ai.js";
 
 // Generate a complete NPC with all characteristics
 export function generateCompleteNPC(req: Request, res: Response) {
