@@ -65,7 +65,20 @@ export const LEVELS: string[] = [
 ];
 
 export const FIRST_NAMES: string[] = [
-  // TODO: Add first name values
+  "Aja", "Alma", "Alric", "Amriel", "Ann", "Annie", "Aran", "Ardo", "Arthur", "Astrid",
+  "Axidor", "Barvin", "Bella", "Benny", "Borg", "Brak", "Bram", "Brenna", "Brielle", "Brolga",
+  "Bruga", "Bruno", "Cecilia", "Clara", "Cora", "Cyrwin", "Daeniel", "David", "Darvin", "Deeg",
+  "Denton", "Dina", "Drago", "Elga", "Eliza", "Eliara", "Elyon", "Finn", "Fink", "Fiora",
+  "Fitz", "Galira", "Georg", "Gendry", "Giralt", "Godfrey", "Gordie", "Gralk", "Grimm", "Grix",
+  "Hank", "Helen", "Hilde", "Hiralia", "Hirok", "Hobb", "Hrogar", "Iggs", "Ishana", "Isolde",
+  "Ithior", "Ingol", "Ivara", "Jasmin", "Jasper", "Jennie", "John", "Jirwyn", "Junnor", "Karina",
+  "Klara", "Korv", "Krull", "Lenk", "Lilly", "Lienna", "Lothiel", "Lydia", "Malchor", "Marga",
+  "Marie", "Marlow", "Mirena", "Mona", "Morgan", "Natinel", "Nattias", "Naugrim", "Nayra", "Nibs",
+  "Nix", "Norbert", "Oscar", "Pike", "Prim", "Ranna", "Riggs", "Rina", "Rizzo", "Rogar",
+  "Roke", "Rose", "Ruhiel", "Ryarn", "Sariel", "Sarna", "Shiraal", "Sophie", "Squib", "Tamra",
+  "Tarin", "Tark", "Thomas", "Tila", "Tilly", "Tisha", "Tirolas", "Torbin", "Torson", "Tragan",
+  "Tucker", "Tulk", "Ulara", "Ulfgar", "Vara", "Varos", "Vidrid", "Will", "Willow", "Wulf",
+  "Yark", "Yelena", "Yuri", "Zali", "Zaphiel", "Zasha", "Zeb", "Zoraan"
 ];
 
 export const LAST_NAMES: string[] = [
