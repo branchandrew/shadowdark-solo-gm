@@ -6,7 +6,34 @@
 
 // NPC race types (different from story arc races)
 export const NPC_RACES: string[] = [
-  // TODO: Add race values
+  "Human",
+  "Human",
+  "Human",
+  "Human",
+  "Elf",
+  "Elf",
+  "Half-elf",
+  "Dwarf",
+  "Halfling",
+  "Human",
+  "Human",
+  "Human",
+  "Human",
+  "Elf",
+  "Elf",
+  "Half-elf",
+  "Dwarf",
+  "Halfling",
+  "Gnome",
+  "Dragonborn",
+  "Kobald",
+  "Goblin",
+  "Minotaur",
+  "Beastfolk",
+  "Ratfolk",
+  "Wyrdling",
+  "Dryad",
+  "Changeling",
 ];
 
 export const OCCUPATIONS: string[] = [
