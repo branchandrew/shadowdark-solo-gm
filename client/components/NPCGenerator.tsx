@@ -97,6 +97,12 @@ export default function NPCGenerator() {
       const data = await response.json();
       if (data.success) {
         setNpc(prev => prev ? { ...prev, [step]: data.result } : null);
+        // Remove this field from user values since it was regenerated
+        setUserValues(prev => {
+          const updated = { ...prev };
+          delete updated[step];
+          return updated;
+        });
       } else {
         console.error("NPC step generation failed:", data.error);
       }
@@ -107,8 +113,27 @@ export default function NPCGenerator() {
     }
   };
 
+  const handleInputChange = (field: keyof GeneratedNPC, value: string) => {
+    // Update the NPC display
+    setNpc(prev => prev ? { ...prev, [field]: value } : null);
+
+    // Store user-entered value
+    if (value.trim() === '') {
+      // Remove from user values if empty
+      setUserValues(prev => {
+        const updated = { ...prev };
+        delete updated[field];
+        return updated;
+      });
+    } else {
+      // Store user value
+      setUserValues(prev => ({ ...prev, [field]: value }));
+    }
+  };
+
   const resetNPC = () => {
     setNpc(null);
+    setUserValues({});
   };
 
   return (
