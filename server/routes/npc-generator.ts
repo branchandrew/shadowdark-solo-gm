@@ -98,7 +98,16 @@ Please create a compelling narrative that:
 
 Write this as a 2-3 paragraph character description that a GM could use to roleplay this NPC effectively. Focus on personality, background, and how all these elements work together to create a memorable character.`;
 
-    const narrative = await generateResponse(prompt);
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1000,
+      messages: [{
+        role: "user",
+        content: prompt
+      }]
+    });
+
+    const narrative = response.content[0].type === "text" ? response.content[0].text : "Failed to generate narrative";
 
     res.json({
       success: true,
