@@ -51,6 +51,8 @@ export function createServer() {
   app.post("/api/generate-hex-map", generateHexMapEndpoint);
   app.get("/api/hex-map-terrains", getHexMapTerrains);
   app.get("/api/test-hex-map", testHexMap);
+  app.post("/api/generate-npc", generateCompleteNPC);
+  app.post("/api/generate-npc-step", generateNPCStepRoute);
 
   return app;
 }
