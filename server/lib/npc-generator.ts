@@ -82,7 +82,24 @@ export const FIRST_NAMES: string[] = [
 ];
 
 export const LAST_NAMES: string[] = [
-  // TODO: Add last name values
+  "Abdou", "Aberrich", "Aefrim", "Aibolsun", "Altas", "Avilseer", "Axeson", "Baelmai", "Bako", "Bingletrite", "Blackreed",
+  "Briggs", "Bronzebeard", "Bronzestein", "Burrows", "Button", "Carter", "Claymore", "Cogturner", "Coldstone",
+  "Coppercrown", "Coppernose", "Cragenmore", "Cray", "Crowbender", "Crysalis", "Darabound", "Darksteele", "Datesi",
+  "Deepstone", "Diamondtoe", "Didor", "Dwandra", "Eastlake", "Eaves", "Emo", "Etellor", "Excellente", "Faemoira",
+  "Fauxmont", "Fenyara", "Finch", "Firebeard", "Firsell", "Fishtoe", "Flint", "Flintheart", "Flintshine", "Forgefoot",
+  "Foxglove", "Frostarms", "Geasfoot", "Gibbs", "Gigak", "Gnazbright", "Goldarm", "Goldcask", "Griffith", "Gulnurkan",
+  "Hammerstrike", "Hartley", "Head", "Honeyeater", "Hook", "Hoover", "Huneldth", "Hutchrice", "Iasbex", "Icruxias", "Ide",
+  "Igrild", "Illa", "Illynmah", "Immamura", "Jarfalsa", "Jaytai", "Jeffries", "Justice", "Kavius", "Keystina",
+  "Khilltahrn", "Koahath", "Leagallow", "Lillyfitz", "Lloyd", "Luckdodger", "Lukewill", "Mavcius", "Merigu", "Mishala",
+  "Mogumir", "Moore", "Narrick", "Neeves", "Neriyra", "Noire", "Noosecatcher", "Ootati", "Oldfur", "Olley", "Oremen",
+  "Orgulas", "Petra", "Plackard", "Polaan", "Poole", "Poutine", "Powell", "Protheroe", "Puddleswish", "Questar",
+  "Quickstoke", "Q'tharas", "Quid", "Rainn", "Randmork", "Reagle", "Reebsa", "Ren", "Requiess", "Reyhana", "Rivershale",
+  "Robinson", "Roamshadow", "Rosenmer", "Rumsdeep", "Rygoss", "Sarberos", "Seidanur", "Shatterblade", "Shaw", "Silverock",
+  "Silverseek", "Silviu", "SindaSalt", "Slane", "Smith", "Stumpfoot", "Strongale", "Strongsmith", "Stringsaw",
+  "Suresnail", "Tanko", "Taylor", "Thanar", "Thaneson", "Thermobolt", "Therundlin", "Tighfield", "Underbough", "Ugdough",
+  "Us", "Uvaes", "Valarnith", "Vainweather", "Veindeep", "Vendorform", "Volto", "Wapronk", "Wheelmaiden", "Wolfsbane",
+  "Woolyboon", "Wright", "Xas", "Xencord", "Xeran", "Yahsquin", "Yeoman", "Yesvyre", "Yiu", "Zakari", "Zeagan", "Zimet",
+  "Zytal"
 ];
 
 export interface GeneratedNPC {
