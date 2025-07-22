@@ -13,6 +13,10 @@ import {
   getHexMapTerrains,
   testHexMap,
 } from "./routes/hex-map-generator";
+import {
+  generateCompleteNPC,
+  generateNPCStepRoute,
+} from "./routes/npc-generator";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
