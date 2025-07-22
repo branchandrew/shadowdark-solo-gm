@@ -38,7 +38,7 @@ const NPC_STEPS = [
   { key: 'physicalAppearance', label: 'Physical Appearance', icon: Palette, description: 'How the NPC looks' },
   { key: 'economicStatus', label: 'Economic Status', icon: DollarSign, description: 'The NPC\'s wealth level' },
   { key: 'quirk', label: 'Quirk', icon: Zap, description: 'Unique behavioral trait' },
-  { key: 'level', label: 'Level', icon: Star, description: 'The NPC\'s power level' },
+  { key: 'competence', label: 'Competence', icon: Star, description: 'The NPC\'s skill and capability level' },
   { key: 'firstName', label: 'First Name', icon: UserCheck, description: 'The NPC\'s given name' },
   { key: 'lastName', label: 'Last Name', icon: Tag, description: 'The NPC\'s family name' },
 ] as const;
