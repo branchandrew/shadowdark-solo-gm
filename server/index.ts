@@ -16,6 +16,7 @@ import {
 import {
   generateCompleteNPC,
   generateNPCStepRoute,
+  generateNPCNarrative,
 } from "./routes/npc-generator";
 
 // Load environment variables if .env file exists
