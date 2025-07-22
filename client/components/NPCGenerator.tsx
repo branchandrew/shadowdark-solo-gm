@@ -287,9 +287,9 @@ export default function NPCGenerator() {
               </Button>
 
               {narrative && (
-                <div className="p-4 border rounded-lg bg-gray-50">
-                  <h4 className="font-medium mb-2">Character Description:</h4>
-                  <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">Character Description:</h4>
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800 dark:text-gray-200">
                     {narrative}
                   </div>
                 </div>
