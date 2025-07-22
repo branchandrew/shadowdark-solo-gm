@@ -534,6 +534,22 @@ export class NPCGenerator {
     if (QUIRKS.length === 0) {
       return "Has an Unusual Hobby"; // Fallback
     }
+
+    // 25% chance of having two quirks
+    if (Math.random() < 0.25) {
+      const firstQuirk = this.getRandomElement(QUIRKS);
+      let secondQuirk = this.getRandomElement(QUIRKS);
+
+      // Ensure we don't get the same quirk twice
+      let attempts = 0;
+      while (secondQuirk === firstQuirk && attempts < 10) {
+        secondQuirk = this.getRandomElement(QUIRKS);
+        attempts++;
+      }
+
+      return `${firstQuirk} & ${secondQuirk}`;
+    }
+
     return this.getRandomElement(QUIRKS);
   }
 
