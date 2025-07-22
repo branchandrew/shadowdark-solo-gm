@@ -424,8 +424,11 @@ export const QUIRKS: string[] = [
   "Laughs when they're about to cry"
 ];
 
-export const LEVELS: string[] = [
-  // TODO: Add level values
+export const COMPETENCE: string[] = [
+  "A liability",
+  "Competent",
+  "Fully capable",
+  "Exceptional"
 ];
 
 export const FIRST_NAMES: string[] = [
