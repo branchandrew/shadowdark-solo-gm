@@ -360,7 +360,28 @@ export const PHYSICAL_APPEARANCES: string[] = [
 ];
 
 export const ECONOMIC_STATUSES: string[] = [
-  // TODO: Add economic status values
+  "Destitute / homeless",
+  "Destitute / homeless",
+  "Destitute / homeless",
+  "Poor",
+  "Poor",
+  "Poor",
+  "Poor",
+  "Poor",
+  "Just getting by",
+  "Just getting by",
+  "Just getting by",
+  "Just getting by",
+  "Can support themselves",
+  "Can support themselves",
+  "Can support themselves",
+  "Climbing the ladder",
+  "Climbing the ladder",
+  "Comfortable",
+  "Comfortable",
+  "Well-off",
+  "Rich",
+  "Extremely wealthy"
 ];
 
 export const QUIRKS: string[] = [
