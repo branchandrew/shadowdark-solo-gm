@@ -477,7 +477,7 @@ export interface GeneratedNPC {
   physicalAppearance: string;
   economicStatus: string;
   quirk: string;
-  level: string;
+  competence: string;
   firstName: string;
   lastName: string;
 }
