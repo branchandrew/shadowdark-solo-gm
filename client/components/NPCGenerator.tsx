@@ -66,7 +66,9 @@ export default function NPCGenerator() {
 
       const data = await response.json();
       if (data.success) {
-        setNpc(data.npc);
+        // Merge generated NPC with user-entered values
+        const mergedNpc = { ...data.npc, ...userValues };
+        setNpc(mergedNpc);
       } else {
         console.error("NPC generation failed:", data.error);
       }
