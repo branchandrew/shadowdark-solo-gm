@@ -2,15 +2,15 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  User, 
-  Briefcase, 
-  Heart, 
-  Eye, 
-  Palette, 
-  DollarSign, 
-  Zap, 
-  Star, 
+import {
+  User,
+  Briefcase,
+  Heart,
+  Eye,
+  Palette,
+  DollarSign,
+  Zap,
+  Star,
   RefreshCw,
   Dice1
 } from "lucide-react";
@@ -24,6 +24,8 @@ interface GeneratedNPC {
   economicStatus: string;
   quirk: string;
   level: string;
+  firstName: string;
+  lastName: string;
 }
 
 const NPC_STEPS = [
