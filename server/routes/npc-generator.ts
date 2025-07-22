@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { generateNPC, generateNPCStep, GeneratedNPC } from "../lib/npc-generator.js";
-import { generateResponse } from "../lib/ai.js";
+import Anthropic from "@anthropic-ai/sdk";
+
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? "",
+});
 
 // Generate a complete NPC with all characteristics
 export function generateCompleteNPC(req: Request, res: Response) {
