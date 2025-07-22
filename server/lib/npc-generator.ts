@@ -37,7 +37,33 @@ export const NPC_RACES: string[] = [
 ];
 
 export const OCCUPATIONS: string[] = [
-  // TODO: Add occupation values
+  "acolyte", "acrobat", "actor", "administrator", "adventurer", "alchemist",
+  "ale", "apostate", "apothecary", "apprentice", "arcane", "archer",
+  "architect", "armiger", "armor", "armorer", "artist", "astrologer",
+  "baker", "bandit", "barbarian", "basketmaker", "beggar", "bodyguard",
+  "books", "boss", "brigand", "burglar", "carpenter", "cartographer",
+  "cavalry", "chandler", "clerk", "clothing", "cobbler", "collector",
+  "con", "constable", "cooper", "courier", "crier", "cult", "cultist",
+  "cutpurse", "dealer", "diplomat", "driver", "engineer", "envoy", "exile",
+  "farmer", "fence", "fisher", "foot", "fugitive", "furrier", "general",
+  "gentry", "goods", "grain", "gravedigger", "greater", "guard", "guide",
+  "guildmaster", "herbalist", "herder", "heretic", "hermit", "hero", "high",
+  "humanoid", "hunter", "inkeep", "inventor", "items", "jeweler", "jewelry",
+  "judge", "kingpin", "knight", "labor", "laborer", "lackey", "layabout",
+  "leader", "lesser", "lieutenant", "livestock", "locksmith", "magic",
+  "magistrate", "mason", "materials", "mendicant", "messenger", "militia",
+  "miner", "missionary", "monk", "musician", "navigator", "nobility",
+  "novice", "nun", "officer", "otherworldly", "outfitter", "outlaw",
+  "patrol", "perfumer", "physician", "pilgrim", "porter", "potter",
+  "preacher", "priest", "prophet", "protector", "quarrier", "racketeer",
+  "rare", "raw", "recruit", "refugee", "ropemaker", "ruler", "sage",
+  "sailor", "scholar", "scout", "scribe", "scrolls", "sentry", "servant",
+  "simpleton", "slaves", "smith", "soldier", "spices", "spirits", "spy",
+  "stablekeeper", "supplies", "swindler", "tailor", "tanner", "tavernkeep",
+  "tax", "templar", "thief", "thug", "tinker", "tobacco", "tough", "town",
+  "trapper", "troubador", "undertaker", "urchin", "vagrant", "vintner",
+  "warden", "warlord", "watch", "weapons", "weaver", "wheelwright", "wine",
+  "wizard", "zealot"
 ];
 
 export const MOTIVATIONS: string[] = [
