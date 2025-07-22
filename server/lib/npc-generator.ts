@@ -186,6 +186,10 @@ export class NPCGenerator {
         return this.generateQuirk();
       case 'level':
         return this.generateLevel();
+      case 'firstName':
+        return this.generateFirstName();
+      case 'lastName':
+        return this.generateLastName();
       default:
         throw new Error(`Unknown NPC generation step: ${step}`);
     }
