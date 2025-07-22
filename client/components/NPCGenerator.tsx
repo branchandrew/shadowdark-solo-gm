@@ -268,6 +268,36 @@ export default function NPCGenerator() {
           </div>
         </CardContent>
       </Card>
+
+      {/* NPC Narrative Generation */}
+      {npc && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Character Narrative</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Button
+                onClick={generateNarrative}
+                disabled={generatingNarrative}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${generatingNarrative ? "animate-spin" : ""}`} />
+                {generatingNarrative ? "Generating Narrative..." : "Generate Character Narrative"}
+              </Button>
+
+              {narrative && (
+                <div className="p-4 border rounded-lg bg-gray-50">
+                  <h4 className="font-medium mb-2">Character Description:</h4>
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                    {narrative}
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
