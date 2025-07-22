@@ -48,6 +48,7 @@ export default function NPCGenerator() {
   const [npc, setNpc] = useState<GeneratedNPC | null>(null);
   const [loading, setLoading] = useState(false);
   const [generatingStep, setGeneratingStep] = useState<string | null>(null);
+  const [userValues, setUserValues] = useState<Partial<GeneratedNPC>>({});
 
   const generateCompleteNPC = async () => {
     setLoading(true);
