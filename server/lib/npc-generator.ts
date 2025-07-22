@@ -100,7 +100,8 @@ export const MOTIVATIONS: string[] = [
   "Talking to someone", "Tracking a goblin tribe", "Traveling to regain memory",
   "Trying to collect all romance novels", "Trying to get promoted", "Trying to infiltrate a fortress",
   "Trying to open the royal vault", "Trying to reach high society", "Trying to rescue someone",
-  "Trying to speak to the dead", "Trying to survive", "Unloading a cursed dagger", "Winning a fistfight tournament"
+  "Trying to speak to the dead", "Trying to survive", "Unloading a cursed dagger", "Winning a fistfight tournament",
+  "Redemption for past mistake"
 ];
 
 export const SECRETS: string[] = [
