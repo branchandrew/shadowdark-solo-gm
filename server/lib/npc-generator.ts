@@ -601,7 +601,7 @@ export class NPCGenerator {
         physicalAppearance: "Average Looking",
         economicStatus: "Middle Class",
         quirk: "Has an Unusual Hobby",
-        level: "Level 1",
+        competence: "Competent",
         firstName: "John",
         lastName: "Smith",
       };
