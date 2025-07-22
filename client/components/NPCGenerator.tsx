@@ -211,7 +211,7 @@ export default function NPCGenerator() {
                           physicalAppearance: '',
                           economicStatus: '',
                           quirk: '',
-                          level: '',
+                          competence: '',
                           firstName: '',
                           lastName: '',
                         });
