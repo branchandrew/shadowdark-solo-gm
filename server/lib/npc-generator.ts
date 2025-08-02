@@ -688,17 +688,29 @@ export class NPCGenerator {
   }
 
   private generateFirstName(): string {
-    if (FIRST_NAMES.length === 0) {
-      return "John"; // Fallback
+    // Choose a random alignment for variety in names
+    const alignments: NameAlignment[] = [1, 2, 3, 4];
+    const alignment = this.getRandomElement(alignments);
+
+    const result = generateNames(alignment, 1);
+    if (result.success && result.names && result.names.length > 0) {
+      return result.names[0];
     }
-    return this.getRandomElement(FIRST_NAMES);
+
+    return "John"; // Fallback
   }
 
   private generateLastName(): string {
-    if (LAST_NAMES.length === 0) {
-      return "Smith"; // Fallback
+    // Choose a random alignment for variety in names
+    const alignments: NameAlignment[] = [1, 2, 3, 4];
+    const alignment = this.getRandomElement(alignments);
+
+    const result = generateNames(alignment, 1);
+    if (result.success && result.names && result.names.length > 0) {
+      return result.names[0];
     }
-    return this.getRandomElement(LAST_NAMES);
+
+    return "Smith"; // Fallback
   }
 
   public generateNPC(): GeneratedNPC {
