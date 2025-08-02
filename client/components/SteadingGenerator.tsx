@@ -85,7 +85,10 @@ export default function SteadingGenerator() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ step }),
+        body: JSON.stringify({
+          step,
+          currentSteading: steading ? { type: steading.type } : undefined
+        }),
       });
 
       if (!response.ok) {
