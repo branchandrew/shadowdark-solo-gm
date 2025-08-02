@@ -28,7 +28,7 @@ export function generateCompleteSteading(req: Request, res: Response) {
 // Generate a specific step of steading creation
 export function generateSteadingStepRoute(req: Request, res: Response) {
   try {
-    const { step } = req.body;
+    const { step, currentSteading } = req.body;
 
     console.log("Generating steading step:", step);
 
@@ -39,8 +39,9 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
       });
     }
 
-    // Generate a new steading and extract the requested field
-    const newSteading = generateSteading();
+    // Generate a new steading of the same type if we have the current steading info
+    const steadingType = currentSteading?.type;
+    const newSteading = generateSteading(steadingType);
     console.log("Generated steading type:", newSteading.type);
     console.log("Available fields:", Object.keys(newSteading));
 
@@ -49,7 +50,7 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
       console.log(`Field '${step}' not found. Available fields:`, Object.keys(newSteading));
       return res.status(400).json({
         success: false,
-        error: `Field '${step}' not found in steading data. Available fields: ${Object.keys(newSteading).join(', ')}`,
+        error: `Field '${step}' not found in ${newSteading.type} steading data. Available fields: ${Object.keys(newSteading).join(', ')}`,
       });
     }
 
