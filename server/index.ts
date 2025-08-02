@@ -18,6 +18,12 @@ import {
   generateNPCStepRoute,
   generateNPCNarrative,
 } from "./routes/npc-generator";
+import {
+  generateCompleteSteading,
+  generateSteadingStepRoute,
+  generateSteadingNarrative,
+  getSettlementTypes,
+} from "./routes/steading-generator";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
@@ -55,6 +61,12 @@ export function createServer() {
   app.post("/api/generate-npc", generateCompleteNPC);
   app.post("/api/generate-npc-step", generateNPCStepRoute);
   app.post("/api/generate-npc-narrative", generateNPCNarrative);
+
+  // Steading generator routes
+  app.post("/api/generate-steading", generateCompleteSteading);
+  app.post("/api/generate-steading-step", generateSteadingStepRoute);
+  app.post("/api/generate-steading-narrative", generateSteadingNarrative);
+  app.get("/api/settlement-types", getSettlementTypes);
 
   return app;
 }
