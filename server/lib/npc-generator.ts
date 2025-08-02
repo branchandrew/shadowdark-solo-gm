@@ -4,6 +4,8 @@
  * Generates random NPCs with various characteristics through multiple steps.
  */
 
+import { generateNames, type NameAlignment } from "./name-generator.js";
+
 // NPC race types (different from story arc races)
 export const NPC_RACES: string[] = [
   "Human",
@@ -57,7 +59,7 @@ export const OCCUPATIONS: string[] = [
   "patrol", "painter", "perfumer", "physician", "pilgrim", "porter", "potter",
   "preacher", "priest", "prophet", "protector", "quarrier", "racketeer",
   "raw recruit", "refugee", "ropemaker", "ruler", "sage",
-  "sailor", "scholar", "scout", "scribe", "scrolls", "sentry", "servant", "seamstress" "sycophant",
+  "sailor\", \"scholar\", \"scout\", \"scribe\", \"scrolls\", \"sentry\", \"servant\", \"seamstress\" \"sycophant",
   "simpleton", "slaves", "smith", "soldier", "spices", "spirits", "spy",
   "stablekeeper", "supplies", "squire", "swindler", "tailor", "tanner", "tavernkeep",
   "tax", "templar", "thief", "thug", "tinker", "tobacco dealer",
