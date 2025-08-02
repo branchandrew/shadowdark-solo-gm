@@ -90,7 +90,20 @@ export async function generateSteadingNarrative(req: Request, res: Response) {
     }
 
     // Create a comprehensive prompt for the steading narrative
-    const steadingData = JSON.stringify(steading, null, 2);
+    console.log("Processing steading for narrative:", {
+      type: steading.type,
+      name: steading.name,
+      keys: Object.keys(steading)
+    });
+
+    let steadingData: string;
+    try {
+      steadingData = JSON.stringify(steading, null, 2);
+    } catch (stringifyError) {
+      console.error("Error stringifying steading data:", stringifyError);
+      // Fallback to a simpler representation
+      steadingData = `Settlement: ${steading.name} (${steading.type})`;
+    }
 
     const prompt = `You are a master storyteller and world-builder for tabletop RPGs. I will provide you with detailed information about a settlement (steading) that has been randomly generated. Your task is to weave these details into a compelling, coherent narrative that brings this place to life.
 
