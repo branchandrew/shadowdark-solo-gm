@@ -31,7 +31,7 @@ const STEADING_TYPES = ["Hamlet", "Village", "City", "Castle", "Tower", "Abbey"]
 
 const STEADING_ICONS: Record<string, any> = {
   Hamlet: Home,
-  Village: Building, 
+  Village: Building,
   City: Building,
   Castle: Castle,
   Tower: Castle,
@@ -54,8 +54,8 @@ export default function SteadingGenerator() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          type: selectedType === "random" ? undefined : selectedType 
+        body: JSON.stringify({
+          type: selectedType === "random" ? undefined : selectedType
         }),
       });
 
@@ -165,9 +165,8 @@ export default function SteadingGenerator() {
 
   const renderField = (key: string, value: any, icon: any) => {
     const Icon = icon;
-    const displayValue = Array.isArray(value) ? value.join(", ") : 
-                       typeof value === 'object' ? JSON.stringify(value, null, 2) : 
-                       String(value);
+    const displayValue = formatComplexValue(value);
+    const isComplexObject = typeof value === 'object' && value !== null && !Array.isArray(value);
 
     return (
       <div key={key} className="space-y-2">
@@ -181,11 +180,12 @@ export default function SteadingGenerator() {
             variant="ghost"
             onClick={() => generateSteadingStep(key as keyof GeneratedSteading)}
             className="h-6 w-6 p-0"
+            title="Regenerate this field"
           >
             <Dice1 className="h-3 w-3" />
           </Button>
         </div>
-        {typeof value === 'object' && !Array.isArray(value) ? (
+        {isComplexObject ? (
           <Textarea
             value={displayValue}
             onChange={(e) => {
@@ -198,6 +198,7 @@ export default function SteadingGenerator() {
               }
             }}
             className="min-h-[100px] font-mono text-xs"
+            placeholder="Enter JSON data..."
           />
         ) : (
           <Input
@@ -227,6 +228,21 @@ export default function SteadingGenerator() {
     });
 
     return { basicFields, otherFields };
+  };
+
+  const formatComplexValue = (value: any): string => {
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    }
+    if (typeof value === 'object' && value !== null) {
+      // Format objects in a more readable way
+      const entries = Object.entries(value);
+      if (entries.length <= 3) {
+        return entries.map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(", ") : v}`).join(" | ");
+      }
+      return JSON.stringify(value, null, 2);
+    }
+    return String(value);
   };
 
   return (
@@ -295,7 +311,7 @@ export default function SteadingGenerator() {
           <CardContent className="space-y-6">
             {(() => {
               const { basicFields, otherFields } = formatSteadingForDisplay(steading);
-              
+
               return (
                 <>
                   {/* Basic Fields */}
@@ -314,7 +330,7 @@ export default function SteadingGenerator() {
                         Additional Details
                       </h3>
                       <div className="grid grid-cols-1 gap-4">
-                        {Object.entries(otherFields).map(([key, value]) => 
+                        {Object.entries(otherFields).map(([key, value]) =>
                           renderField(key, value, Scroll)
                         )}
                       </div>
