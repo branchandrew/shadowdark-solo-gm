@@ -6,7 +6,8 @@ import CampaignElements from "./CampaignElements";
 import BTSPanel from "./BTSPanel";
 import Map from "./Map";
 import NPCGenerator from "./NPCGenerator";
-import { User, BookOpen, Network, Eye, MapPin, Users } from "lucide-react";
+import SteadingGenerator from "./SteadingGenerator";
+import { User, BookOpen, Network, Eye, MapPin, Users, Castle } from "lucide-react";
 import { useSessionState } from "../hooks/useSessionState";
 
 export default function RightPanel() {
@@ -21,7 +22,7 @@ export default function RightPanel() {
       onValueChange={setActiveTab}
       className="h-full flex flex-col"
     >
-      <TabsList className="grid w-full grid-cols-6">
+      <TabsList className="grid w-full grid-cols-7">
         <TabsTrigger value="character" className="flex items-center gap-2">
           <User className="h-4 w-4" />
           Character
@@ -37,6 +38,10 @@ export default function RightPanel() {
         <TabsTrigger value="npc" className="flex items-center gap-2">
           <Users className="h-4 w-4" />
           NPC Generator
+        </TabsTrigger>
+        <TabsTrigger value="steading" className="flex items-center gap-2">
+          <Castle className="h-4 w-4" />
+          Steading Generator
         </TabsTrigger>
         <TabsTrigger value="map" className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
@@ -69,6 +74,12 @@ export default function RightPanel() {
       <TabsContent value="npc" className="flex-1 mt-4 overflow-hidden">
         <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
           <NPCGenerator />
+        </ScrollArea>
+      </TabsContent>
+
+      <TabsContent value="steading" className="flex-1 mt-4 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-2">
+          <SteadingGenerator />
         </ScrollArea>
       </TabsContent>
 
