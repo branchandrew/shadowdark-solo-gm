@@ -30,6 +30,8 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
   try {
     const { step } = req.body;
 
+    console.log("Generating steading step:", step);
+
     if (!step) {
       return res.status(400).json({
         success: false,
@@ -39,21 +41,25 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
 
     // Generate a new steading and extract the requested field
     const newSteading = generateSteading();
+    console.log("Generated steading type:", newSteading.type);
+    console.log("Available fields:", Object.keys(newSteading));
 
     // Check if the field exists in the generated steading
     if (!(step in newSteading)) {
+      console.log(`Field '${step}' not found. Available fields:`, Object.keys(newSteading));
       return res.status(400).json({
         success: false,
-        error: `Field '${step}' not found in steading data`,
+        error: `Field '${step}' not found in steading data. Available fields: ${Object.keys(newSteading).join(', ')}`,
       });
     }
 
     const stepValue = newSteading[step];
+    console.log(`Step '${step}' value:`, stepValue);
 
     res.json({
       success: true,
       step: step,
-      value: stepValue,
+      result: stepValue,
     });
   } catch (error) {
     console.error("Error generating steading step:", error);
