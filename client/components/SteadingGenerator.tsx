@@ -94,7 +94,7 @@ export default function SteadingGenerator() {
 
       const data = await response.json();
       if (data.success) {
-        setSteading(prev => prev ? { ...prev, [step]: data.value } : null);
+        setSteading(prev => prev ? { ...prev, [step]: data.result } : null);
         // Remove this field from user values since it was regenerated
         setUserValues(prev => {
           const updated = { ...prev };
