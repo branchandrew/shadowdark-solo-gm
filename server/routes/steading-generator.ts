@@ -37,22 +37,18 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
       });
     }
 
-    // Allow regeneration of basic common fields
-    const validSteps = [
-      'category', 'type', 'name', 'nameVariations', 'disposition',
-      'mainBuilding', 'peasantHouses', 'layout', 'secret',
-      'size', 'population', 'occupation', 'ruler', 'rulerDisposition',
-      'condition', 'appearance', 'insideAppearance', 'history'
-    ];
+    // Generate a new steading and extract the requested field
+    const newSteading = generateSteading();
 
-    if (!validSteps.includes(step)) {
+    // Check if the field exists in the generated steading
+    if (!(step in newSteading)) {
       return res.status(400).json({
         success: false,
-        error: `Invalid step. Valid steps are: ${validSteps.join(', ')}`,
+        error: `Field '${step}' not found in steading data`,
       });
     }
 
-    const stepValue = generateSteadingStep(step);
+    const stepValue = newSteading[step];
 
     res.json({
       success: true,
