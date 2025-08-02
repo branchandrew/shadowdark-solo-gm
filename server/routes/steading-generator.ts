@@ -37,8 +37,12 @@ export function generateSteadingStepRoute(req: Request, res: Response) {
       });
     }
 
-    const validSteps: (keyof GeneratedSteading)[] = [
-      'category', 'type', 'name', 'nameVariations', 'disposition'
+    // Allow regeneration of basic common fields
+    const validSteps = [
+      'category', 'type', 'name', 'nameVariations', 'disposition',
+      'mainBuilding', 'peasantHouses', 'layout', 'secret',
+      'size', 'population', 'occupation', 'ruler', 'rulerDisposition',
+      'condition', 'appearance', 'insideAppearance', 'history'
     ];
 
     if (!validSteps.includes(step)) {
@@ -85,7 +89,7 @@ export async function generateSteadingNarrative(req: Request, res: Response) {
 
     // Create a comprehensive prompt for the steading narrative
     const steadingData = JSON.stringify(steading, null, 2);
-    
+
     const prompt = `You are a master storyteller and world-builder for tabletop RPGs. I will provide you with detailed information about a settlement (steading) that has been randomly generated. Your task is to weave these details into a compelling, coherent narrative that brings this place to life.
 
 Please create a rich narrative description that:
