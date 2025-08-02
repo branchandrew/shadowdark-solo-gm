@@ -136,9 +136,14 @@ Write the narrative now:`;
     });
   } catch (error) {
     console.error("Error generating steading narrative:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      anthropicKey: process.env.ANTHROPIC_API_KEY ? "Present" : "Missing"
+    });
     res.status(500).json({
       success: false,
-      error: "Failed to generate steading narrative",
+      error: error instanceof Error ? error.message : "Failed to generate steading narrative",
     });
   }
 }
