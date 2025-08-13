@@ -10,7 +10,7 @@ const handleDemo = (req, res) => {
   };
   res.status(200).json(response);
 };
-const anthropic$4 = new Anthropic({
+const anthropic$7 = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
 });
 const handleAIChat = async (req, res) => {
@@ -44,7 +44,7 @@ Your Role:
 Player's Action: "${message}"
 
 Respond as the GM would, describing what happens and asking for any necessary rolls or decisions.`;
-    const claudeResponse = await anthropic$4.messages.create({
+    const claudeResponse = await anthropic$7.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 300,
       temperature: 0.7,
@@ -384,7 +384,15 @@ const EVIL_START = [
   "Ty",
   "Wy",
   "Zy",
-  "Fy"
+  "Fy",
+  "Mal",
+  "Vex",
+  "Mor",
+  "Nyx",
+  "Zar",
+  "Bla",
+  "Grim",
+  "Drak"
 ];
 const EVIL_MIDDLE = [
   "yu",
@@ -406,7 +414,13 @@ const EVIL_MIDDLE = [
   "ik",
   "ek",
   "oz",
-  "az"
+  "az",
+  "oth",
+  "arn",
+  "ugh",
+  "okh",
+  "aal",
+  "uur"
 ];
 const EVIL_END = [
   "d",
@@ -428,7 +442,413 @@ const EVIL_END = [
   "zd",
   "fd",
   "ld",
-  "md"
+  "md",
+  "goth",
+  "mor",
+  "oth",
+  "ugh",
+  "ash",
+  "arn"
+];
+const CELTIC_START = [
+  "Ai",
+  "Bri",
+  "Cai",
+  "Dai",
+  "Eo",
+  "Fio",
+  "Gwy",
+  "Llo",
+  "Mai",
+  "Nia",
+  "Oi",
+  "Pry",
+  "Rhy",
+  "Sia",
+  "Tei",
+  "Una",
+  "Bla",
+  "Cae",
+  "Dwy",
+  "Gla",
+  "Mor",
+  "Bre",
+  "Cer",
+  "Dun",
+  "Fen",
+  "Gal",
+  "Kil",
+  "Llan",
+  "Tre"
+];
+const CELTIC_MIDDLE = [
+  "an",
+  "wy",
+  "ll",
+  "dd",
+  "ff",
+  "rh",
+  "th",
+  "ch",
+  "oe",
+  "ae",
+  "ei",
+  "ou",
+  "ia",
+  "io",
+  "ua",
+  "ri",
+  "gu",
+  "gw",
+  "dy",
+  "fy",
+  "lyn",
+  "wen",
+  "gar",
+  "mor",
+  "dor",
+  "tan",
+  "van",
+  "han"
+];
+const CELTIC_END = [
+  "an",
+  "wy",
+  "dd",
+  "ff",
+  "th",
+  "ch",
+  "wen",
+  "lyn",
+  "gan",
+  "van",
+  "dor",
+  "mor",
+  "gar",
+  "tan",
+  "han",
+  "lan",
+  "ron",
+  "eon",
+  "aig",
+  "ais",
+  "aith",
+  "aidh",
+  "ough",
+  "edd",
+  "ydd",
+  "wyr"
+];
+const NORDIC_START = [
+  "Bj",
+  "Ey",
+  "Gu",
+  "Ha",
+  "In",
+  "Jo",
+  "Kj",
+  "Lo",
+  "Mag",
+  "Ol",
+  "Ra",
+  "Sig",
+  "Th",
+  "Ulf",
+  "Vig",
+  "As",
+  "Br",
+  "Dag",
+  "Eg",
+  "Fr",
+  "Grim",
+  "Heid",
+  "Ing",
+  "Kol",
+  "Leif",
+  "Rag",
+  "Rune",
+  "Stein",
+  "Thor",
+  "Tor"
+];
+const NORDIC_MIDDLE = [
+  "ar",
+  "er",
+  "ir",
+  "or",
+  "ur",
+  "an",
+  "en",
+  "in",
+  "on",
+  "un",
+  "stein",
+  "bjorn",
+  "grim",
+  "ulf",
+  "thor",
+  "gar",
+  "mund",
+  "rik",
+  "berg",
+  "dahl",
+  "strand",
+  "vik",
+  "helm",
+  "bald",
+  "finn",
+  "mark"
+];
+const NORDIC_END = [
+  "son",
+  "sen",
+  "sson",
+  "dottir",
+  "ulf",
+  "bjorn",
+  "gar",
+  "mund",
+  "rik",
+  "stein",
+  "berg",
+  "dahl",
+  "strand",
+  "vik",
+  "helm",
+  "bald",
+  "finn",
+  "mark",
+  "thor",
+  "grim",
+  "ar",
+  "er",
+  "ir",
+  "or",
+  "ur",
+  "yn",
+  "en",
+  "an"
+];
+const GERMANIC_START = [
+  "Ad",
+  "Ber",
+  "Con",
+  "Die",
+  "Eck",
+  "Fri",
+  "Ger",
+  "Hei",
+  "Ing",
+  "Kai",
+  "Lud",
+  "Man",
+  "Nor",
+  "Ot",
+  "Rei",
+  "Sig",
+  "Thi",
+  "Ulf",
+  "Wal",
+  "Wil",
+  "Brun",
+  "Ernst",
+  "Gott",
+  "Hart",
+  "Karl",
+  "Rich",
+  "Wolf"
+];
+const GERMANIC_MIDDLE = [
+  "hard",
+  "bert",
+  "helm",
+  "mund",
+  "rich",
+  "wald",
+  "fried",
+  "grim",
+  "bold",
+  "mar",
+  "win",
+  "bald",
+  "gang",
+  "bert",
+  "hold",
+  "brand",
+  "gar",
+  "ward",
+  "mann",
+  "wolf"
+];
+const GERMANIC_END = [
+  "rich",
+  "bert",
+  "fried",
+  "mund",
+  "wald",
+  "helm",
+  "hard",
+  "bold",
+  "bald",
+  "brand",
+  "gar",
+  "ward",
+  "mann",
+  "wolf",
+  "grim",
+  "win",
+  "mar",
+  "gang",
+  "hold",
+  "hart"
+];
+const LATIN_START = [
+  "Aur",
+  "Bel",
+  "Cas",
+  "Dom",
+  "Emp",
+  "Fab",
+  "Gra",
+  "Hon",
+  "Imp",
+  "Jul",
+  "Lac",
+  "Mag",
+  "Nob",
+  "Oct",
+  "Pal",
+  "Qui",
+  "Reg",
+  "Sev",
+  "Tit",
+  "Urb",
+  "Val",
+  "Max",
+  "Dec",
+  "Fla",
+  "Cor",
+  "Mar",
+  "Vic",
+  "Luc"
+];
+const LATIN_MIDDLE = [
+  "us",
+  "ius",
+  "ulus",
+  "anus",
+  "inus",
+  "onus",
+  "enus",
+  "arius",
+  "ensis",
+  "icus",
+  "tius",
+  "lius",
+  "rius",
+  "sius",
+  "ticus",
+  "vius",
+  "dius",
+  "pius",
+  "mius",
+  "nius"
+];
+const LATIN_END = [
+  "us",
+  "ius",
+  "anus",
+  "inus",
+  "icus",
+  "orus",
+  "arus",
+  "erus",
+  "urus",
+  "etus",
+  "atus",
+  "itus",
+  "otus",
+  "utus",
+  "ensis",
+  "aris",
+  "oris",
+  "uris",
+  "eris",
+  "iris"
+];
+const GREEK_START = [
+  "Al",
+  "Ar",
+  "Bry",
+  "Cl",
+  "De",
+  "Eu",
+  "Hy",
+  "Id",
+  "Ly",
+  "Me",
+  "Ni",
+  "Ol",
+  "Ph",
+  "Rh",
+  "St",
+  "Th",
+  "Xe",
+  "Zy",
+  "An",
+  "Ap",
+  "Dio",
+  "Her",
+  "Ath",
+  "Dem",
+  "Hel",
+  "Neo",
+  "Pan",
+  "Soc"
+];
+const GREEK_MIDDLE = [
+  "an",
+  "ar",
+  "as",
+  "at",
+  "es",
+  "is",
+  "os",
+  "us",
+  "yn",
+  "yr",
+  "kles",
+  "phon",
+  "dor",
+  "krat",
+  "phil",
+  "theo",
+  "gon",
+  "arch",
+  "sth",
+  "mach"
+];
+const GREEK_END = [
+  "es",
+  "is",
+  "os",
+  "us",
+  "as",
+  "on",
+  "ys",
+  "ax",
+  "ex",
+  "ix",
+  "kles",
+  "phon",
+  "dor",
+  "krat",
+  "phil",
+  "theo",
+  "gon",
+  "arch",
+  "tes",
+  "des"
 ];
 const SLAVIC_START = [
   "Sv",
@@ -450,7 +870,16 @@ const SLAVIC_START = [
   "Pet",
   "Rus",
   "Stan",
-  "Tad"
+  "Tad",
+  "Bog",
+  "Dra",
+  "Gos",
+  "Kaz",
+  "Lyub",
+  "Raz",
+  "Slav",
+  "Voj",
+  "Zdan"
 ];
 const SLAVIC_MIDDLE = [
   "ya",
@@ -472,7 +901,13 @@ const SLAVIC_MIDDLE = [
   "vi",
   "za",
   "bo",
-  "du"
+  "du",
+  "mir",
+  "slav",
+  "dan",
+  "mil",
+  "rad",
+  "bog"
 ];
 const SLAVIC_END = [
   "ov",
@@ -494,7 +929,535 @@ const SLAVIC_END = [
   "dor",
   "gar",
   "len",
-  "nov"
+  "nov",
+  "ek",
+  "ak",
+  "uk",
+  "ik"
+];
+const ARABIC_START = [
+  "Ab",
+  "Al",
+  "As",
+  "Da",
+  "Fa",
+  "Ha",
+  "Ib",
+  "Ja",
+  "Ka",
+  "Ma",
+  "Na",
+  "Om",
+  "Ra",
+  "Sa",
+  "Ta",
+  "Wa",
+  "Ya",
+  "Za",
+  "Kh",
+  "Gh",
+  "Mah",
+  "Rah",
+  "Sar",
+  "Tar",
+  "Ash",
+  "Bah",
+  "Dar",
+  "Far",
+  "Gar",
+  "Har"
+];
+const ARABIC_MIDDLE = [
+  "al",
+  "ar",
+  "as",
+  "an",
+  "am",
+  "ah",
+  "ad",
+  "af",
+  "ag",
+  "aj",
+  "mad",
+  "had",
+  "sad",
+  "fad",
+  "lah",
+  "rah",
+  "mah",
+  "dah",
+  "shah",
+  "kah"
+];
+const ARABIC_END = [
+  "ad",
+  "af",
+  "ah",
+  "al",
+  "am",
+  "an",
+  "ar",
+  "as",
+  "at",
+  "az",
+  "mad",
+  "had",
+  "sad",
+  "fad",
+  "lah",
+  "rah",
+  "mah",
+  "dah",
+  "shah",
+  "kah",
+  "din",
+  "sir",
+  "mir",
+  "tar"
+];
+const FINNISH_START = [
+  "Ai",
+  "Ee",
+  "Il",
+  "Kal",
+  "Lai",
+  "Mik",
+  "Nie",
+  "Oi",
+  "Pek",
+  "Rai",
+  "Sii",
+  "Tai",
+  "Uol",
+  "Vai",
+  "Yli",
+  "Aki",
+  "Esa",
+  "Jaa",
+  "Kaa",
+  "Laa",
+  "Maa",
+  "Naa",
+  "Paa",
+  "Raa",
+  "Saa",
+  "Taa",
+  "Vaa"
+];
+const FINNISH_MIDDLE = [
+  "ki",
+  "ko",
+  "ka",
+  "ke",
+  "ku",
+  "li",
+  "lo",
+  "la",
+  "le",
+  "lu",
+  "mi",
+  "mo",
+  "ma",
+  "me",
+  "mu",
+  "ni",
+  "no",
+  "na",
+  "ne",
+  "nu",
+  "kki",
+  "lli",
+  "mmi",
+  "nni",
+  "ppi",
+  "tti",
+  "kka",
+  "lla",
+  "mma",
+  "nna"
+];
+const FINNISH_END = [
+  "nen",
+  "inen",
+  "ainen",
+  "anen",
+  "kka",
+  "lla",
+  "mma",
+  "nna",
+  "ppa",
+  "tta",
+  "ki",
+  "ko",
+  "ka",
+  "ke",
+  "ku",
+  "li",
+  "lo",
+  "la",
+  "le",
+  "lu",
+  "sto",
+  "nen",
+  "ken",
+  "sen",
+  "ten"
+];
+const BASQUE_START = [
+  "Ait",
+  "Bel",
+  "Ek",
+  "Ga",
+  "Har",
+  "Ib",
+  "Jox",
+  "Kol",
+  "Lar",
+  "Mit",
+  "Nak",
+  "Oin",
+  "Pat",
+  "Rud",
+  "Sab",
+  "Txe",
+  "Urd",
+  "Xab",
+  "Yon",
+  "Zur",
+  "And",
+  "Ber",
+  "Deb",
+  "Egi",
+  "Fer",
+  "Goi",
+  "Ira",
+  "Leh"
+];
+const BASQUE_MIDDLE = [
+  "ar",
+  "er",
+  "ir",
+  "or",
+  "ur",
+  "ai",
+  "ei",
+  "oi",
+  "au",
+  "eu",
+  "tx",
+  "tz",
+  "rr",
+  "ll",
+  "dd",
+  "kk",
+  "tt",
+  "pp",
+  "ss",
+  "nn",
+  "eta",
+  "arra",
+  "erre",
+  "uri"
+];
+const BASQUE_END = [
+  "a",
+  "e",
+  "i",
+  "o",
+  "u",
+  "z",
+  "x",
+  "k",
+  "n",
+  "r",
+  "tx",
+  "tz",
+  "rr",
+  "ll",
+  "eta",
+  "arra",
+  "erre",
+  "uri",
+  "tegi",
+  "degi"
+];
+const ELVISH_START = [
+  "El",
+  "Ar",
+  "Fin",
+  "Gal",
+  "Leg",
+  "Thran",
+  "Mir",
+  "Lor",
+  "Ae",
+  "Ce",
+  "Fe",
+  "Gla",
+  "Ha",
+  "Il",
+  "La",
+  "Ma",
+  "Na",
+  "Oro",
+  "Quen",
+  "Sil",
+  "Gil",
+  "Cel",
+  "Elu",
+  "Lin",
+  "Nim",
+  "Tar",
+  "Eru"
+];
+const ELVISH_MIDDLE = [
+  "en",
+  "ion",
+  "ad",
+  "or",
+  "el",
+  "ith",
+  "ael",
+  "aur",
+  "eor",
+  "ian",
+  "lor",
+  "mir",
+  "nor",
+  "ril",
+  "thar",
+  "uin",
+  "wen",
+  "yar",
+  "zir",
+  "dor",
+  "rond",
+  "duin",
+  "goth",
+  "moth",
+  "neth",
+  "reth"
+];
+const ELVISH_END = [
+  "dor",
+  "las",
+  "wen",
+  "ril",
+  "thar",
+  "ion",
+  "ael",
+  "aur",
+  "eor",
+  "ian",
+  "lor",
+  "mir",
+  "nor",
+  "del",
+  "fel",
+  "gil",
+  "hel",
+  "kel",
+  "mel",
+  "nel",
+  "rond",
+  "duin",
+  "goth",
+  "moth",
+  "neth",
+  "reth",
+  "eth",
+  "ith",
+  "oth"
+];
+const DRACONIC_START = [
+  "Tha",
+  "Bah",
+  "Vor",
+  "Sar",
+  "Kri",
+  "Dra",
+  "Zar",
+  "Gha",
+  "Mor",
+  "Ash",
+  "Pyrr",
+  "Igna",
+  "Umbr",
+  "Terr",
+  "Aqua",
+  "Vent",
+  "Lumi",
+  "Tene",
+  "Glaci",
+  "Fulg"
+];
+const DRACONIC_MIDDLE = [
+  "mat",
+  "kul",
+  "vor",
+  "thar",
+  "rax",
+  "nax",
+  "goth",
+  "moth",
+  "roth",
+  "zoth",
+  "prax",
+  "krex",
+  "thex",
+  "vex",
+  "hex",
+  "rex",
+  "lex",
+  "nex"
+];
+const DRACONIC_END = [
+  "rax",
+  "nax",
+  "goth",
+  "moth",
+  "roth",
+  "zoth",
+  "prax",
+  "krex",
+  "thex",
+  "vex",
+  "hex",
+  "rex",
+  "lex",
+  "nex",
+  "thar",
+  "khar",
+  "ghar",
+  "vhar"
+];
+const PRIMORDIAL_START = [
+  "Aer",
+  "Aqu",
+  "Igni",
+  "Terr",
+  "Umbr",
+  "Lumi",
+  "Glaci",
+  "Fulg",
+  "Vent",
+  "Sil",
+  "Cael",
+  "Abys",
+  "Ethr",
+  "Void",
+  "Prim",
+  "Elem",
+  "Flux",
+  "Ess"
+];
+const PRIMORDIAL_MIDDLE = [
+  "is",
+  "us",
+  "ar",
+  "or",
+  "al",
+  "el",
+  "il",
+  "ul",
+  "yn",
+  "an",
+  "oth",
+  "ith",
+  "eth",
+  "uth",
+  "ath",
+  "oss",
+  "iss",
+  "ess",
+  "uss",
+  "ass"
+];
+const PRIMORDIAL_END = [
+  "oss",
+  "iss",
+  "ess",
+  "uss",
+  "ass",
+  "oth",
+  "ith",
+  "eth",
+  "uth",
+  "ath",
+  "os",
+  "is",
+  "es",
+  "us",
+  "as",
+  "ar",
+  "or",
+  "al",
+  "el",
+  "il"
+];
+const INFERNAL_START = [
+  "Bel",
+  "Dis",
+  "Mal",
+  "Lev",
+  "Baa",
+  "Ash",
+  "Mol",
+  "Nerg",
+  "Set",
+  "Bah",
+  "Zeb",
+  "Mam",
+  "Bel",
+  "Ast",
+  "Deu",
+  "Phl",
+  "Bif",
+  "Ose",
+  "Amy",
+  "Ori"
+];
+const INFERNAL_MIDDLE = [
+  "ze",
+  "pha",
+  "mon",
+  "goth",
+  "moth",
+  "roth",
+  "zoth",
+  "leth",
+  "neth",
+  "seth",
+  "bub",
+  "baal",
+  "zar",
+  "gar",
+  "har",
+  "var",
+  "dar",
+  "tar"
+];
+const INFERNAL_END = [
+  "oth",
+  "eth",
+  "uth",
+  "ith",
+  "ath",
+  "eus",
+  "ius",
+  "ous",
+  "ael",
+  "iel",
+  "bub",
+  "baal",
+  "zar",
+  "gar",
+  "har",
+  "var",
+  "dar",
+  "tar",
+  "goth",
+  "moth"
 ];
 const ANGLO_START = [
   "Æth",
@@ -516,7 +1479,14 @@ const ANGLO_START = [
   "Theod",
   "Wig",
   "Wulf",
-  "Ælf"
+  "Ælf",
+  "Beorn",
+  "Cuth",
+  "Ead",
+  "Gar",
+  "Hild",
+  "Os",
+  "Wil"
 ];
 const ANGLO_MIDDLE = [
   "win",
@@ -562,92 +1532,207 @@ const ANGLO_END = [
   "mund",
   "ric"
 ];
-const ELVISH_START = [
-  "El",
-  "Ar",
-  "Fin",
-  "Gal",
-  "Leg",
-  "Thran",
-  "Mir",
-  "Lor",
-  "Ae",
-  "Ce",
-  "Fe",
-  "Gla",
-  "Ha",
-  "Il",
-  "La",
-  "Ma",
-  "Na",
-  "Oro",
-  "Quen",
-  "Sil"
+const STEPPE_START = [
+  "Bat",
+  "Che",
+  "Dal",
+  "Gan",
+  "Kha",
+  "Mun",
+  "Nor",
+  "Ork",
+  "Qar",
+  "Sub",
+  "Tem",
+  "Ulz",
+  "Yam",
+  "Zul",
+  "Bog",
+  "Dor",
+  "Gen",
+  "Jem",
+  "Kul",
+  "Mog"
 ];
-const ELVISH_MIDDLE = [
+const STEPPE_MIDDLE = [
+  "khan",
+  "gul",
+  "bur",
+  "dar",
+  "gan",
+  "hun",
+  "jal",
+  "kar",
+  "lun",
+  "mur",
+  "nar",
+  "ool",
+  "pal",
+  "qul",
+  "sur",
+  "tul",
+  "uur",
+  "val",
+  "yal",
+  "zul"
+];
+const STEPPE_END = [
+  "khan",
+  "gul",
+  "bur",
+  "dar",
+  "gan",
+  "hun",
+  "jal",
+  "kar",
+  "lun",
+  "mur",
+  "nar",
+  "ool",
+  "pal",
+  "qul",
+  "sur",
+  "tul",
+  "uur",
+  "val",
+  "yal",
+  "zul"
+];
+const EGYPTIAN_START = [
+  "Akh",
+  "Ank",
+  "Anu",
+  "Ato",
+  "Hap",
+  "Hor",
+  "Isi",
+  "Kha",
+  "Nef",
+  "Osi",
+  "Pta",
+  "Ra",
+  "Set",
+  "Tho",
+  "Uto",
+  "Ama",
+  "Ben",
+  "Dja",
+  "Hem",
+  "Kep",
+  "Men",
+  "Neb",
+  "Per",
+  "Sab",
+  "Wab"
+];
+const EGYPTIAN_MIDDLE = [
+  "em",
   "en",
-  "ion",
-  "ad",
-  "or",
-  "el",
-  "ith",
-  "ael",
-  "aur",
-  "eor",
-  "ian",
-  "lor",
-  "mir",
-  "nor",
-  "ril",
-  "thar",
-  "uin",
-  "wen",
-  "yar",
-  "zir",
-  "dor"
+  "ep",
+  "er",
+  "es",
+  "et",
+  "hotep",
+  "ankh",
+  "djed",
+  "was",
+  "ka",
+  "ba",
+  "akh",
+  "sekh",
+  "neb",
+  "per",
+  "dja",
+  "hem",
+  "kep",
+  "men"
 ];
-const ELVISH_END = [
-  "dor",
-  "las",
-  "wen",
-  "ril",
-  "thar",
-  "ion",
-  "ael",
-  "aur",
-  "eor",
-  "ian",
-  "lor",
-  "mir",
-  "nor",
-  "del",
-  "fel",
-  "gil",
-  "hel",
-  "kel",
-  "mel",
-  "nel"
+const EGYPTIAN_END = [
+  "hotep",
+  "ankh",
+  "djed",
+  "was",
+  "ka",
+  "ba",
+  "akh",
+  "sekh",
+  "neb",
+  "per",
+  "dja",
+  "hem",
+  "kep",
+  "men",
+  "is",
+  "es",
+  "us",
+  "os",
+  "as"
 ];
+const ALIGNMENT_NAMES = {
+  1: "Evil",
+  2: "Celtic (Gaelic)",
+  3: "Nordic (Old Norse)",
+  4: "Germanic",
+  5: "Latin",
+  6: "Ancient Greek",
+  7: "Slavic",
+  8: "Arabic/Persian",
+  9: "Finnish",
+  10: "Basque",
+  11: "Elvish",
+  12: "Draconic",
+  13: "Primordial",
+  14: "Infernal",
+  15: "Anglo-Saxon",
+  16: "Steppe Nomad",
+  17: "Ancient Egyptian"
+};
 function getSyllableSets(alignment) {
   switch (alignment) {
     case 1:
       return { start: EVIL_START, middle: EVIL_MIDDLE, end: EVIL_END };
     case 2:
-      return { start: SLAVIC_START, middle: SLAVIC_MIDDLE, end: SLAVIC_END };
+      return { start: CELTIC_START, middle: CELTIC_MIDDLE, end: CELTIC_END };
     case 3:
-      return { start: ANGLO_START, middle: ANGLO_MIDDLE, end: ANGLO_END };
+      return { start: NORDIC_START, middle: NORDIC_MIDDLE, end: NORDIC_END };
     case 4:
+      return { start: GERMANIC_START, middle: GERMANIC_MIDDLE, end: GERMANIC_END };
+    case 5:
+      return { start: LATIN_START, middle: LATIN_MIDDLE, end: LATIN_END };
+    case 6:
+      return { start: GREEK_START, middle: GREEK_MIDDLE, end: GREEK_END };
+    case 7:
+      return { start: SLAVIC_START, middle: SLAVIC_MIDDLE, end: SLAVIC_END };
+    case 8:
+      return { start: ARABIC_START, middle: ARABIC_MIDDLE, end: ARABIC_END };
+    case 9:
+      return { start: FINNISH_START, middle: FINNISH_MIDDLE, end: FINNISH_END };
+    case 10:
+      return { start: BASQUE_START, middle: BASQUE_MIDDLE, end: BASQUE_END };
+    case 11:
       return { start: ELVISH_START, middle: ELVISH_MIDDLE, end: ELVISH_END };
+    case 12:
+      return { start: DRACONIC_START, middle: DRACONIC_MIDDLE, end: DRACONIC_END };
+    case 13:
+      return { start: PRIMORDIAL_START, middle: PRIMORDIAL_MIDDLE, end: PRIMORDIAL_END };
+    case 14:
+      return { start: INFERNAL_START, middle: INFERNAL_MIDDLE, end: INFERNAL_END };
+    case 15:
+      return { start: ANGLO_START, middle: ANGLO_MIDDLE, end: ANGLO_END };
+    case 16:
+      return { start: STEPPE_START, middle: STEPPE_MIDDLE, end: STEPPE_END };
+    case 17:
+      return { start: EGYPTIAN_START, middle: EGYPTIAN_MIDDLE, end: EGYPTIAN_END };
     default:
-      throw new Error("Alignment must be between 1 and 4");
+      throw new Error("Alignment must be between 1 and 17");
   }
 }
 function generateNames$1(alignment, numNames = 10) {
   try {
-    if (alignment < 1 || alignment > 4) {
+    if (alignment < 1 || alignment > 17) {
       return {
         success: false,
-        error: "Alignment must be between 1 and 4"
+        error: "Alignment must be between 1 and 17"
       };
     }
     if (numNames < 1) {
@@ -679,8 +1764,29 @@ function generateNames$1(alignment, numNames = 10) {
     };
   }
 }
+function getAlignmentOptions() {
+  return [
+    { value: 1, label: "Evil" },
+    { value: 2, label: "Celtic (Gaelic)" },
+    { value: 3, label: "Nordic (Old Norse)" },
+    { value: 4, label: "Germanic" },
+    { value: 5, label: "Latin" },
+    { value: 6, label: "Ancient Greek" },
+    { value: 7, label: "Slavic" },
+    { value: 8, label: "Arabic/Persian" },
+    { value: 9, label: "Finnish" },
+    { value: 10, label: "Basque" },
+    { value: 11, label: "Elvish" },
+    { value: 12, label: "Draconic" },
+    { value: 13, label: "Primordial" },
+    { value: 14, label: "Infernal" },
+    { value: 15, label: "Anglo-Saxon" },
+    { value: 16, label: "Steppe Nomad" },
+    { value: 17, label: "Ancient Egyptian" }
+  ];
+}
 function isValidAlignment(value) {
-  return typeof value === "number" && value >= 1 && value <= 4;
+  return typeof value === "number" && value >= 1 && value <= 17;
 }
 const SHADOWDARK_VILLAIN_TYPES = [
   "Human",
@@ -1132,7 +2238,7 @@ function generateAdventureSeeds() {
     cards
   };
 }
-const anthropic$3 = new Anthropic({
+const anthropic$6 = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? ""
 });
 const generateNames = (alignment, numNames) => {
@@ -1154,7 +2260,7 @@ const generateNames = (alignment, numNames) => {
     });
   }
 };
-const getLieutenantTypes = (count = 2) => {
+const getLieutenantTypes$1 = (count = 2) => {
   try {
     console.log(`Getting ${count} lieutenant types using TypeScript`);
     const result = getRandomLieutenantTypes(count);
@@ -1380,7 +2486,7 @@ Return JSON:
   "alignment": 1-4,
   "reasoning": "Brief explanation of why this BBEG would want to appear this way to the public"
 }`;
-    const personaResponse = await anthropic$3.messages.create({
+    const personaResponse = await anthropic$6.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 150,
       messages: [{ role: "user", content: personaPrompt }]
@@ -1416,7 +2522,7 @@ Return JSON:
     }
     console.log("Generated names:", nameResult.names);
     console.log("Getting random lieutenant types...");
-    const lieutenantTypesResult = await getLieutenantTypes(2);
+    const lieutenantTypesResult = await getLieutenantTypes$1(2);
     if (!lieutenantTypesResult.success) {
       throw new Error(
         `Lieutenant types generation failed: ${lieutenantTypesResult.error}`
@@ -1616,7 +2722,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
       "First message content preview:",
       messages[0].content.substring(0, 100)
     );
-    const ai = await anthropic$3.messages.create({
+    const ai = await anthropic$6.messages.create({
       model: "claude-3-5-sonnet-20241022",
       system: "Return only the JSON object requested.",
       max_tokens: 1200,
@@ -1881,7 +2987,7 @@ Return one clean JSON object and nothing else.  Keep values concise:
   }
 };
 let isGeneratingScene = false;
-const anthropic$2 = new Anthropic({
+const anthropic$5 = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
 });
 async function generateScene(req, res) {
@@ -2223,7 +3329,7 @@ Please ensure this is a completely fresh scene generation, not a cached response
   console.log(promptWithRandomization.substring(0, 800));
   console.log("=== END FIRST 800 CHARS ===");
   console.log("=== END FINAL PROMPT DEBUG ===");
-  const response = await anthropic$2.messages.create({
+  const response = await anthropic$5.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 800,
     temperature: 0.9,
@@ -2340,7 +3446,7 @@ Create a scene goal and success conditions. Return JSON:
   "goal": "What the scene is trying to accomplish",
   "successConditions": ["Condition 1", "Condition 2", "Condition 3"]
 }`;
-  const response = await anthropic$2.messages.create({
+  const response = await anthropic$5.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 400,
     messages: [{ role: "user", content: prompt }]
@@ -2971,6 +4077,210 @@ const ACTION_SUBJECT = [
   "Usurp",
   "Waste"
 ];
+const DESCRIPTOR_1_ADVERBS = [
+  "Adventurously",
+  "Aggressively",
+  "Anxiously",
+  "Awkwardly",
+  "Beautifully",
+  "Bleakly",
+  "Boldly",
+  "Bravely",
+  "Busily",
+  "Calmly",
+  "Carefully",
+  "Carelessly",
+  "Cautiously",
+  "Ceaselessly",
+  "Cheerfully",
+  "Combatively",
+  "Coolly",
+  "Crazily",
+  "Curiously",
+  "Dangerously",
+  "Defiantly",
+  "Deliberately",
+  "Delicately",
+  "Delightfully",
+  "Dimly",
+  "Efficiently",
+  "Emotionally",
+  "Energetically",
+  "Enormously",
+  "Enthusiastically",
+  "Excitedly",
+  "Fearfully",
+  "Ferociously",
+  "Fiercely",
+  "Foolishly",
+  "Fortunately",
+  "Frantically",
+  "Freely",
+  "Frighteningly",
+  "Fully",
+  "Generously",
+  "Gently",
+  "Gladly",
+  "Gracefully",
+  "Gratefully",
+  "Happily",
+  "Hastily",
+  "Healthily",
+  "Helpfully",
+  "Helplessly",
+  "Hopelessly",
+  "Innocently",
+  "Intensely",
+  "Interestingly",
+  "Irritatingly",
+  "Joyfully",
+  "Kindly",
+  "Lazily",
+  "Lightly",
+  "Loosely",
+  "Loudly",
+  "Lovingly",
+  "Loyally",
+  "Majestically",
+  "Meaningfully",
+  "Mechanically",
+  "Mildly",
+  "Miserably",
+  "Mockingly",
+  "Mysteriously",
+  "Naturally",
+  "Neatly",
+  "Nicely",
+  "Oddly",
+  "Offensively",
+  "Officially",
+  "Partially",
+  "Passively",
+  "Peacefully",
+  "Perfectly",
+  "Playfully",
+  "Politely",
+  "Positively",
+  "Powerfully",
+  "Quaintly",
+  "Quarrelsomely",
+  "Quietly",
+  "Roughly",
+  "Rudely",
+  "Ruthlessly",
+  "Slowly",
+  "Softly",
+  "Strangely",
+  "Swiftly",
+  "Threateningly",
+  "Timidly",
+  "Very",
+  "Violently",
+  "Wildly",
+  "Yieldingly"
+];
+const DESCRIPTOR_2_ADJECTIVES = [
+  "Abnormal",
+  "Amusing",
+  "Artificial",
+  "Average",
+  "Beautiful",
+  "Bizarre",
+  "Boring",
+  "Bright",
+  "Broken",
+  "Clean",
+  "Cold",
+  "Colorful",
+  "Colorless",
+  "Comforting",
+  "Creepy",
+  "Cute",
+  "Damaged",
+  "Dark",
+  "Defeated",
+  "Dirty",
+  "Disagreeable",
+  "Dry",
+  "Dull",
+  "Empty",
+  "Enormous",
+  "Extraordinary",
+  "Extravagant",
+  "Faded",
+  "Familiar",
+  "Fancy",
+  "Feeble",
+  "Festive",
+  "Flawless",
+  "Forlorn",
+  "Fragile",
+  "Fragrant",
+  "Fresh",
+  "Full",
+  "Glorious",
+  "Graceful",
+  "Hard",
+  "Harsh",
+  "Healthy",
+  "Heavy",
+  "Historical",
+  "Horrible",
+  "Important",
+  "Interesting",
+  "Juvenile",
+  "Lacking",
+  "Large",
+  "Lavish",
+  "Lean",
+  "Less",
+  "Lethal",
+  "Lively",
+  "Lonely",
+  "Lovely",
+  "Magnificent",
+  "Mature",
+  "Messy",
+  "Mighty",
+  "Military",
+  "Modern",
+  "Mundane",
+  "Mysterious",
+  "Natural",
+  "Normal",
+  "Odd",
+  "Old",
+  "Pale",
+  "Peaceful",
+  "Petite",
+  "Plain",
+  "Poor",
+  "Powerful",
+  "Protective",
+  "Quaint",
+  "Rare",
+  "Reassuring",
+  "Remarkable",
+  "Rotten",
+  "Rough",
+  "Ruined",
+  "Rustic",
+  "Scary",
+  "Shocking",
+  "Simple",
+  "Small",
+  "Smooth",
+  "Soft",
+  "Strong",
+  "Stylish",
+  "Unpleasant",
+  "Valuable",
+  "Vibrant",
+  "Warm",
+  "Watery",
+  "Weak",
+  "Young"
+];
 function rollMeaningTable$1() {
   const verbRoll = Math.floor(Math.random() * 100) + 1;
   const subjectRoll = Math.floor(Math.random() * 100) + 1;
@@ -2990,6 +4300,25 @@ function rollMeaningTable$1() {
     meaning: `${verb} ${subject}`
   };
 }
+function rollDescriptorTable$1() {
+  const adverbRoll = Math.floor(Math.random() * 100) + 1;
+  const adjectiveRoll = Math.floor(Math.random() * 100) + 1;
+  const adverbIndex = Math.min(adverbRoll - 1, DESCRIPTOR_1_ADVERBS.length - 1);
+  const adverb = DESCRIPTOR_1_ADVERBS[adverbIndex];
+  const adjectiveIndex = Math.min(adjectiveRoll - 1, DESCRIPTOR_2_ADJECTIVES.length - 1);
+  const adjective = DESCRIPTOR_2_ADJECTIVES[adjectiveIndex];
+  return {
+    adverb_roll: adverbRoll,
+    adverb,
+    adverb_index: adverbIndex + 1,
+    // Return 1-indexed for display
+    adjective_roll: adjectiveRoll,
+    adjective,
+    adjective_index: adjectiveIndex + 1,
+    // Return 1-indexed for display
+    description: `${adverb} ${adjective}`
+  };
+}
 const runMeaningTable = () => {
   try {
     const result = rollMeaningTable$1();
@@ -2998,6 +4327,18 @@ const runMeaningTable = () => {
     return Promise.reject(
       new Error(
         error instanceof Error ? error.message : "Meaning table error occurred"
+      )
+    );
+  }
+};
+const runDescriptorTable = () => {
+  try {
+    const result = rollDescriptorTable$1();
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error ? error.message : "Descriptor table error occurred"
       )
     );
   }
@@ -3022,6 +4363,37 @@ const rollMeaningTable = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Error rolling Meaning Table:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : void 0
+    });
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      details: error instanceof Error ? error.stack : void 0
+    });
+  }
+};
+const rollDescriptorTable = async (req, res) => {
+  try {
+    console.log("Rolling Descriptor Table (Adverb/Adjective)");
+    const result = await runDescriptorTable();
+    console.log("Descriptor Table result:", result);
+    const response = {
+      success: true,
+      adverb_roll: result.adverb_roll || 0,
+      adverb: result.adverb || "Unknown",
+      adverb_index: result.adverb_index || 0,
+      adjective_roll: result.adjective_roll || 0,
+      adjective: result.adjective || "Unknown",
+      adjective_index: result.adjective_index || 0,
+      description: result.description || "Unknown Unknown",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    console.log("Sending response:", response);
+    res.json(response);
+  } catch (error) {
+    console.error("Error rolling Descriptor Table:", error);
     console.error("Error details:", {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : void 0
@@ -3733,6 +5105,161 @@ const testHexMap = async (req, res) => {
     });
   }
 };
+const anthropic$4 = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? ""
+});
+async function chooseLanguageWithFate(context) {
+  const prompt = `You are an expert in fantasy linguistics and world-building. Based on the following character context, choose the 3 MOST APPROPRIATE language styles for generating this character's name, ranked from best to worst.
+
+CHARACTER CONTEXT:
+Type: ${context.characterType}
+${context.race ? `Race: ${context.race}` : ""}
+${context.occupation ? `Occupation: ${context.occupation}` : ""}
+${context.motivation ? `Motivation: ${context.motivation}` : ""}
+${context.goal ? `Goal: ${context.goal}` : ""}
+${context.faction ? `Faction: ${context.faction}` : ""}
+${context.description ? `Description: ${context.description}` : ""}
+
+AVAILABLE LANGUAGE STYLES:
+1. Evil - Dark, harsh syllables for villains and evil characters
+2. Celtic (Gaelic) - Irish/Scottish inspired names perfect for elven and druidic cultures
+3. Nordic (Old Norse) - Old Norse names ideal for barbarian tribes and northern kingdoms
+4. Germanic - Germanic names perfect for dwarven clans and mountain craftsmen
+5. Latin - Classical Latin names for imperial organizations and scholarly orders
+6. Ancient Greek - Ancient Greek names for academic institutions and city-states
+7. Slavic - Slavic names great for cold empires and mystical kingdoms
+8. Arabic/Persian - Arabic/Persian names perfect for desert kingdoms and sultanates
+9. Finnish - Finnish names creating distinctive, otherworldly sounds
+10. Basque - Basque names with unique, unusual fantasy characteristics
+11. Elvish - Tolkien-inspired elvish names for ancient, graceful beings
+12. Draconic - Harsh, ancient draconic names for dragons and their servants
+13. Primordial - Elemental primordial names for nature spirits and ancient beings
+14. Infernal - Dark, imposing infernal names for evil entities and cults
+15. Anglo-Saxon - Old English Anglo-Saxon names for medieval warriors and nobles
+16. Steppe Nomad - Mongolian/Turkish inspired names for nomadic horse-riding cultures
+17. Ancient Egyptian - Ancient Egyptian names for pyramid-building desert civilizations
+
+Respond with EXACTLY this format:
+
+FIRST CHOICE: [Number]. [Language Name]
+REASONING: [1-2 sentences explaining why this language fits perfectly]
+
+SECOND CHOICE: [Number]. [Language Name]  
+REASONING: [1-2 sentences explaining why this would also work well]
+
+THIRD CHOICE: [Number]. [Language Name]
+REASONING: [1-2 sentences explaining why this could work as a backup]
+
+Consider the character's race, role, cultural background, and thematic elements when making your choices.`;
+  try {
+    const response = await anthropic$4.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 800,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    const text = content.text;
+    const choices = [];
+    const choicePattern = /(FIRST|SECOND|THIRD) CHOICE:\s*(\d+)\.\s*([^\n]+)\s*REASONING:\s*([^\n]+(?:\n[^\n]*(?!CHOICE:))*)/g;
+    let match;
+    while ((match = choicePattern.exec(text)) !== null) {
+      const alignment = parseInt(match[2]);
+      const languageName = match[3].trim();
+      const reasoning = match[4].trim();
+      if (alignment >= 1 && alignment <= 17) {
+        choices.push({
+          alignment,
+          languageName,
+          reasoning
+        });
+      }
+    }
+    if (choices.length === 0) {
+      throw new Error("Failed to parse LLM language choices");
+    }
+    const fateDecisions = [];
+    for (const choice of choices) {
+      const question = `Is ${choice.languageName} the right language style for this ${context.characterType}'s name?`;
+      const fateResult = rollFateChart$1("Likely", 5);
+      fateDecisions.push({
+        question,
+        alignment: choice.alignment,
+        languageName: choice.languageName,
+        roll: fateResult.roll,
+        result: fateResult.result,
+        accepted: fateResult.success
+      });
+      if (fateResult.success) {
+        return choice;
+      }
+    }
+    const fallbackChoice = choices[0];
+    fateDecisions.push({
+      question: `Should we use ${fallbackChoice.languageName} despite fate's previous rejections?`,
+      alignment: fallbackChoice.alignment,
+      languageName: fallbackChoice.languageName,
+      roll: 0,
+      // No actual roll, just accepting
+      result: "Fallback - Accepted",
+      accepted: true
+    });
+    return fallbackChoice;
+  } catch (error) {
+    console.error("Error in LLM language selection:", error);
+    const fallbackAlignment = context.characterType.toLowerCase().includes("villain") ? 1 : 2;
+    return {
+      alignment: fallbackAlignment,
+      languageName: ALIGNMENT_NAMES[fallbackAlignment],
+      reasoning: "Fallback choice due to LLM error"
+    };
+  }
+}
+async function generateNamesWithIntelligentLanguageChoice(context, numNames = 3) {
+  try {
+    const languageChoice = await chooseLanguageWithFate(context);
+    const nameResult = generateNames$1(languageChoice.alignment, numNames);
+    if (!nameResult.success) {
+      return {
+        success: false,
+        error: nameResult.error || "Name generation failed"
+      };
+    }
+    return {
+      success: true,
+      names: nameResult.names,
+      languageChoice
+      // Note: fateDecisions would be populated in a full implementation
+      // but for now we'll keep it simple and just return the final choice
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred"
+    };
+  }
+}
+async function generateSingleIntelligentName(context) {
+  const result = await generateNamesWithIntelligentLanguageChoice(context, 1);
+  if (!result.success || !result.names || result.names.length === 0) {
+    return {
+      success: false,
+      error: result.error || "Failed to generate name"
+    };
+  }
+  return {
+    success: true,
+    name: result.names[0],
+    languageChoice: result.languageChoice
+  };
+}
 const NPC_RACES = [
   "Human",
   "Human",
@@ -4910,6 +6437,40 @@ class NPCGenerator {
     }
     return this.getRandomElement(LAST_NAMES);
   }
+  /**
+   * Generate an intelligent name based on NPC characteristics
+   */
+  async generateIntelligentName(npcData) {
+    try {
+      const result = await generateSingleIntelligentName({
+        characterType: "NPC",
+        race: npcData.race,
+        occupation: npcData.occupation,
+        motivation: npcData.motivation,
+        description: `${npcData.race} ${npcData.occupation} with secret: ${npcData.secret}`
+      });
+      if (result.success && result.name) {
+        const nameParts = result.name.split(/\s+/);
+        if (nameParts.length >= 2) {
+          return {
+            firstName: nameParts[0],
+            lastName: nameParts.slice(1).join(" ")
+          };
+        } else {
+          return {
+            firstName: nameParts[0] || this.generateFirstName(),
+            lastName: this.generateLastName()
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Error generating intelligent name:", error);
+    }
+    return {
+      firstName: this.generateFirstName(),
+      lastName: this.generateLastName()
+    };
+  }
   generateNPC() {
     try {
       return {
@@ -4966,20 +6527,66 @@ class NPCGenerator {
     }
   }
 }
-function generateNPC() {
+async function generateIntelligentNPC() {
   const generator = new NPCGenerator();
-  return generator.generateNPC();
+  try {
+    const race = generator.generateRace();
+    const occupation = generator.generateOccupation();
+    const motivation = generator.generateMotivation();
+    const secret = generator.generateSecret();
+    const physicalAppearance = generator.generatePhysicalAppearance();
+    const economicStatus = generator.generateEconomicStatus();
+    const quirk = generator.generateQuirk();
+    const competence = generator.generateCompetence();
+    const nameData = await generator.generateIntelligentName({
+      race,
+      occupation,
+      motivation,
+      secret
+    });
+    return {
+      race,
+      occupation,
+      motivation,
+      secret,
+      physicalAppearance,
+      economicStatus,
+      quirk,
+      competence,
+      firstName: nameData.firstName,
+      lastName: nameData.lastName
+    };
+  } catch (error) {
+    console.error("Error generating intelligent NPC:", error);
+    return generator.generateNPC();
+  }
 }
 function generateNPCStep(step) {
   const generator = new NPCGenerator();
   return generator.generateStep(step);
 }
-const anthropic$1 = new Anthropic({
+const GLOBAL_NARRATIVE_RESTRICTIONS = `
+GLOBAL NARRATIVE RESTRICTIONS (Apply to ALL content):
+
+You are a master Dungeons and Dragons Game Master. Use words to craft narratively rich, but also simple and meaningful, role playing game world building elements. Write with wit, theatrical flair, and engaging storytelling that brings fantasy worlds to life.
+
+
+- NEVER include any adventure hooks, plot hooks, or suggestions for player character activities
+- NEVER include narratives about strange lights, glows, or mysterious illumination that can be seen at night from miles away
+- NEVER mention things glowing on the horizon at night
+- NEVER use the phrase "stands as a testament" or "a testament to" or any variation with the word "testament"
+- DO NOT include any content that suggests what players should do or where they should go
+- AVOID clichéd fantasy tropes like mysterious lights, ominous glows, or prophetic warnings
+- Keep descriptions atmospheric but practical, focusing on what exists rather than what might happen`;
+function getGlobalNarrativeRestrictions() {
+  return GLOBAL_NARRATIVE_RESTRICTIONS;
+}
+const anthropic$3 = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? ""
 });
-function generateCompleteNPC(req, res) {
+async function generateCompleteNPC(req, res) {
   try {
-    const npc = generateNPC();
+    const npc = await generateIntelligentNPC();
     res.json({
       success: true,
       npc
@@ -5064,10 +6671,12 @@ Please create a compelling narrative that:
 
 Write this as a 2-3 paragraph character description that a GM could use to roleplay this NPC effectively. Focus on personality, background, and how all these elements work together to create a memorable character.
 
+${getGlobalNarrativeRestrictions()}
+
 Then, in a separate section below the character description, add:
 
 **GM Notes:** If you modified, reinterpreted, or left out any of the provided details to create a more coherent character, explain what changes you made and why. If all details worked well together as-is, simply state "All provided details were incorporated as given."`;
-    const response = await anthropic$1.messages.create({
+    const response = await anthropic$3.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1e3,
       messages: [{
@@ -5630,7 +7239,7 @@ class SteadingGenerator {
   }
   generateCastleName() {
     const firstPart = this.getTableResult(CASTLE_FIRST_PARTS, this.rollD30());
-    const secondPart = this.getTableResult(CASTLE_SECOND_PARTS, Math.floor(Math.random() * 24) + 1);
+    const secondPart = this.getTableResult(CASTLE_SECOND_PARTS, this.rollDie(24));
     return `Castle ${firstPart} ${secondPart}`;
   }
   generateAbbeyName() {
@@ -5693,6 +7302,12 @@ class SteadingGenerator {
       ];
       secret = this.getTableResult(secrets, this.rollD6());
     }
+    const descriptorResult = rollDescriptorTable$1();
+    const descriptors = {
+      adverb: descriptorResult.adverb,
+      adjective: descriptorResult.adjective,
+      description: descriptorResult.description
+    };
     return {
       category: "Civilian",
       type: "Hamlet",
@@ -5703,7 +7318,8 @@ class SteadingGenerator {
       peasantHouses,
       totalBuildings: 1 + peasantHouses,
       layout,
-      secret
+      secret,
+      descriptors
     };
   }
   generateVillage() {
@@ -5987,16 +7603,6 @@ class SteadingGenerator {
     } else {
       appearance = appearanceOptions[appearanceRoll - 1];
     }
-    const general = {
-      blacksmiths: sizeMultiplier,
-      cemeteries: sizeMultiplier,
-      churches: sizeMultiplier,
-      general_stores: sizeMultiplier,
-      libraries: sizeMultiplier,
-      markets: sizeMultiplier,
-      stables: sizeMultiplier,
-      taverns: sizeMultiplier
-    };
     const specialLocationOptions = [
       "Abandoned building",
       "Aqueduct",
@@ -6022,12 +7628,23 @@ class SteadingGenerator {
     const special = [];
     for (let i = 0; i < sizeMultiplier; i++) {
       const roll = this.rollD20();
-      special.push(specialLocationOptions[roll - 1]);
+      const location = specialLocationOptions[roll - 1];
+      const descriptorResult = rollDescriptorTable$1();
+      special.push({
+        location,
+        descriptors: {
+          adverb: descriptorResult.adverb,
+          adjective: descriptorResult.adjective,
+          description: descriptorResult.description
+        }
+      });
     }
     const buildingsOfInterest = [];
     for (let i = 0; i < sizeMultiplier * 3; i++) {
       const roll = this.rollD20();
+      let building = "";
       if (roll >= 1 && roll <= 3) {
+        const regularHousingRoll = this.rollDie(10);
         const housingOptions = [
           "Studio",
           "One bedroom apartment",
@@ -6050,63 +7667,113 @@ class SteadingGenerator {
           "Basement",
           "Hut"
         ];
-        const detail = this.getTableResult(housingOptions, this.rollD20());
-        buildingsOfInterest.push(`Housing: ${detail}`);
+        const detail = this.getTableResult(housingOptions, regularHousingRoll <= 10 ? regularHousingRoll : this.rollD20());
+        building = `Housing: ${detail}`;
       } else if (roll >= 4 && roll <= 10) {
         const businessOptions = [
           "Alchemist",
+          "Alchemist",
+          "Animal trainer",
           "Animal trainer",
           "Apothecary",
+          "Apothecary",
+          "Armorer",
           "Armorer",
           "Artist",
+          "Artist",
+          "Astronomer",
           "Astronomer",
           "Baker",
+          "Baker",
+          "Bank",
           "Bank",
           "Blacksmith",
+          "Blacksmith",
+          "Bookmaker",
           "Bookmaker",
           "Botanist",
+          "Botanist",
+          "Brewery",
           "Brewery",
           "Brothel",
+          "Brothel",
+          "Butcher",
           "Butcher",
           "Candlemaker",
+          "Candlemaker",
+          "Candy shop",
           "Candy shop",
           "Carpenter",
+          "Carpenter",
+          "Cartographer",
           "Cartographer",
           "Casino",
+          "Casino",
+          "Cheesemaker",
           "Cheesemaker",
           "Doctor",
+          "Doctor",
+          "Dollmaker",
           "Dollmaker",
           "Florist",
+          "Florist",
+          "Fortuneteller",
           "Fortuneteller",
           "Foundry",
+          "Foundry",
+          "General store",
           "General store",
           "Glassblower",
+          "Glassblower",
+          "Hairdresser",
           "Hairdresser",
           "Hardware store",
+          "Hardware store",
+          "Jeweler",
           "Jeweler",
           "Lawyer",
+          "Lawyer",
+          "Locksmith",
           "Locksmith",
           "Pawnshop",
+          "Pawnshop",
+          "Perfumer",
           "Perfumer",
           "Pet shop",
+          "Pet shop",
+          "Potter",
           "Potter",
           "Restaurant",
+          "Restaurant",
+          "Sage",
           "Sage",
           "Sauna",
+          "Sauna",
+          "Scribe",
           "Scribe",
           "Siege engines seller",
+          "Siege engines seller",
+          "Slaughterhouse",
           "Slaughterhouse",
           "Stables",
+          "Stables",
+          "Tailor",
           "Tailor",
           "Tanner",
+          "Tanner",
+          "Tapestry maker",
           "Tapestry maker",
           "Tavern",
+          "Tavern",
+          "Tinker",
           "Tinker",
           "Veterinarian",
+          "Veterinarian",
+          "Wine shop",
           "Wine shop"
         ];
-        const detail = this.getTableResult(businessOptions, Math.floor(Math.random() * 50) + 1);
-        buildingsOfInterest.push(`Business: ${detail}`);
+        const business = this.getTableResult(businessOptions, this.rollD100());
+        building = `Business: ${business}`;
       } else if (roll >= 11 && roll <= 13) {
         const officialOptions = [
           "Arcane university",
@@ -6131,7 +7798,7 @@ class SteadingGenerator {
           "Water tower"
         ];
         const detail = this.getTableResult(officialOptions, this.rollD20());
-        buildingsOfInterest.push(`Official: ${detail}`);
+        building = `Official: ${detail}`;
       } else if (roll === 14) {
         const religiousOptions = [
           "Catacombs",
@@ -6148,7 +7815,7 @@ class SteadingGenerator {
           "Ziggurat"
         ];
         const detail = this.getTableResult(religiousOptions, this.rollD12());
-        buildingsOfInterest.push(`Religious: ${detail}`);
+        building = `Religious: ${detail}`;
       } else if (roll >= 15 && roll <= 17) {
         const publicOptions = [
           "Aquarium",
@@ -6173,7 +7840,7 @@ class SteadingGenerator {
           "Zoo"
         ];
         const detail = this.getTableResult(publicOptions, this.rollD20());
-        buildingsOfInterest.push(`Public: ${detail}`);
+        building = `Public: ${detail}`;
       } else {
         const militaryOptions = [
           "Armory",
@@ -6198,8 +7865,17 @@ class SteadingGenerator {
           "Warehouse"
         ];
         const detail = this.getTableResult(militaryOptions, this.rollD20());
-        buildingsOfInterest.push(`Military: ${detail}`);
+        building = `Military: ${detail}`;
       }
+      const descriptorResult = rollDescriptorTable$1();
+      buildingsOfInterest.push({
+        building,
+        descriptors: {
+          adverb: descriptorResult.adverb,
+          adjective: descriptorResult.adjective,
+          description: descriptorResult.description
+        }
+      });
     }
     const isWalled = this.rollDie(2) === 1;
     let defenseInfo = {
@@ -6208,9 +7884,20 @@ class SteadingGenerator {
     };
     if (isWalled) {
       const entrances = [];
-      const directions = ["North", "East", "South", "West"];
+      const availableDirections = ["North", "East", "South", "West"];
       for (let i = 0; i < sizeMultiplier; i++) {
-        const direction = this.getRandomElement(directions);
+        let direction;
+        let attempts2 = 0;
+        do {
+          const directionRoll = this.rollDie(4);
+          direction = ["North", "East", "South", "West"][directionRoll - 1];
+          attempts2++;
+        } while (entrances.some((e) => e.includes(direction)) && attempts2 < 10);
+        if (entrances.some((e) => e.includes(direction))) {
+          const usedDirections = entrances.map((e) => e.split(" ")[0]);
+          const remaining = availableDirections.filter((d) => !usedDirections.includes(d));
+          direction = remaining.length > 0 ? remaining[0] : direction;
+        }
         const entranceRoll = this.rollD6();
         let entranceType;
         if (entranceRoll >= 1 && entranceRoll <= 3) {
@@ -6310,7 +7997,6 @@ class SteadingGenerator {
       characteristics,
       appearance,
       pointsOfInterest: {
-        general,
         special
       },
       buildingsOfInterest,
@@ -6362,16 +8048,16 @@ class SteadingGenerator {
     const noblesInJail = this.rollDie(3);
     const siegeSupplies = this.roll2D6();
     const treasure = {};
-    if (this.rollDie(2) === 1) {
+    if (this.rollD100() <= 50) {
       treasure.gold = this.rollDie(4) * 1e4;
     }
-    if (this.rollDie(2) === 1) {
+    if (this.rollD100() <= 50) {
       treasure.additionalGold = this.rollDie(6) * 5e3;
     }
-    if (this.rollDie(4) === 1) {
+    if (this.rollD100() <= 25) {
       treasure.gems = this.rollDie(6) + this.rollDie(6) + this.rollDie(6);
     }
-    if (this.rollDie(4) === 1) {
+    if (this.rollD100() <= 25) {
       treasure.jewelry = this.rollDie(10);
     }
     if (this.rollD100() <= 15) {
@@ -6796,13 +8482,13 @@ class SteadingGenerator {
       abbotLevel = 9;
       if (monksNuns >= 50) abbotLevel += 1;
     } else {
-      monksNuns = Math.floor(Math.random() * 24) + 1 * 10 + 90;
+      monksNuns = this.rollDie(24) * 10 + 90;
       abbotLevel = 9 + Math.floor(monksNuns / 100);
     }
     const structureAndLand = {
       protection: "Stone wall with large gate",
       outsideWalls: "Fields and farming buildings (barns, mills, etc.)",
-      areaWithinWalls: `${this.rollDie(2) + 2} acres (= ${1.2 + this.rollDie(2) * 0.4}-${1.2 + this.rollDie(2) * 0.4 + 0.4} ha)`
+      areaWithinWalls: `${this.rollDie(2) + 2} acres (= ${1.2 + (this.rollDie(2) - 1) * 0.4}-${1.6} ha)`
     };
     const coreLocations = [
       "Abbot's room",
@@ -6958,8 +8644,8 @@ class SteadingGenerator {
       name,
       nameVariations: [name],
       disposition: this.generateDisposition(),
-      size,
-      population: {
+      abbeySize: size,
+      abbeyPopulation: {
         monksNuns,
         abbotLevel
       },
@@ -7007,9 +8693,22 @@ const steadingGenerator = new SteadingGenerator();
 function generateSteading(type) {
   return steadingGenerator.generateSteading(type);
 }
-const anthropic = new Anthropic({
+const anthropic$2 = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? ""
 });
+function generateNotableCitizenNPCs(notableNPCs) {
+  if (!notableNPCs || notableNPCs.length === 0) {
+    return [];
+  }
+  const npcGenerator = new NPCGenerator();
+  const generatedNPCs = [];
+  for (const occupation of notableNPCs) {
+    const npc = npcGenerator.generateNPC();
+    npc.occupation = occupation;
+    generatedNPCs.push(npc);
+  }
+  return generatedNPCs;
+}
 function generateCompleteSteading(req, res) {
   try {
     const { type } = req.body;
@@ -7089,18 +8788,60 @@ async function generateSteadingNarrative(req, res) {
       console.error("Error stringifying steading data:", stringifyError);
       steadingData = `Settlement: ${steading.name} (${steading.type})`;
     }
+    let allGeneratedNPCs = [];
+    if (steading.ruler) {
+      const rulerNPC = generateNotableCitizenNPCs([steading.ruler])[0];
+      if (rulerNPC) {
+        rulerNPC.occupation = steading.ruler;
+        allGeneratedNPCs.push(rulerNPC);
+        console.log(`Generated ruler NPC: ${rulerNPC.firstName} ${rulerNPC.lastName} (${rulerNPC.occupation})`);
+      }
+    }
+    if (steading.notableNPCs && Array.isArray(steading.notableNPCs)) {
+      const citizenNPCs = generateNotableCitizenNPCs(steading.notableNPCs);
+      allGeneratedNPCs.push(...citizenNPCs);
+      console.log(`Generated ${citizenNPCs.length} NPCs for notable citizens`);
+    }
+    let descriptorGuidance = "";
+    if (steading.descriptors) {
+      descriptorGuidance = `
+
+IMPORTANT: This settlement has been given the mythic descriptors "${steading.descriptors.description}" (${steading.descriptors.adverb} + ${steading.descriptors.adjective}). Let these qualities inspire the overall mood, atmosphere, and character of the settlement. NEVER put these descriptor words in quotation marks or use them literally. Instead, let them subtly influence your word choices, imagery, and tone. For buildings and special locations with their own descriptive pairs, use the same approach - let those descriptors guide the feel and atmosphere without forcing the actual words into the narrative. Think of descriptors as invisible mood guides, not vocabulary requirements.`;
+    }
+    let npcGuidance = "";
+    if (allGeneratedNPCs.length > 0) {
+      const npcDescriptions = allGeneratedNPCs.map((npc) => {
+        const role = npc.occupation.toLowerCase().includes("ruler") || npc.occupation.toLowerCase().includes("lord") || npc.occupation.toLowerCase().includes("mayor") ? "RULER" : "NOTABLE CITIZEN";
+        return `${role}: ${npc.firstName} ${npc.lastName} - ${npc.race} ${npc.occupation}. Motivation: ${npc.motivation}. Appearance: ${npc.physicalAppearance}. Quirk: ${npc.quirk}. Secret: ${npc.secret}. Economic Status: ${npc.economicStatus}. Competence: ${npc.competence}.`;
+      }).join("\n");
+      npcGuidance = `
+
+IMPORTANT - DETAILED NPCs TO WEAVE INTO NARRATIVE:
+The following NPCs have been generated for this settlement. DO NOT list them separately or create an NPC section. Instead, naturally incorporate them into your narrative storytelling. Mention them organically as part of the settlement's story, describing them in context as you tell about different areas, events, or aspects of the settlement:
+
+${npcDescriptions}
+
+Weave these characters naturally into your narrative - describe them as you mention different locations, tell about the settlement's governance, discuss local events, or paint the social fabric of the community. Make them feel like living, breathing parts of the settlement's story rather than a separate character roster.`;
+    }
     const prompt = `You are a master storyteller and world-builder for tabletop RPGs. I will provide you with detailed information about a settlement (steading) that has been randomly generated. Your task is to weave these details into a compelling, coherent narrative that brings this place to life.
 
+NARRATIVE APPROACH - THEME FIRST:
+1. ESTABLISH A GENERAL THEME: Begin by analyzing the ruler, outside appearance, disposition, and notable NPCs to establish a unifying theme or character for this settlement. This theme should guide the entire narrative.
+2. APPLY DESCRIPTORS WITHIN THE THEME: When describing points of interest and buildings, use the mythic descriptor word pairs to enhance locations, but always within the confines of your established theme.
+3. CREATIVE ADAPTATION: If mythic descriptor words naturally contradict or feel jarring with your established theme, find creative ways to make them work or reinterpret them. Prioritize narrative flow and thematic consistency over forcing exact descriptor words.
+4. THEMATIC COHESION: Everything should feel like it belongs in the same settlement with the same underlying character and mood.
+
 Please create a rich narrative description that:
-1. Tells the story of this settlement - its history, current state, and what makes it unique
-2. Explains how all the various details work together logically
-3. Creates atmosphere and mood appropriate to the settlement type
-4. Includes plot hooks and adventure opportunities for visiting adventurers
-5. Resolves any contradictory details in a creative way that enhances rather than detracts from the story
+1. Opens by establishing the settlement's overarching theme based on ruler, appearance, disposition, and key NPCs
+2. Tells the story of this settlement - its history, current state, and what makes it unique
+3. Explains how all the various details work together logically within your established theme
+4. Creates atmosphere and mood that remains consistent throughout
+5. Resolves any contradictory details in creative ways that enhance the thematic unity
 6. Focuses on what makes this place memorable and distinct
+7. Naturally incorporates any provided NPCs into the narrative flow without creating separate character sections
 
 Here is the settlement data:
-${steadingData}
+${steadingData}${descriptorGuidance}${npcGuidance}
 
 Guidelines:
 - Write in a descriptive, atmospheric tone suitable for a GM to read to players
@@ -7108,11 +8849,15 @@ Guidelines:
 - Explain the relationships between different NPCs, factions, and locations
 - If there are secrets, events, or conflicts, weave them into the narrative naturally
 - Include specific details that make the settlement feel lived-in and real
-- Suggest 2-3 adventure hooks or interesting situations for player characters
 - Keep the narrative between 300-500 words
+- IMPORTANT: For buildings and special locations with descriptive pairs, DO NOT use quotation marks or force the exact descriptor words into the text. Instead, let these descriptors inspire the mood, atmosphere, and feel of each location without explicitly stating them, but always within your established theme
+- If mythic descriptors conflict with your theme, creatively reinterpret them or find ways to make them work - narrative cohesion is more important than literal descriptor usage
+- Maintain thematic consistency throughout - every element should feel like it belongs in the same coherent world
+
+${getGlobalNarrativeRestrictions()}
 
 Write the narrative now:`;
-    const response = await anthropic.messages.create({
+    const response = await anthropic$2.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 800,
       temperature: 0.8,
@@ -7155,6 +8900,1645 @@ function getSettlementTypes(req, res) {
     });
   }
 }
+const anthropic$1 = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? ""
+});
+const getLieutenantTypes = (count = 2) => {
+  try {
+    const result = getRandomLieutenantTypes(count);
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.resolve({
+      success: false,
+      error: error instanceof Error ? error.message : "Lieutenant types generation failed"
+    });
+  }
+};
+const getRandomVillainType = () => {
+  const randomIndex = Math.floor(Math.random() * SHADOWDARK_VILLAIN_TYPES.length);
+  return SHADOWDARK_VILLAIN_TYPES[randomIndex];
+};
+const generateIntermediateSteps = async () => {
+  const adventureSeeds = generateAdventureSeeds();
+  const nameResult = await generateNamesWithIntelligentLanguageChoice({
+    characterType: "villain",
+    race: adventureSeeds.race,
+    goal: adventureSeeds.goal,
+    description: "A main antagonist/villain for the campaign"
+  }, 6);
+  const villainNames = nameResult.success ? nameResult.names : ["Malachar", "Zygrath", "Nethys", "Vorthak", "Xantheus", "Balthazor"];
+  const lieutenantResult = await getLieutenantTypes(2);
+  const lieutenantTypes = lieutenantResult.success ? lieutenantResult.lieutenant_types : ["Assassin", "Cultist"];
+  const lieutenantNameResult = await generateNamesWithIntelligentLanguageChoice({
+    characterType: "lieutenant",
+    race: adventureSeeds.race,
+    goal: adventureSeeds.goal,
+    description: `Lieutenants serving under the villain: ${lieutenantTypes.join(", ")}`
+  }, 6);
+  const lieutenantNames = lieutenantNameResult.success ? lieutenantNameResult.names : ["Vex", "Korran", "Silith", "Drak", "Nereth", "Zylara"];
+  const factionNameResult = await generateSingleIntelligentName({
+    characterType: "faction",
+    race: adventureSeeds.race,
+    goal: adventureSeeds.goal,
+    description: "An evil organization/cult/faction serving the villain"
+  });
+  const factionName = factionNameResult.success ? `The ${factionNameResult.name} Covenant` : "The Obsidian Covenant";
+  const expandedElements = await generateAllVillainElements({
+    tarotCards: adventureSeeds.cards,
+    goal: adventureSeeds.goal,
+    race: adventureSeeds.race,
+    villainNames: villainNames || [],
+    lieutenantTypes: lieutenantTypes || [],
+    lieutenantNames: lieutenantNames || [],
+    factionName
+  });
+  return {
+    tarotCards: adventureSeeds.cards,
+    goal: adventureSeeds.goal,
+    race: adventureSeeds.race,
+    villainNames: villainNames || [],
+    lieutenantTypes: lieutenantTypes || [],
+    lieutenantNames: lieutenantNames || [],
+    factionName,
+    ...expandedElements
+  };
+};
+const regenerateIntermediateStep = async (stepKey, currentData) => {
+  const updatedData = { ...currentData };
+  switch (stepKey) {
+    case "tarotCards":
+      const adventureSeeds = generateAdventureSeeds();
+      updatedData.tarotCards = adventureSeeds.cards;
+      break;
+    case "goal":
+      const newAdventureSeeds = generateAdventureSeeds();
+      updatedData.goal = newAdventureSeeds.goal;
+      break;
+    case "race":
+      const raceSeeds = generateAdventureSeeds();
+      updatedData.race = raceSeeds.race;
+      break;
+    case "villainNames":
+      const nameResult = await generateNamesWithIntelligentLanguageChoice({
+        characterType: "villain",
+        race: updatedData.race,
+        goal: updatedData.goal,
+        description: "A main antagonist/villain for the campaign"
+      }, 6);
+      updatedData.villainNames = nameResult.success ? nameResult.names : ["Malachar", "Zygrath", "Nethys", "Vorthak", "Xantheus", "Balthazor"];
+      break;
+    case "lieutenantTypes":
+      const lieutenantResult = await getLieutenantTypes(2);
+      updatedData.lieutenantTypes = lieutenantResult.success ? lieutenantResult.lieutenant_types : ["Assassin", "Cultist"];
+      break;
+    case "lieutenantNames":
+      const lieutenantNameResult = await generateNamesWithIntelligentLanguageChoice({
+        characterType: "lieutenant",
+        race: updatedData.race,
+        goal: updatedData.goal,
+        description: `Lieutenants serving under the villain: ${updatedData.lieutenantTypes.join(", ")}`
+      }, 6);
+      updatedData.lieutenantNames = lieutenantNameResult.success ? lieutenantNameResult.names : ["Vex", "Korran", "Silith", "Drak", "Nereth", "Zylara"];
+      break;
+    case "llmReasoning":
+      updatedData.llmReasoning = await generateLLMReasoning({
+        tarotCards: updatedData.tarotCards,
+        goal: updatedData.goal,
+        race: updatedData.race,
+        villainNames: updatedData.villainNames,
+        lieutenantTypes: updatedData.lieutenantTypes,
+        lieutenantNames: updatedData.lieutenantNames
+      });
+      break;
+  }
+  return updatedData;
+};
+const generateAllVillainElements = async (baseData) => {
+  const prompt = `You are an expert RPG designer creating a complete villain generation process. Based on the following elements, generate ALL the missing components with fate questions and detailed reasoning:
+
+BASE ELEMENTS:
+Tarot Cards: ${JSON.stringify(baseData.tarotCards, null, 2)}
+Goal: ${baseData.goal}
+Race: ${baseData.race}
+Villain Names: ${baseData.villainNames.join(", ")}
+Lieutenant Types: ${baseData.lieutenantTypes.join(", ")}
+Lieutenant Names: ${baseData.lieutenantNames.join(", ")}
+Faction Name: ${baseData.factionName}
+
+Generate the following components in JSON format:
+
+{
+  "factionFateQuestions": [
+    {
+      "question": "Yes/No question about faction's origin or nature",
+      "roll": "Yes/No with mythic reasoning",
+      "interpretation": "What this means for the faction",
+      "impact": "How this affects their operations"
+    }
+    // Generate 3-4 faction fate questions
+  ],
+  "lieutenantFateQuestions": [
+    {
+      "lieutenantName": "First lieutenant name from list",
+      "lieutenantType": "First lieutenant type from list",
+      "fateQuestions": [
+        {
+          "question": "Yes/No question about this lieutenant's background",
+          "roll": "Yes/No with mythic reasoning",
+          "interpretation": "What this means for their role"
+        }
+        // 2-3 questions per lieutenant
+      ]
+    },
+    {
+      "lieutenantName": "Second lieutenant name from list",
+      "lieutenantType": "Second lieutenant type from list",
+      "fateQuestions": [
+        // 2-3 questions for second lieutenant
+      ]
+    }
+  ],
+  "clues": [
+    "8 investigation clues that heroes can discover about the villain",
+    "Each clue should reveal different aspects",
+    "Mix of physical evidence, witness accounts, documents, etc.",
+    "Clues should build toward revealing the villain's plan"
+  ],
+  "highTowerSurprise": {
+    "surprise": "A major plot twist or revelation about the villain",
+    "fateQuestion": "Yes/No question about how this surprise unfolds",
+    "roll": "Yes/No with mythic reasoning",
+    "interpretation": "How the fate roll affects the surprise",
+    "finalOutcome": "The actual result after the fate decision"
+  },
+  "minions": [
+    {
+      "type": "Primary minion type",
+      "description": "What they do and how they serve the villain",
+      "count": "Approximate numbers (e.g., 'dozens', 'a handful', 'scores')"
+    }
+    // 3-4 different minion types
+  ],
+  "llmReasoning": {
+    "tarotInterpretation": "How the tarot cards influence the overall villain concept",
+    "raceRationale": "Why this race works perfectly with the goal and tarot themes",
+    "goalAlignment": "How all elements align to create a coherent villain",
+    "overallCoherence": "Summary of how all fate decisions create a compelling antagonist",
+    "villainNameChoice": "Which villain name from the generated list works best and why (include the chosen name)",
+    "lieutenantNameChoices": "Which lieutenant names from the generated list work best for each lieutenant type and why (include the chosen names)"
+  }
+}
+
+Make all fate questions meaningful and let the Yes/No rolls genuinely influence the outcomes. Use mythic GME style reasoning for the rolls.`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 3e3,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
+    }
+    const elements = JSON.parse(jsonMatch[0]);
+    return elements;
+  } catch (error) {
+    console.error("Error generating villain elements:", error);
+    return {
+      factionFateQuestions: [
+        {
+          question: "Was this faction founded by the villain personally?",
+          roll: "Yes - The villain created this organization from nothing",
+          interpretation: "The faction is deeply loyal and reflects the villain's personal vision",
+          impact: "Members are fanatically devoted and difficult to turn against their leader"
+        }
+      ],
+      lieutenantFateQuestions: [
+        {
+          lieutenantName: baseData.lieutenantNames[0] || "Vex",
+          lieutenantType: baseData.lieutenantTypes[0] || "Assassin",
+          fateQuestions: [
+            {
+              question: "Does this lieutenant have a personal grudge motivating their service?",
+              roll: "Yes - They seek revenge against the same enemies",
+              interpretation: "Their loyalty is based on shared hatred rather than mere employment"
+            }
+          ]
+        },
+        {
+          lieutenantName: baseData.lieutenantNames[1] || "Korran",
+          lieutenantType: baseData.lieutenantTypes[1] || "Cultist",
+          fateQuestions: [
+            {
+              question: "Is this lieutenant secretly plotting against the villain?",
+              roll: "No - They are completely devoted to the cause",
+              interpretation: "This lieutenant can be trusted absolutely and will never betray the villain"
+            }
+          ]
+        }
+      ],
+      clues: [
+        "Strange symbols carved into stone at crime scenes",
+        "Witnesses report seeing the villain's distinctive appearance",
+        "Documents bearing the faction's seal found at key locations",
+        "Pattern of attacks targeting specific types of victims",
+        "Unusual magical residue left at sites of villain activity",
+        "Intercepted communications between faction members",
+        "Financial records showing suspicious transactions",
+        "Artifacts or weapons with unique craftsmanship signatures"
+      ],
+      highTowerSurprise: {
+        surprise: "The villain's true plan is far grander than initially apparent",
+        fateQuestion: "Does the villain's plan succeed partially before heroes can stop it?",
+        roll: "Yes - But only the first phase completes",
+        interpretation: "The heroes arrive just as the villain achieves a significant milestone",
+        finalOutcome: "The villain has gained considerable power but their ultimate goal remains unfinished"
+      },
+      minions: [
+        {
+          type: "Elite Guards",
+          description: "Highly trained warriors who serve as the villain's personal protection",
+          count: "A dozen"
+        },
+        {
+          type: "Cult Followers",
+          description: "Fanatical believers who spread the villain's influence",
+          count: "Scores"
+        },
+        {
+          type: "Infiltrators",
+          description: "Spies and saboteurs placed throughout society",
+          count: "A handful"
+        }
+      ],
+      llmReasoning: {
+        tarotInterpretation: `The tarot spread of ${baseData.tarotCards.map((c) => c.card_text).join(", ")} creates a complex narrative foundation for this villain.`,
+        raceRationale: `The choice of ${baseData.race} as the villain's race provides excellent opportunities for developing their motivations and methods.`,
+        goalAlignment: `The goal of "${baseData.goal}" aligns perfectly with the tarot themes and racial background.`,
+        overallCoherence: "All elements combine to create a multi-layered antagonist with clear motivations and compelling story potential.",
+        villainNameChoice: `From the names ${baseData.villainNames.join(", ")}, I choose ${baseData.villainNames[0]} as it resonates with the dark themes and provides gravitas suitable for the villain's goal.`,
+        lieutenantNameChoices: `For the lieutenants: ${baseData.lieutenantNames[0]} works perfectly as the ${baseData.lieutenantTypes[0]}, while ${baseData.lieutenantNames[1]} suits the ${baseData.lieutenantTypes[1]} role. These names complement the villain's scheme.`
+      }
+    };
+  }
+};
+const generateLLMReasoning = async (data) => {
+  const prompt = `You are an expert RPG designer analyzing the results of various generation systems. Provide reasoning and interpretation for the following randomly generated and algorithmic results:
+
+TAROT CARDS (Random table rolls):
+${JSON.stringify(data.tarotCards, null, 2)}
+
+GOAL (Random from 360-item table): ${data.goal}
+
+RACE (Weighted random selection): ${data.race}
+
+VILLAIN NAMES (Algorithmic evil-name generation): ${data.villainNames.join(", ")}
+
+LIEUTENANT TYPES (Random table rolls): ${data.lieutenantTypes.join(", ")}
+
+LIEUTENANT NAMES (Algorithmic evil-name generation): ${data.lieutenantNames.join(", ")}
+
+Provide analysis in the following format:
+
+TAROT INTERPRETATION:
+[How do these 6 tarot cards work together thematically? What narrative themes do they suggest?]
+
+RACE SELECTION RATIONALE:
+[Why does this race choice work well with the goal and tarot themes? What does it add to the villain concept?]
+
+GOAL ALIGNMENT:
+[How does the randomly selected goal align with or contrast with the tarot spread? What interesting tensions or synergies exist?]
+
+OVERALL COHERENCE:
+[Summary of how all elements work together to create a compelling villain concept]
+
+VILLAIN NAME CHOICE:
+[From the generated villain names, pick the one that works best with the concept and explain why. Include the chosen name in your reasoning.]
+
+LIEUTENANT NAME CHOICES:
+[From the generated lieutenant names, assign the best names to each lieutenant type and explain the reasoning. Include the chosen names for each type.]
+
+Keep your reasoning concise but insightful. Focus on how the random elements can create unexpected but compelling villain concepts.`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1200,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    const text = content.text;
+    const reasoning = {
+      tarotInterpretation: "",
+      raceRationale: "",
+      goalAlignment: "",
+      overallCoherence: "",
+      villainNameChoice: "",
+      lieutenantNameChoices: ""
+    };
+    const sections = text.split(/(?=TAROT INTERPRETATION:|RACE SELECTION RATIONALE:|GOAL ALIGNMENT:|OVERALL COHERENCE:|VILLAIN NAME CHOICE:|LIEUTENANT NAME CHOICES:)/);
+    for (const section of sections) {
+      if (section.includes("TAROT INTERPRETATION:")) {
+        reasoning.tarotInterpretation = section.replace("TAROT INTERPRETATION:", "").trim();
+      } else if (section.includes("RACE SELECTION RATIONALE:")) {
+        reasoning.raceRationale = section.replace("RACE SELECTION RATIONALE:", "").trim();
+      } else if (section.includes("GOAL ALIGNMENT:")) {
+        reasoning.goalAlignment = section.replace("GOAL ALIGNMENT:", "").trim();
+      } else if (section.includes("OVERALL COHERENCE:")) {
+        reasoning.overallCoherence = section.replace("OVERALL COHERENCE:", "").trim();
+      } else if (section.includes("VILLAIN NAME CHOICE:")) {
+        reasoning.villainNameChoice = section.replace("VILLAIN NAME CHOICE:", "").trim();
+      } else if (section.includes("LIEUTENANT NAME CHOICES:")) {
+        reasoning.lieutenantNameChoices = section.replace("LIEUTENANT NAME CHOICES:", "").trim();
+      }
+    }
+    return reasoning;
+  } catch (error) {
+    console.error("Error generating LLM reasoning:", error);
+    return {
+      tarotInterpretation: "The tarot cards suggest a complex narrative with multiple layers of meaning that will shape this villain's story.",
+      raceRationale: `The selection of ${data.race} as the villain's race provides interesting opportunities for developing their background and motivations.`,
+      goalAlignment: `The goal of "${data.goal}" creates compelling possibilities when combined with the other generated elements.`,
+      overallCoherence: "All elements combine to create a multi-layered antagonist with clear motivations and compelling story potential.",
+      villainNameChoice: `From the names ${data.villainNames.join(", ")}, I choose ${data.villainNames[0]} as it resonates with the dark themes established by the tarot and race.`,
+      lieutenantNameChoices: `For the lieutenants: ${data.lieutenantNames[0]} works well as the ${data.lieutenantTypes?.[0] || "first lieutenant"}, while ${data.lieutenantNames[1]} suits the ${data.lieutenantTypes?.[1] || "second lieutenant"} role.`
+    };
+  }
+};
+const generateVillainNarrativeFromSteps = async (generationData) => {
+  const prompt = `You are an expert dungeon master creating a structured narrative about a villain for a fantasy RPG campaign. Based on the following generation results, create a well-organized story with specific headers and sections:
+
+TAROT INSPIRATION:
+${JSON.stringify(generationData.tarotCards, null, 2)}
+
+GENERATED ELEMENTS:
+- Goal: ${generationData.goal}
+- Race: ${generationData.race}
+- Potential Names: ${generationData.villainNames.join(", ")}
+- Lieutenant Types: ${generationData.lieutenantTypes.join(", ")}
+- Lieutenant Names: ${generationData.lieutenantNames.join(", ")}
+- Faction Name: ${generationData.factionName}
+
+FATE DECISIONS:
+Faction: ${generationData.factionFateQuestions.map((f) => `${f.question} (${f.roll}) - ${f.interpretation}`).join("; ")}
+Lieutenants: ${generationData.lieutenantFateQuestions.map((lt) => `${lt.lieutenantName}: ${lt.fateQuestions.map((fq) => `${fq.question} (${fq.roll})`).join(", ")}`).join("; ")}
+High Tower Surprise: ${generationData.highTowerSurprise.fateQuestion} (${generationData.highTowerSurprise.roll}) - ${generationData.highTowerSurprise.finalOutcome}
+
+INVESTIGATION CLUES:
+${generationData.clues.map((clue, index) => `${index + 1}. ${clue}`).join("\n")}
+
+MINIONS:
+${generationData.minions.map((m) => `${m.type} (${m.count}): ${m.description}`).join("\n")}
+
+Create a structured narrative with these EXACT headers and sections:
+
+## Villain / BBEG
+[Choose the best name from the potential names list. Write 2-3 paragraphs about their background, rise to power, motivations influenced by the tarot themes and goal. Include their race and how the fate decisions shaped their story.]
+
+## The High Tower Surprise
+[Write 1-2 paragraphs about the plot twist: ${generationData.highTowerSurprise.surprise}. Incorporate how the fate question outcome (${generationData.highTowerSurprise.roll}) affects this surprise, leading to: ${generationData.highTowerSurprise.finalOutcome}]
+
+## Clues About the BBEG
+[Format the investigation clues as a bulleted list using markdown bullet points (•), incorporating each clue into the narrative context]
+
+## ${generationData.lieutenantFateQuestions[0]?.lieutenantName || generationData.lieutenantNames[0]} - ${generationData.lieutenantFateQuestions[0]?.lieutenantType || generationData.lieutenantTypes[0]}
+[Write 1-2 paragraphs about this lieutenant, incorporating their fate question outcomes and role]
+
+## ${generationData.lieutenantFateQuestions[1]?.lieutenantName || generationData.lieutenantNames[1]} - ${generationData.lieutenantFateQuestions[1]?.lieutenantType || generationData.lieutenantTypes[1]}
+[Write 1-2 paragraphs about this lieutenant, incorporating their fate question outcomes and role]
+
+## The ${generationData.factionName}
+[Write 2-3 paragraphs about the faction, incorporating the faction fate decisions and how the organization operates]
+
+## Minions
+[Write 1-2 paragraphs describing the various minion types and how they serve the villain's goals]
+
+Use the fate decision outcomes to shape each section. Write in an engaging, atmospheric style that a dungeon master could read aloud. Make sure each section flows naturally but maintains clear organization.
+
+${getGlobalNarrativeRestrictions()}`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1e3,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    return content.text;
+  } catch (error) {
+    console.error("Error generating narrative from steps:", error);
+    return `The legend of ${generationData.villainNames[0] || "this villain"} spreads across the land like a dark shadow. Born of ${generationData.race.toLowerCase()} heritage and driven by an insatiable desire to ${generationData.goal.toLowerCase()}, this antagonist has become a force to be reckoned with.
+
+Their rise to power was foretold in the ancient cards - ${generationData.tarotCards.map((card) => card.card_text).join(", ")} - and now their influence spreads through trusted lieutenants of varying races and backgrounds.
+
+Those who dare oppose them must be prepared for a cunning adversary who will stop at nothing to achieve their dark ambitions.`;
+  }
+};
+const generateCompleteVillain = async () => {
+  const adventureSeeds = generateAdventureSeeds();
+  const villainType = getRandomVillainType();
+  const nameResult = await generateNamesWithIntelligentLanguageChoice({
+    characterType: "villain",
+    race: adventureSeeds.race,
+    goal: adventureSeeds.goal,
+    description: `${villainType} - A main antagonist/villain for the campaign`
+  }, 3);
+  const villainNames = nameResult.success ? nameResult.names : ["Malachar", "Zygrath", "Nethys"];
+  const lieutenantResult = await getLieutenantTypes(2);
+  const lieutenantTypes = lieutenantResult.success ? lieutenantResult.lieutenant_types : ["Assassin", "Cultist"];
+  const lieutenantNameResult = await generateNamesWithIntelligentLanguageChoice({
+    characterType: "lieutenant",
+    race: adventureSeeds.race,
+    goal: adventureSeeds.goal,
+    description: `Lieutenants serving under the ${villainType}: ${lieutenantTypes.join(", ")}`
+  }, 4);
+  const lieutenantNames = lieutenantNameResult.success ? lieutenantNameResult.names : ["Vex", "Korran", "Silith", "Drak"];
+  const prompt = `You are an expert dungeon master creating a compelling villain for a fantasy RPG campaign. Generate a detailed BBEG (Big Bad Evil Guy) based on the following constraints:
+
+TAROT INSPIRATION:
+${JSON.stringify(adventureSeeds, null, 2)}
+
+VILLAIN TYPE: ${villainType}
+POTENTIAL NAMES: ${villainNames?.join(", ")}
+LIEUTENANT TYPES: ${lieutenantTypes?.join(", ")}
+LIEUTENANT NAMES: ${lieutenantNames?.join(", ")}
+
+Generate a JSON response with the following structure:
+{
+  "name": "Choose the best name from the list or create a variation",
+  "villainType": "${villainType}",
+  "motivation": "What drives this villain's actions (1-2 sentences)",
+  "hook": "How this villain enters or affects the story (1-2 sentences)",
+  "detailedDescription": "Detailed physical description, personality, and background (2-3 sentences)",
+  "faction": {
+    "name": "Name of the villain's organization/cult/army",
+    "description": "Brief description of the faction's goals and methods"
+  },
+  "lieutenants": [
+    {
+      "name": "Use one of the lieutenant names",
+      "description": "Description of this lieutenant (their role, personality, abilities)",
+      "minions": "Optional: what type of minions they command"
+    },
+    {
+      "name": "Use another lieutenant name", 
+      "description": "Description of this lieutenant",
+      "minions": "Optional: what type of minions they command"
+    }
+  ],
+  "minions": "General description of the villain's common followers/army",
+  "powerLevel": "Description of the villain's capabilities and threat level",
+  "weaknesses": ["List", "of", "potential", "weaknesses", "or", "ways", "to", "defeat", "them"]
+}
+
+Make the villain compelling, memorable, and thematically appropriate for the tarot inspiration. Ensure the villain feels dangerous but defeatable with clever planning.`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 2e3,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
+    }
+    const villainData = JSON.parse(jsonMatch[0]);
+    return villainData;
+  } catch (error) {
+    console.error("Error generating villain:", error);
+    return {
+      name: villainNames?.[0] || "Malachar the Dark",
+      villainType,
+      motivation: "Seeks to corrupt the natural order and spread darkness across the land.",
+      hook: "Ancient seals binding this entity are beginning to weaken, causing strange omens.",
+      detailedDescription: "A towering figure shrouded in dark robes, with eyes that burn like cold stars. Their presence fills the air with dread and whispers of forgotten curses.",
+      faction: {
+        name: "The Obsidian Covenant",
+        description: "A cult of fanatics devoted to bringing about eternal darkness through ancient rituals."
+      },
+      lieutenants: [
+        {
+          name: lieutenantNames?.[0] || "Vex",
+          description: "A cunning spymaster who gathers information through fear and manipulation.",
+          minions: "Thieves and informants throughout the city"
+        },
+        {
+          name: lieutenantNames?.[1] || "Korran",
+          description: "A brutal enforcer who leads the villain's military forces with an iron fist.",
+          minions: "Elite soldiers and mercenaries"
+        }
+      ],
+      minions: "Cultists, corrupted creatures, and hired mercenaries",
+      powerLevel: "Extremely dangerous with powerful magic and numerous followers",
+      weaknesses: ["Ancient binding rituals", "Holy artifacts", "Unity among heroes", "Their own arrogance"]
+    };
+  }
+};
+const regenerateVillainStep = async (step, currentVillain) => {
+  const prompt = `You are updating a specific aspect of an existing villain. Here is the current villain:
+
+${JSON.stringify(currentVillain, null, 2)}
+
+Regenerate ONLY the "${step}" field with new content while keeping everything else the same. Return the complete villain JSON with only the "${step}" field changed. Make sure the new content fits with the existing villain's theme and background.`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1500,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
+    }
+    return JSON.parse(jsonMatch[0]);
+  } catch (error) {
+    console.error(`Error regenerating step ${step}:`, error);
+    return currentVillain;
+  }
+};
+const generateVillainNarrative = async (villain) => {
+  const prompt = `You are a skilled storyteller creating an engaging narrative about a villain for a fantasy RPG campaign. Here is the villain:
+
+${JSON.stringify(villain, null, 2)}
+
+Write a compelling 3-4 paragraph narrative that brings this villain to life. Include:
+- Their rise to power or origin story
+- How they operate and influence the world
+- What makes them a credible threat to heroes
+- Hints about how they might be encountered or defeated
+
+Write in an engaging, atmospheric style that a dungeon master could read aloud or adapt for their campaign. Make it feel like a legend or dark tale that characters might hear whispered in taverns.
+
+${getGlobalNarrativeRestrictions()}`;
+  try {
+    const response = await anthropic$1.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1e3,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") {
+      throw new Error("Unexpected response type from Claude");
+    }
+    return content.text;
+  } catch (error) {
+    console.error("Error generating narrative:", error);
+    return "The dark legend of this villain is shrouded in mystery, their true story lost to time and shadow...";
+  }
+};
+const villainGenerator = async (req, res) => {
+  try {
+    const body = req.body;
+    if (body.generateIntermediateSteps) {
+      const generationResults = await generateIntermediateSteps();
+      res.json({
+        success: true,
+        generationResults
+      });
+    } else if (body.regenerateIntermediateStep && body.currentGenerationData) {
+      const updatedResults = await regenerateIntermediateStep(body.regenerateIntermediateStep, body.currentGenerationData);
+      res.json({
+        success: true,
+        generationResults: updatedResults
+      });
+    } else if (body.generateVillainFromSteps && body.generationData) {
+      const narrative = await generateVillainNarrativeFromSteps(body.generationData);
+      res.json({
+        success: true,
+        narrative
+      });
+    } else if (body.generateAll) {
+      const villain = await generateCompleteVillain();
+      res.json({
+        success: true,
+        villain
+      });
+    } else if (body.regenerateStep && body.currentVillain) {
+      const updatedVillain = await regenerateVillainStep(body.regenerateStep, body.currentVillain);
+      res.json({
+        success: true,
+        villain: updatedVillain
+      });
+    } else if (body.generateNarrative && body.villain) {
+      const narrative = await generateVillainNarrative(body.villain);
+      res.json({
+        success: true,
+        narrative
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        error: "Invalid request parameters"
+      });
+    }
+  } catch (error) {
+    console.error("Villain generator error:", error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred"
+    });
+  }
+};
+function generateNamesRoute(req, res) {
+  try {
+    const { alignment, numNames = 8 } = req.body;
+    let actualAlignment;
+    if (alignment === 0) {
+      actualAlignment = Math.floor(Math.random() * 17) + 1;
+    } else if (!isValidAlignment(alignment)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid alignment. Must be 0 (Random) or 1-17 for specific styles"
+      });
+    } else {
+      actualAlignment = alignment;
+    }
+    if (typeof numNames !== "number" || numNames < 1 || numNames > 50) {
+      return res.status(400).json({
+        success: false,
+        error: "Number of names must be between 1 and 50"
+      });
+    }
+    const result = generateNames$1(actualAlignment, numNames);
+    res.json({
+      ...result,
+      actualAlignment
+    });
+  } catch (error) {
+    console.error("Error generating names:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate names"
+    });
+  }
+}
+function getAlignmentOptionsRoute(req, res) {
+  try {
+    const options = getAlignmentOptions();
+    res.json({
+      success: true,
+      alignments: options
+    });
+  } catch (error) {
+    console.error("Error getting alignment options:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to get alignment options"
+    });
+  }
+}
+const mildCurses = [
+  "Turns purple any time they tell a lie.",
+  "Always looks sopping wet.",
+  "Will be pooped on by a bird at least once a day (regardless of location).",
+  "Is now horribly allergic to pollen and dust.",
+  "Is compelled to give any stranger they meet a high five. If the stranger leaves them hanging, the creature will high five their own hand.",
+  "Cannot stop yawning in an egregious (and fairly disrespectful) way.",
+  "Can communicate with cats but only cats. All other language is lost to them.",
+  "Grows a cumbersome beard twice as long as they are tall.",
+  "Is hoarse and all but inaudible.",
+  "Is under the impression every single person they encounter knows their darkest secrets.",
+  "Must speak in rhymed couplets or take 1d4 +1 psychic damage each time they talk.",
+  "Is always thirsty.",
+  "Is allergic to metal and breaks out in leaky sores on contact.",
+  "Must use jazz hands when they speak or take 1d6 + 3 psychic damage.",
+  "Refuses to be seen without their hat, and won't let anyone forget it.",
+  "Is suddenly followed by every mouse and rat in the village.",
+  "Has breath so bad it knocks out anyone who comes within a yard.",
+  "Is disgusted by gold.",
+  "Loses the ability to lie or even omit elements of the truth.",
+  "Emits an offensively repulsive odor.",
+  "Becomes allergic to anything with fur.",
+  "Their personality shifts slightly.",
+  "Everyone keeps forgetting who they are.",
+  "Their hair won't stop growing at an alarmingly fast rate.",
+  "Smells nothing but sewage at all times.",
+  "Makes a considerable amount of noise when trying to sneak.",
+  "Drops their weapon after every attack.",
+  "Can't stop reciting subpar poetry.",
+  "Can't maintain their balance.",
+  "Trips and falls constantly.",
+  "Can't stop staring at people.",
+  "Their hands stick to anything they touch.",
+  "All but their head is invisible.",
+  "Everyone keeps mistaking them for a wanted criminal.",
+  "Has an uncontrollable urge to steal cooking equipment.",
+  "Can't speak to the opposite sex.",
+  "Can't sit down.",
+  "Everyone is convinced they are a doppelganger.",
+  "Has an uncontrollable urge to pickpocket town guards.",
+  "Becomes overly sensitive to light.",
+  "Feels very heavy.",
+  "Can read minds, but only when inconvenient.",
+  "The weather is constantly bad wherever they go.",
+  "Falls in love with anyone they make direct eye contact with.",
+  "Can't stop laughing.",
+  "Is afflicted with eternal, unrelenting hiccups.",
+  "Is unable to resist speaking every thought they have out loud.",
+  "Is completely oblivious to traps and can't stop setting them off.",
+  "Keeps losing gold in inexplicable ways.",
+  "Is unable to distinguish between good and bad advice.",
+  "Clucks like a chicken when they try to speak.",
+  "Farts uncontrollably all the time.",
+  "Each day they wake up with their face covered in full clown makeup, requiring a DC 12 Wisdom saving throw when opening their mouth or laughing uncontrollably.",
+  "Begins to float away every time they lay down.",
+  "Attracts minuscule and mischievous fey creatures that constantly steal their stuff.",
+  "Everything tastes like ash.",
+  "Can only speak in haiku.",
+  "Stops believing magic exists.",
+  "All liquids, including magical ones, become water when they touch the container.",
+  "Crows follow them everywhere, cawing noisily every time they try to speak or rest.",
+  "Desires to shake hands with every single creature they meet, no matter the danger.",
+  "Believes butterflies will lead them to great treasure and will follow one at any cost.",
+  "Forgets how to read.",
+  "Believes they can fly but cannot, with failures not enlightening or deterring them.",
+  "An angry giant goat named Kevin follows them everywhere, staring unless they turn their back.",
+  "Becomes a kleptomaniac, attempting to steal anything not nailed down.",
+  "Has an uncontrollable need to sing all the time, wherever they are.",
+  "Becomes covered with mud and stinking filth that reappears every time it's cleaned off, giving disadvantage on all Charisma checks.",
+  "Will tell their deepest held secrets to anyone they meet, leading with the hidden knowledge.",
+  "Can only speak in questions.",
+  "Grows a wildly uncontrollable mustache that moves of its own accord, imposing disadvantage on concentration checks.",
+  "Must refer to themselves in the third person or take 9 (2d8) necrotic damage each time they don't.",
+  "Grows a lawful good mole on their left upper lip that speaks incessantly and protests unlawful actions.",
+  "A spectral bard follows them everywhere singing songs of their most embarrassing mistakes.",
+  "Sheds glitter everywhere and has disadvantage on all Dexterity (Stealth) checks.",
+  "Any piece of furniture or equipment they try to sit or lie on breaks and they fall.",
+  "Is compelled to lick everything.",
+  "Proposes marriage to everyone and everything.",
+  "Is compelled to hand their money and valuables out to random strangers.",
+  "Must enter buildings backward while singing sea shanties at the top of their lungs."
+];
+const severeCurses = [
+  "Loses hit points equal to any damage they deal to another creature.",
+  "Ages 1d10 years each time they take a long rest.",
+  "Loses 3d6 pounds each time they eat.",
+  "Can only use a total of 20 words per day.",
+  "Must walk/run backward or they'll drop to 0 HP.",
+  "Completely loses their sense of direction and has disadvantage on all Wisdom (Survival) checks related to travel.",
+  "Is vulnerable to cold damage and cannot stop their teeth from chattering at the slightest drop in temperature.",
+  "Has an 80 percent chance of being struck by lightning in a storm.",
+  "Forgets how to do basic math. Numbers are meaningless now.",
+  "Gets incredibly seasick to the point of collapse.",
+  "Must ask for permission to enter any dwelling and is barred from entry by un-dispellable magic if they do not receive it from the dwelling's owner.",
+  "Is anchored to the Material Plane. They cannot travel to other planes, nor can their soul move on.",
+  "Is terribly frightened of the outdoors. They have disadvantage on Wisdom (Nature) skill checks and any rolls made when outside any urban environment.",
+  "Becomes incredibly accident prone.",
+  "Forgets what they were doing and why once per short rest at GM discretion.",
+  "Passes a curse to every humanoid they touch.",
+  "Can't stop crying.",
+  "Believes they are friendless, penniless and aimless.",
+  "Dies painfully but is immediately resurrected, with half as much max HP, at the start of each new day.",
+  "Believes they are immortal and acts accordingly.",
+  "Is vulnerable to all damage but feels no pain.",
+  "Lacks bones and moves as an ooze would.",
+  "Becomes catatonic at the sound of thunder.",
+  "Gets incredibly winded during physical activity and must succeed on a DC 15 Constitution saving throw to avoid passing out.",
+  "Takes the shape of the world's most notorious criminal.",
+  "Can only eat grass.",
+  "Can't move their arms or legs.",
+  "Hears cats screaming whenever music is played.",
+  "Gains 3d6 pounds per day, rerolling at the end of every long rest.",
+  "Is compelled to challenge every creature they encounter to a duel.",
+  "Weeps blood at the slightest insult.",
+  "Can only see the Ethereal Plane.",
+  "Has their Strength score reduced by half.",
+  "Has their Dexterity score reduced by half.",
+  "Has their Constitution score reduced by half.",
+  "Has their Intelligence score reduced by half.",
+  "Has their Wisdom score reduced by half.",
+  "Has their Charisma score reduced by half.",
+  "Has their movement speed reduced by half.",
+  "Immediately loses half their max HP.",
+  "Reverts to a childhood state.",
+  "Loses the ability to learn or make new memories.",
+  "Must kill a creature with their bare hands every day or die.",
+  "Is being hunted by a shadow.",
+  "Is petrified and unable to move.",
+  "Their dreams are haunted by a ghost.",
+  "Becomes unconscious at the smell of hay.",
+  "Falls asleep whenever they hear the word 'the'.",
+  "Has forgotten how to speak.",
+  "Has forgotten how to walk.",
+  "Has an evil alternate personality who takes control often.",
+  "Everything they touch turns to ash.",
+  "Is unable to trust even their closest friends.",
+  "Is gripped with terror at the thought of their own existence.",
+  "Is being stalked by a vampire.",
+  "Can't stop gaining weight at an alarming rate.",
+  "Can't stop dancing.",
+  "Their dreams are haunted by a demon.",
+  "All of their attacks are nonlethal.",
+  "Feels as if they are on fire.",
+  "Has horrible luck.",
+  "Their body parts swell up one by one.",
+  "Sees hellhounds everywhere they go.",
+  "Everything they touch is set on fire.",
+  "Can't stop growing at an alarming rate.",
+  "Has an uncontrollable urge to stab anyone who talks to them.",
+  "Their personality shifts drastically to the opposite of what it was.",
+  "Now breathes water instead of air.",
+  "Has become blind.",
+  "Feels the urge to attack everyone who looks at them.",
+  "Feels filthy no matter how much they bathe.",
+  "Everything they touch turns to stone.",
+  "If they stop moving they will die.",
+  "Is slowly transforming into a swamp creature.",
+  "Has forgotten how to read or write.",
+  "Loses the ability to turn left.",
+  "Has forgotten how to breathe.",
+  "Has become deaf.",
+  "Is unable to perform spells of any kind.",
+  "Has forgotten how to fight.",
+  "Has forgotten how to eat.",
+  "Becomes convinced they are turning into a zombie.",
+  "Is being haunted by a wraith.",
+  "Their spells may have the opposite of the intended effect.",
+  "Has no memory of their companions.",
+  "Any armor they put on is unbearably heavy.",
+  "Their skin becomes paper-thin and fragile, gaining vulnerability to necrotic damage and taking 5 (2d4) fire damage for every hour spent in the sun.",
+  "Gains vulnerability to fire damage.",
+  "All of their fingers fall off, unable to hold weapons/equipment or cast spells with somatic components until spending 5 (2d4) weeks training.",
+  "Their skin turns blue and burns with sickly glowing symbols, taking 5 (1d6 + 2) psychic damage each time they make a Charisma-based check.",
+  "Their skin, organs and muscles turn to dust, becoming a skeleton but retaining all statistics.",
+  "Gains vulnerability to acid damage and can only respond to questions with 'It's complicated.'",
+  "Their legs and arms switch places on their body.",
+  "Loses 1 hit point each time they hear their name.",
+  "Gains vulnerability to thunder damage.",
+  "Can only eat items that aren't food, like rocks or metal, gaining 1 level of exhaustion each day.",
+  "Is frightened of the moon and depictions of it.",
+  "Punches themselves in the face hard every time they hear the word 'tavern.'",
+  "Grows a sentient, prehensile tail that is chaotic evil and always trying to strangle them.",
+  "Has to be reduced to 0 hit points at least once per day or they'll die permanently.",
+  "Gains vulnerability to lightning damage.",
+  "Metal of all kinds are drawn toward them, sticking to their skin and requiring a DC 20 Strength check to remove.",
+  "All fires within 50 feet go out when they are around (doesn't affect instantaneous damage).",
+  "Believes they are dying, moving at quarter speed and preferring to lie down.",
+  "All coins, gems and precious metals turn to stone as soon as they touch them.",
+  "Becomes the realm's most wanted criminal.",
+  "Cannot enter a city, town or village with more than 60 people, falling unconscious if they do.",
+  "Becomes a frog.",
+  "Bleeds easily and profusely, requiring a DC 14 Constitution saving throw when taking damage or permanently losing 2 (1d4) maximum hit points.",
+  "Gains vulnerability to radiant damage.",
+  "Their hair becomes snakes, requiring a DC 14 Dexterity saving throw each hour or taking 2 (1d4) piercing and 7 (2d6) poison damage.",
+  "Small polyps grow on their skin, developing tentacles that will open a portal to the abyss in 5 (2d4) days.",
+  "Becomes a magnet for ranged attacks, with creatures attacking from more than 10 feet away getting +2 to attack rolls.",
+  "Takes 6 (1d8 + 2) psychic damage every time they touch a door knob, clasp or lock.",
+  "At night, their right hand detaches and becomes chaotic neutral, robbing the rich to give to the poor.",
+  "Their arms grow to ridiculous length, gaining 10 feet reach but disadvantage on attack rolls and Dexterity checks.",
+  "Is constantly hungry and starts to think their companions look tasty.",
+  "Feels they are invulnerable and acts accordingly.",
+  "Their soul will inhabit the body of the next creature they kill.",
+  "Gains vulnerability to poison damage.",
+  "Is incredibly narcoleptic, requiring a DC 13 Wisdom saving throw at the beginning of each turn or falling asleep.",
+  "Becomes a black pudding that can communicate telepathically within 30 feet but cannot use magic items.",
+  "Is affected by 3 (1d6) curses from this list."
+];
+const funnyCurses = [
+  "Glows in the dark but only when embarrassed.",
+  "Transforms into an overripe watermelon with blindsense. The creature maintains its mental statistics and can communicate telepathically.",
+  "Has an overwhelming desire to eat (but an aversion to the taste of) sand.",
+  "Can only communicate in song titles.",
+  "Has one of those head colds that just won't quit.",
+  "Feels their teeth triple in size, and their mouth curve into a giant (and agonizing) grin.",
+  "Birth to a fully formed quasit once per month.",
+  "Has an increasingly unignorable hunger for chalk.",
+  "Dog. Another stray will join this growing pack every time the cursed creature takes a long rest.",
+  "Suddenly has rubber-like arms that become twisted and tangled whenever they try to use them.",
+  "Is haunted by a constant, uncontrollable sneeze.",
+  "Their body releases a pheromone that attracts monsters (but only small, harmless ones like rabbits).",
+  "Shrinks down to half their size.",
+  "Becomes tired in the day and overly energetic at night.",
+  "Their body releases a pheromone that attracts deer.",
+  "Is unable to sleep.",
+  "Can't lie down.",
+  "Transforms into a random animal during a full moon.",
+  "Their body releases a pheromone that attracts bears (but only teddy bears).",
+  "Everything they touch freezes over (but only for 3 seconds).",
+  "Their spells have random targets (but always friendly ones).",
+  "Can't stop singing (but only knows one song).",
+  "Unattractive people can't help but fall madly in love with them.",
+  "Their body releases a pheromone that attracts rats (who form a helpful cleaning crew).",
+  "Is unable to stop randomly shouting about rabbits.",
+  "Their dreams are haunted by embarrassing memories (which they act out while sleepwalking).",
+  "Has forgotten how to drink (but only water - other liquids are fine).",
+  "Hiccups uncontrollably and foul-smelling bubbles pour out of their mouth each time.",
+  "Their nostrils fuse shut and they can no longer smell (which is sometimes a blessing).",
+  "Their hair turns purple and grows at an exponential rate, requiring cutting every 2 hours or losing half movement speed to tangling.",
+  "When they speak, it sounds as if they're underwater, giving disadvantage on Charisma-based checks.",
+  "Becomes fascinated with horses, speaking exclusively to any horse in line of sight to the detriment of all else.",
+  "Hears a high-pitched ringing at all times and fails any hearing-based Wisdom (Perception) checks.",
+  "The world around them seems to spin constantly, requiring a DC 14 Constitution saving throw each hour or becoming dizzy for 10 minutes.",
+  "Cries uncontrollably if they step on grass.",
+  "Hops on one leg everywhere they go, moving with half speed and having disadvantage on Dexterity-based skill checks.",
+  "Their eyes disappear from the front of their head and reappear in the back, giving disadvantage on Wisdom (Perception) checks based on sight.",
+  "The joints in their arms reverse, giving disadvantage to all attack rolls and Dexterity (Sleight of Hand) checks.",
+  "Spiky quills erupt from their back, requiring them to sleep on their stomach.",
+  "Hiccups uncontrollably and foul-smelling bubbles pour out of their mouth each time.",
+  "Their eyes glow green and they see everything in shades of blue, rolling all Dexterity (Stealth) checks with disadvantage.",
+  "Their fingernails grow into sharp claws and they constantly feel like clawing out their own eyes (but never actually do it).",
+  "Believes they have become a dragon and uses their 'breath weapon' (just blowing air) at every opportunity.",
+  "Sparks fly from the ground where they walk, making pretty but harmless light shows.",
+  "Must count grains of salt or sand if they are in sight, forgoing any other actions.",
+  "Plants die everywhere they walk, becoming brittle and turning to dust (but they regrow twice as beautiful the next day).",
+  "Their skin turns green and sprouts mushrooms that smell of dirty feet and garlic.",
+  "Grows a wildly uncontrollable mustache that moves of its own accord and has its own personality.",
+  "Believes 5 feet is actually a mile and can only move 5 feet during a move action.",
+  "Becomes meek, with any damage they deal reduced by half (but they become incredibly polite).",
+  "Sweats profusely when indoors (but only maple syrup).",
+  "Can't stop singing (only lullabies, which puts everyone to sleep).",
+  "Everything they touch turns to cheese for exactly 30 seconds.",
+  "Their shadow detaches and follows them around, occasionally waving at people.",
+  "They can only walk sideways like a crab.",
+  "Every time they sneeze, a small flower grows from their nose.",
+  "Their voice becomes incredibly high-pitched, like they've inhaled helium.",
+  "They compulsively rhyme everything they say, even when it makes no sense.",
+  "Their reflection shows them as a different person each day.",
+  "They can only taste things that are the color blue.",
+  "Small birds constantly nest in their hair.",
+  "They leave glittery footprints wherever they walk.",
+  "Every door they open plays a different silly sound effect.",
+  "They can only speak in questions, even when making statements.",
+  "Their hiccups sound like different animal noises each time.",
+  "They age backwards one day for every week that passes.",
+  "Everything they write appears in crayon, regardless of what they're writing with."
+];
+const curseEffects = [...mildCurses, ...severeCurses, ...funnyCurses];
+function generateCurse(category = "random") {
+  try {
+    let selectedCurse;
+    let actualCategory;
+    if (category === "random") {
+      const categories = ["mild", "severe", "funny"];
+      actualCategory = categories[Math.floor(Math.random() * categories.length)];
+    } else {
+      actualCategory = category;
+    }
+    let curseArray;
+    switch (actualCategory) {
+      case "mild":
+        curseArray = mildCurses;
+        break;
+      case "severe":
+        curseArray = severeCurses;
+        break;
+      case "funny":
+        curseArray = funnyCurses;
+        break;
+      default:
+        return {
+          success: false,
+          error: "Invalid curse category"
+        };
+    }
+    const randomIndex = Math.floor(Math.random() * curseArray.length);
+    selectedCurse = curseArray[randomIndex];
+    return {
+      success: true,
+      curse: selectedCurse,
+      category: actualCategory
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unexpected error occurred"
+    };
+  }
+}
+function getCurseCount(category = "random") {
+  switch (category) {
+    case "mild":
+      return mildCurses.length;
+    case "severe":
+      return severeCurses.length;
+    case "funny":
+      return funnyCurses.length;
+    case "random":
+      return curseEffects.length;
+    default:
+      return 0;
+  }
+}
+function getCurseCategories() {
+  return [
+    { value: "random", label: "Random", count: curseEffects.length },
+    { value: "mild", label: "Mild", count: mildCurses.length },
+    { value: "severe", label: "Severe", count: severeCurses.length },
+    { value: "funny", label: "Funny", count: funnyCurses.length }
+  ];
+}
+function generateCursesRoute(req, res) {
+  try {
+    const { category = "random" } = req.body;
+    if (!["random", "mild", "severe", "funny"].includes(category)) {
+      return res.status(400).json({
+        success: false,
+        error: "Category must be one of: random, mild, severe, funny"
+      });
+    }
+    const result = generateCurse(category);
+    res.json(result);
+  } catch (error) {
+    console.error("Error generating curse:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate curse"
+    });
+  }
+}
+function getCurseCategoriesRoute(req, res) {
+  try {
+    const categories = getCurseCategories();
+    res.json({
+      success: true,
+      categories
+    });
+  } catch (error) {
+    console.error("Error getting curse categories:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to get curse categories"
+    });
+  }
+}
+function getCurseCountRoute(req, res) {
+  try {
+    const { category = "random" } = req.query;
+    const count = getCurseCount(category);
+    res.json({
+      success: true,
+      category,
+      count
+    });
+  } catch (error) {
+    console.error("Error getting curse count:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to get curse count"
+    });
+  }
+}
+const MAIN_CATEGORIES = {
+  1: "UNNATURAL ENTITY",
+  2: "HAZARD",
+  3: "HAZARD",
+  4: "HAZARD",
+  5: "HAZARD",
+  6: "HAZARD",
+  7: "CREATURE",
+  8: "CREATURE",
+  9: "CREATURE",
+  10: "CREATURE",
+  11: "CREATURE",
+  12: "CREATURE"
+};
+const UNNATURAL_ENTITY_SUBCATEGORIES = {
+  1: "DIVINE",
+  2: "PLANAR",
+  3: "PLANAR",
+  4: "PLANAR",
+  5: "UNDEAD",
+  6: "UNDEAD",
+  7: "UNDEAD",
+  8: "UNDEAD",
+  9: "UNDEAD",
+  10: "UNDEAD",
+  11: "UNDEAD",
+  12: "UNDEAD"
+};
+const DIVINE_ENTITIES = {
+  1: "agent",
+  2: "agent",
+  3: "agent",
+  4: "agent",
+  5: "agent",
+  6: "champion",
+  7: "champion",
+  8: "champion",
+  9: "champion",
+  10: "army/force",
+  11: "army/force",
+  12: "avatar/embodiment"
+};
+const PLANAR_ENTITIES = {
+  1: "imp/sprite",
+  2: "imp/sprite",
+  3: "imp/sprite",
+  4: "lesser demon/elemental",
+  5: "lesser demon/elemental",
+  6: "lesser demon/elemental",
+  7: "demon/elemental",
+  8: "demon/elemental",
+  9: "demon/elemental",
+  10: "greater demon/elemental",
+  11: "greater demon/elemental",
+  12: "devil/elemental lord"
+};
+const UNDEAD_ENTITIES = {
+  1: "haunt/wisp",
+  2: "haunt/wisp",
+  3: "haunt/wisp",
+  4: "haunt/wisp",
+  5: "phantom/shadow",
+  6: "phantom/shadow",
+  7: "ghost/specter",
+  8: "ghost/specter",
+  9: "ghost/specter",
+  10: "wight/wraith/revenant",
+  11: "wight/wraith/revenant",
+  12: "spirit lord/lich"
+};
+const HAZARD_SUBCATEGORIES = {
+  1: "UNNATURAL",
+  2: "UNNATURAL",
+  3: "NATURAL",
+  4: "NATURAL",
+  5: "NATURAL",
+  6: "NATURAL",
+  7: "NATURAL",
+  8: "NATURAL",
+  9: "NATURAL",
+  10: "NATURAL",
+  11: "NATURAL",
+  12: "NATURAL"
+};
+const UNNATURAL_HAZARDS = {
+  1: "taint/blight/curse",
+  2: "taint/blight/curse",
+  3: "taint/blight/curse",
+  4: "taint/blight/curse",
+  5: "taint/blight/curse",
+  6: "magical: unnatural + magic type [p55]",
+  7: "magical: unnatural + magic type [p55]",
+  8: "magical: unnatural + magic type [p55]",
+  9: "magical: unnatural + magic type [p55]",
+  10: "planar: natural + element [p55]",
+  11: "planar: natural + element [p55]",
+  12: "divine: natural + deity"
+};
+const NATURAL_HAZARDS = {
+  1: "oddity-based [p55]",
+  2: "tectonic/volcanic",
+  3: "unseen pitfall (chasm, crevasse, abyss, rift)",
+  4: "unseen pitfall (chasm, crevasse, abyss, rift)",
+  5: "ensnaring (bog, mire, tarpit, quicksand, etc.)",
+  6: "ensnaring (bog, mire, tarpit, quicksand, etc.)",
+  7: "defensive (created by local creature)",
+  8: "meteorological (blizzard, thunderstorm, sandstorm, etc.)",
+  9: "meteorological (blizzard, thunderstorm, sandstorm, etc.)",
+  10: "meteorological (blizzard, thunderstorm, sandstorm, etc.)",
+  11: "seasonal (fire, flood, avalanche, etc.)",
+  12: "impairing (mist, fog, murk, gloom, miasma, etc.)"
+};
+const CREATURE_SUBCATEGORIES = {
+  1: "MONSTER",
+  2: "MONSTER",
+  3: "MONSTER",
+  4: "MONSTER",
+  5: "BEAST",
+  6: "BEAST",
+  7: "BEAST",
+  8: "BEAST",
+  9: "BEAST",
+  10: "BEAST",
+  11: "HUMANOID",
+  12: "HUMANOID"
+};
+const MONSTER_SUBCATEGORIES = {
+  1: "EXTRAPLANAR",
+  2: "LEGENDARY",
+  3: "UNDEAD",
+  4: "UNDEAD",
+  5: "UNDEAD",
+  6: "UNUSUAL",
+  7: "UNUSUAL",
+  8: "BEASTLY",
+  9: "BEASTLY",
+  10: "WILD HUMANOID",
+  11: "WILD HUMANOID",
+  12: "WILD HUMANOID"
+};
+const EXTRAPLANAR_MONSTERS = {
+  1: "divine/demonic lord",
+  2: "angel/demon",
+  3: "cherub/imp",
+  4: "cherub/imp",
+  5: "cherub/imp",
+  6: "elemental [p55]",
+  7: "elemental [p55]",
+  8: "elemental [p55]",
+  9: "elemental [p55]",
+  10: "elemental [p55]",
+  11: "elemental [p55]",
+  12: "elemental [p55]"
+};
+const LEGENDARY_MONSTERS = {
+  1: "huge + oddity [p55]",
+  2: "dragon/giant + beast",
+  3: "dragon/giant",
+  4: "dragon/giant",
+  5: "beast + huge",
+  6: "beast + huge",
+  7: "beast + huge",
+  8: "beast + huge",
+  9: "beast + huge",
+  10: "beast + huge",
+  11: "beast + huge",
+  12: "beast + huge"
+};
+const UNDEAD_MONSTERS = {
+  1: "lich/vampire/mummy",
+  2: "wight/wraith",
+  3: "wisp/ghost/specter",
+  4: "wisp/ghost/specter",
+  5: "skeleton/zombie/ghoul",
+  6: "skeleton/zombie/ghoul",
+  7: "skeleton/zombie/ghoul",
+  8: "skeleton/zombie/ghoul",
+  9: "skeleton/zombie/ghoul",
+  10: "skeleton/zombie/ghoul",
+  11: "skeleton/zombie/ghoul",
+  12: "skeleton/zombie/ghoul"
+};
+const UNUSUAL_MONSTERS = {
+  1: "slime/ooze/jelly",
+  2: "slime/ooze/jelly",
+  3: "slime/ooze/jelly",
+  4: "slime/ooze/jelly",
+  5: "plant/fungus/parasite",
+  6: "plant/fungus/parasite",
+  7: "plant/fungus/parasite",
+  8: "plant/fungus/parasite",
+  9: "golem/homunculus",
+  10: "golem/homunculus",
+  11: "fey/fairy",
+  12: "fey/fairy"
+};
+const BEASTLY_MONSTERS = {
+  1: "beast + aberrance [p54]",
+  2: "beast + element [p55]",
+  3: "beast + oddity [p55]",
+  4: "beast + ability [p54]",
+  5: "beast + ability [p54]",
+  6: "beast + ability [p54]",
+  7: "beast + ability [p54]",
+  8: "beast + beast",
+  9: "beast + beast",
+  10: "beast + beast",
+  11: "beast + beast",
+  12: "beast + beast"
+};
+const WILD_HUMANOID_MONSTERS = {
+  1: "ogre/troll/giant",
+  2: "orc/hobgoblin/gnoll",
+  3: "orc/hobgoblin/gnoll",
+  4: "orc/hobgoblin/gnoll",
+  5: "orc/hobgoblin/gnoll",
+  6: "goblin/kobold",
+  7: "goblin/kobold",
+  8: "goblin/kobold",
+  9: "goblin/kobold",
+  10: "humanoid + oddity [p55]",
+  11: "human + beast",
+  12: "human + beast"
+};
+const BEAST_SUBCATEGORIES = {
+  1: "WATER-GOING",
+  2: "WATER-GOING",
+  3: "AIRBORNE",
+  4: "AIRBORNE",
+  5: "AIRBORNE",
+  6: "EARTHBOUND",
+  7: "EARTHBOUND",
+  8: "EARTHBOUND",
+  9: "EARTHBOUND",
+  10: "EARTHBOUND",
+  11: "EARTHBOUND",
+  12: "EARTHBOUND"
+};
+const WATER_GOING_BEASTS = {
+  1: "whale",
+  2: "squid/octopus",
+  3: "dolphin/shark",
+  4: "alligator/crocodile",
+  5: "turtle",
+  6: "fish",
+  7: "crab/lobster",
+  8: "frog/toad",
+  9: "eel/snake",
+  10: "clam/oyster/snail",
+  11: "jelly/anemone",
+  12: "insect"
+};
+const AIRBORNE_BEASTS = {
+  1: "pteranodon",
+  2: "condor",
+  3: "eagle/owl",
+  4: "hawk/falcon",
+  5: "heron/crane/stork",
+  6: "crow/raven",
+  7: "gull/waterbird",
+  8: "songbird/parrot",
+  9: "chicken/duck/goose",
+  10: "bee/wasp",
+  11: "locust/dragonfly/moth",
+  12: "mosquito/gnat/firefly"
+};
+const EARTHBOUND_BEASTS = {
+  1: "mammoth/dinosaur",
+  2: "ox/rhino",
+  3: "bear/ape/gorilla",
+  4: "deer/horse/camel",
+  5: "cat/lion/panther",
+  6: "boar/pig",
+  7: "dog/fox/wolf",
+  8: "vole/rat/weasel",
+  9: "snake/lizard",
+  10: "ant/centipede/scorpion",
+  11: "snail/slug/worm",
+  12: "termite/tick/louse"
+};
+const HUMANOID_SUBCATEGORIES = {
+  1: "RARE",
+  2: "UNCOMMON",
+  3: "UNCOMMON",
+  4: "UNCOMMON",
+  5: "UNCOMMON",
+  6: "COMMON",
+  7: "COMMON",
+  8: "COMMON",
+  9: "COMMON",
+  10: "COMMON",
+  11: "COMMON",
+  12: "COMMON"
+};
+const RARE_HUMANOIDS = {
+  1: "elf",
+  2: "elf",
+  3: "elf",
+  4: "elf",
+  5: "elf",
+  6: "elf",
+  7: "elf",
+  8: "elf",
+  9: "elf",
+  10: "elf",
+  11: "elf",
+  12: "elf"
+};
+const UNCOMMON_HUMANOIDS = {
+  1: "human + beast",
+  2: "human + beast",
+  3: "human + beast",
+  4: "dwarf",
+  5: "dwarf",
+  6: "dwarf",
+  7: "dwarf",
+  8: "halfling",
+  9: "halfling",
+  10: "halfling",
+  11: "halfling",
+  12: "halfling"
+};
+const COMMON_HUMANOIDS = {
+  1: "mixed",
+  2: "mixed",
+  3: "mixed",
+  4: "human",
+  5: "human",
+  6: "human",
+  7: "human",
+  8: "human",
+  9: "human",
+  10: "human",
+  11: "human",
+  12: "human"
+};
+function rollD12() {
+  return Math.floor(Math.random() * 12) + 1;
+}
+function generateSingleDanger() {
+  const categoryRoll = rollD12();
+  const category = MAIN_CATEGORIES[categoryRoll];
+  const subcategoryRoll = rollD12();
+  let subcategory;
+  if (category === "UNNATURAL ENTITY") {
+    subcategory = UNNATURAL_ENTITY_SUBCATEGORIES[subcategoryRoll];
+  } else if (category === "HAZARD") {
+    subcategory = HAZARD_SUBCATEGORIES[subcategoryRoll];
+  } else {
+    subcategory = CREATURE_SUBCATEGORIES[subcategoryRoll];
+    if (subcategory === "MONSTER") {
+      const monsterSubcategoryRoll = rollD12();
+      subcategory = MONSTER_SUBCATEGORIES[monsterSubcategoryRoll];
+    }
+    if (subcategory === "BEAST") {
+      const beastSubcategoryRoll = rollD12();
+      subcategory = BEAST_SUBCATEGORIES[beastSubcategoryRoll];
+    }
+    if (subcategory === "HUMANOID") {
+      const humanoidSubcategoryRoll = rollD12();
+      subcategory = HUMANOID_SUBCATEGORIES[humanoidSubcategoryRoll];
+    }
+  }
+  const specificRoll = rollD12();
+  let specificResult;
+  if (category === "UNNATURAL ENTITY") {
+    if (subcategory === "DIVINE") {
+      specificResult = DIVINE_ENTITIES[specificRoll];
+    } else if (subcategory === "PLANAR") {
+      specificResult = PLANAR_ENTITIES[specificRoll];
+    } else {
+      specificResult = UNDEAD_ENTITIES[specificRoll];
+    }
+  } else if (category === "HAZARD") {
+    if (subcategory === "UNNATURAL") {
+      specificResult = UNNATURAL_HAZARDS[specificRoll];
+    } else {
+      specificResult = NATURAL_HAZARDS[specificRoll];
+    }
+  } else {
+    if (subcategory === "EXTRAPLANAR") {
+      specificResult = EXTRAPLANAR_MONSTERS[specificRoll];
+    } else if (subcategory === "LEGENDARY") {
+      specificResult = LEGENDARY_MONSTERS[specificRoll];
+    } else if (subcategory === "UNDEAD") {
+      specificResult = UNDEAD_MONSTERS[specificRoll];
+    } else if (subcategory === "UNUSUAL") {
+      specificResult = UNUSUAL_MONSTERS[specificRoll];
+    } else if (subcategory === "BEASTLY") {
+      specificResult = BEASTLY_MONSTERS[specificRoll];
+    } else if (subcategory === "WILD HUMANOID") {
+      specificResult = WILD_HUMANOID_MONSTERS[specificRoll];
+    } else if (subcategory === "WATER-GOING") {
+      specificResult = WATER_GOING_BEASTS[specificRoll];
+    } else if (subcategory === "AIRBORNE") {
+      specificResult = AIRBORNE_BEASTS[specificRoll];
+    } else if (subcategory === "EARTHBOUND") {
+      specificResult = EARTHBOUND_BEASTS[specificRoll];
+    } else if (subcategory === "RARE") {
+      specificResult = RARE_HUMANOIDS[specificRoll];
+    } else if (subcategory === "UNCOMMON") {
+      specificResult = UNCOMMON_HUMANOIDS[specificRoll];
+    } else {
+      specificResult = COMMON_HUMANOIDS[specificRoll];
+    }
+  }
+  return {
+    category,
+    subcategory,
+    specificResult,
+    rolls: {
+      categoryRoll,
+      subcategoryRoll,
+      specificRoll
+    }
+  };
+}
+function generateDangers(numDangers = 1) {
+  try {
+    if (numDangers < 1 || numDangers > 10) {
+      return {
+        success: false,
+        error: "Number of dangers must be between 1 and 10"
+      };
+    }
+    const dangers = [];
+    for (let i = 0; i < numDangers; i++) {
+      dangers.push(generateSingleDanger());
+    }
+    return {
+      success: true,
+      dangers,
+      count: dangers.length
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unexpected error occurred"
+    };
+  }
+}
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? ""
+});
+function generateDangersRoute(req, res) {
+  try {
+    const { numDangers = 1 } = req.body;
+    if (typeof numDangers !== "number" || numDangers < 1 || numDangers > 10) {
+      return res.status(400).json({
+        success: false,
+        error: "Number of dangers must be between 1 and 10"
+      });
+    }
+    const result = generateDangers(numDangers);
+    res.json(result);
+  } catch (error) {
+    console.error("Error generating dangers:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate dangers"
+    });
+  }
+}
+async function generateDangerNarrativeRoute(req, res) {
+  try {
+    const { danger } = req.body;
+    if (!danger || !danger.category || !danger.subcategory || !danger.specificResult) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid danger data provided"
+      });
+    }
+    const prompt = `Create a compelling narrative description for this danger based on the three randomly generated parameters:
+
+Category: ${danger.category}
+Subcategory: ${danger.subcategory}
+Specific Result: ${danger.specificResult}
+Dice Rolls: ${danger.rolls.categoryRoll}, ${danger.rolls.subcategoryRoll}, ${danger.rolls.specificRoll}
+
+Please create a detailed narrative that:
+1. Combines all three parameters into a coherent, threatening scenario
+2. Describes what characters would encounter, see, hear, or experience
+3. Explains the immediate danger and potential consequences
+4. Provides atmospheric details that help set the scene
+5. Suggests how the danger might unfold or escalate
+6. If any parameters seem contradictory, creatively interpret them to work together
+
+Write this as 2-3 paragraphs that a Game Master could read aloud or use as inspiration when presenting this danger to players. Focus on vivid descriptions, immediate threats, and narrative hooks that create tension and excitement.
+
+${getGlobalNarrativeRestrictions()}
+
+Then, in a separate section below the description, add:
+
+**GM Notes:** Include any tactical suggestions, potential outcomes, or ways to modify the encounter based on party level and composition.`;
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1e3,
+      messages: [{
+        role: "user",
+        content: prompt
+      }]
+    });
+    const narrative = response.content[0].type === "text" ? response.content[0].text : "Failed to generate narrative";
+    res.json({
+      success: true,
+      narrative
+    });
+  } catch (error) {
+    console.error("Error generating danger narrative:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate danger narrative"
+    });
+  }
+}
 function createServer() {
   const app2 = express__default();
   app2.use(cors());
@@ -7169,6 +10553,7 @@ function createServer() {
   app2.post("/api/generate-scene", generateScene);
   app2.post("/api/roll-fate", rollFateChart);
   app2.post("/api/roll-meaning", rollMeaningTable);
+  app2.post("/api/roll-descriptor", rollDescriptorTable);
   app2.post("/api/get-session-data", getSessionData);
   app2.get("/api/creature-types", getCreatureTypes);
   app2.post("/api/generate-hex-map", generateHexMapEndpoint);
@@ -7181,6 +10566,14 @@ function createServer() {
   app2.post("/api/generate-steading-step", generateSteadingStepRoute);
   app2.post("/api/generate-steading-narrative", generateSteadingNarrative);
   app2.get("/api/settlement-types", getSettlementTypes);
+  app2.post("/api/villain-generator", villainGenerator);
+  app2.post("/api/generate-names", generateNamesRoute);
+  app2.get("/api/alignment-options", getAlignmentOptionsRoute);
+  app2.post("/api/generate-curses", generateCursesRoute);
+  app2.get("/api/curse-count", getCurseCountRoute);
+  app2.get("/api/curse-categories", getCurseCategoriesRoute);
+  app2.post("/api/generate-dangers", generateDangersRoute);
+  app2.post("/api/generate-danger-narrative", generateDangerNarrativeRoute);
   return app2;
 }
 const app = createServer();
