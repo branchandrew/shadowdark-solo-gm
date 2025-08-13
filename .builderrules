@@ -1,0 +1,8 @@
+Whenever a button is created, please create it in with this tailwind:
+px-3 py-1 text-white shadow-lg hover:shadow-xl transition-all duration-200
+And with random border-radius on each corner. They need to be random radii between 15px and 22px. 
+The font size should always be 16px. 
+It should have the following box shadow properties:
+box-shadow: rgba(255, 255, 255, 0.2) 1px 1px 2px inset, rgba(0, 0, 0, 0.2) -1px -1px 2px inset, rgba(0, 0, 0, 0.1) 0px 2px 4px; transform: translateY(-1px
+border: none; border-radius: [include the randomly generated values for these]; font-family: MedievalSharp, serif; font-size: 16px; font-weight: normal; cursor: pointer; )
+The hover state of these buttons should have a 20% darker background color, with the text reminaining unchanged. 
