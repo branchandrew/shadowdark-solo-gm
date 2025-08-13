@@ -1,10 +1,34 @@
 import { Request, Response } from "express";
 import { generateSteading, generateSteadingStep, GeneratedSteading, ALL_SETTLEMENT_TYPES } from "../lib/steading-generator.js";
 import Anthropic from "@anthropic-ai/sdk";
+import { getGlobalNarrativeRestrictions } from "../lib/llm-instructions.js";
+import { NPCGenerator, type GeneratedNPC } from "../lib/npc-generator.js";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
+
+// Function to generate NPCs for notable citizens with prepopulated occupations
+function generateNotableCitizenNPCs(notableNPCs: string[]): GeneratedNPC[] {
+  if (!notableNPCs || notableNPCs.length === 0) {
+    return [];
+  }
+
+  const npcGenerator = new NPCGenerator();
+  const generatedNPCs: GeneratedNPC[] = [];
+
+  for (const occupation of notableNPCs) {
+    // Generate a complete NPC
+    const npc = npcGenerator.generateNPC();
+
+    // Override the occupation with the one from the settlement
+    npc.occupation = occupation;
+
+    generatedNPCs.push(npc);
+  }
+
+  return generatedNPCs;
+}
 
 // Generate a complete steading with all characteristics
 export function generateCompleteSteading(req: Request, res: Response) {
@@ -106,18 +130,67 @@ export async function generateSteadingNarrative(req: Request, res: Response) {
       steadingData = `Settlement: ${steading.name} (${steading.type})`;
     }
 
+    // Generate NPCs for notable citizens and ruler if they exist (BEFORE creating prompt)
+    let allGeneratedNPCs: GeneratedNPC[] = [];
+
+    // Generate NPC for the ruler if ruler exists
+    if (steading.ruler) {
+      const rulerNPC = generateNotableCitizenNPCs([steading.ruler])[0];
+      if (rulerNPC) {
+        rulerNPC.occupation = steading.ruler; // Ensure ruler occupation is set
+        allGeneratedNPCs.push(rulerNPC);
+        console.log(`Generated ruler NPC: ${rulerNPC.firstName} ${rulerNPC.lastName} (${rulerNPC.occupation})`);
+      }
+    }
+
+    // Generate NPCs for notable citizens
+    if (steading.notableNPCs && Array.isArray(steading.notableNPCs)) {
+      const citizenNPCs = generateNotableCitizenNPCs(steading.notableNPCs);
+      allGeneratedNPCs.push(...citizenNPCs);
+      console.log(`Generated ${citizenNPCs.length} NPCs for notable citizens`);
+    }
+
+    // Check if this steading has descriptors and include them in the prompt
+    let descriptorGuidance = "";
+    if (steading.descriptors) {
+      descriptorGuidance = `\n\nIMPORTANT: This settlement has been given the mythic descriptors "${steading.descriptors.description}" (${steading.descriptors.adverb} + ${steading.descriptors.adjective}). Let these qualities inspire the overall mood, atmosphere, and character of the settlement. NEVER put these descriptor words in quotation marks or use them literally. Instead, let them subtly influence your word choices, imagery, and tone. For buildings and special locations with their own descriptive pairs, use the same approach - let those descriptors guide the feel and atmosphere without forcing the actual words into the narrative. Think of descriptors as invisible mood guides, not vocabulary requirements.`;
+    }
+
+    // Prepare NPC data for the prompt if we have generated NPCs
+    let npcGuidance = "";
+    if (allGeneratedNPCs.length > 0) {
+      const npcDescriptions = allGeneratedNPCs.map(npc => {
+        const role = npc.occupation.toLowerCase().includes('ruler') || npc.occupation.toLowerCase().includes('lord') || npc.occupation.toLowerCase().includes('mayor') ? 'RULER' : 'NOTABLE CITIZEN';
+        return `${role}: ${npc.firstName} ${npc.lastName} - ${npc.race} ${npc.occupation}. Motivation: ${npc.motivation}. Appearance: ${npc.physicalAppearance}. Quirk: ${npc.quirk}. Secret: ${npc.secret}. Economic Status: ${npc.economicStatus}. Competence: ${npc.competence}.`;
+      }).join('\n');
+
+      npcGuidance = `\n\nIMPORTANT - DETAILED NPCs TO WEAVE INTO NARRATIVE:
+The following NPCs have been generated for this settlement. DO NOT list them separately or create an NPC section. Instead, naturally incorporate them into your narrative storytelling. Mention them organically as part of the settlement's story, describing them in context as you tell about different areas, events, or aspects of the settlement:
+
+${npcDescriptions}
+
+Weave these characters naturally into your narrative - describe them as you mention different locations, tell about the settlement's governance, discuss local events, or paint the social fabric of the community. Make them feel like living, breathing parts of the settlement's story rather than a separate character roster.`;
+    }
+
     const prompt = `You are a master storyteller and world-builder for tabletop RPGs. I will provide you with detailed information about a settlement (steading) that has been randomly generated. Your task is to weave these details into a compelling, coherent narrative that brings this place to life.
 
+NARRATIVE APPROACH - THEME FIRST:
+1. ESTABLISH A GENERAL THEME: Begin by analyzing the ruler, outside appearance, disposition, and notable NPCs to establish a unifying theme or character for this settlement. This theme should guide the entire narrative.
+2. APPLY DESCRIPTORS WITHIN THE THEME: When describing points of interest and buildings, use the mythic descriptor word pairs to enhance locations, but always within the confines of your established theme.
+3. CREATIVE ADAPTATION: If mythic descriptor words naturally contradict or feel jarring with your established theme, find creative ways to make them work or reinterpret them. Prioritize narrative flow and thematic consistency over forcing exact descriptor words.
+4. THEMATIC COHESION: Everything should feel like it belongs in the same settlement with the same underlying character and mood.
+
 Please create a rich narrative description that:
-1. Tells the story of this settlement - its history, current state, and what makes it unique
-2. Explains how all the various details work together logically
-3. Creates atmosphere and mood appropriate to the settlement type
-4. Includes plot hooks and adventure opportunities for visiting adventurers
-5. Resolves any contradictory details in a creative way that enhances rather than detracts from the story
+1. Opens by establishing the settlement's overarching theme based on ruler, appearance, disposition, and key NPCs
+2. Tells the story of this settlement - its history, current state, and what makes it unique
+3. Explains how all the various details work together logically within your established theme
+4. Creates atmosphere and mood that remains consistent throughout
+5. Resolves any contradictory details in creative ways that enhance the thematic unity
 6. Focuses on what makes this place memorable and distinct
+7. Naturally incorporates any provided NPCs into the narrative flow without creating separate character sections
 
 Here is the settlement data:
-${steadingData}
+${steadingData}${descriptorGuidance}${npcGuidance}
 
 Guidelines:
 - Write in a descriptive, atmospheric tone suitable for a GM to read to players
@@ -125,8 +198,12 @@ Guidelines:
 - Explain the relationships between different NPCs, factions, and locations
 - If there are secrets, events, or conflicts, weave them into the narrative naturally
 - Include specific details that make the settlement feel lived-in and real
-- Suggest 2-3 adventure hooks or interesting situations for player characters
 - Keep the narrative between 300-500 words
+- IMPORTANT: For buildings and special locations with descriptive pairs, DO NOT use quotation marks or force the exact descriptor words into the text. Instead, let these descriptors inspire the mood, atmosphere, and feel of each location without explicitly stating them, but always within your established theme
+- If mythic descriptors conflict with your theme, creatively reinterpret them or find ways to make them work - narrative cohesion is more important than literal descriptor usage
+- Maintain thematic consistency throughout - every element should feel like it belongs in the same coherent world
+
+${getGlobalNarrativeRestrictions()}
 
 Write the narrative now:`;
 

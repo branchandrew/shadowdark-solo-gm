@@ -211,6 +211,214 @@ export const ACTION_SUBJECT = [
   "Waste",
 ] as const;
 
+// Descriptor Table 1 - Adverbs (d100)
+export const DESCRIPTOR_1_ADVERBS = [
+  "Adventurously",
+  "Aggressively",
+  "Anxiously",
+  "Awkwardly",
+  "Beautifully",
+  "Bleakly",
+  "Boldly",
+  "Bravely",
+  "Busily",
+  "Calmly",
+  "Carefully",
+  "Carelessly",
+  "Cautiously",
+  "Ceaselessly",
+  "Cheerfully",
+  "Combatively",
+  "Coolly",
+  "Crazily",
+  "Curiously",
+  "Dangerously",
+  "Defiantly",
+  "Deliberately",
+  "Delicately",
+  "Delightfully",
+  "Dimly",
+  "Efficiently",
+  "Emotionally",
+  "Energetically",
+  "Enormously",
+  "Enthusiastically",
+  "Excitedly",
+  "Fearfully",
+  "Ferociously",
+  "Fiercely",
+  "Foolishly",
+  "Fortunately",
+  "Frantically",
+  "Freely",
+  "Frighteningly",
+  "Fully",
+  "Generously",
+  "Gently",
+  "Gladly",
+  "Gracefully",
+  "Gratefully",
+  "Happily",
+  "Hastily",
+  "Healthily",
+  "Helpfully",
+  "Helplessly",
+  "Hopelessly",
+  "Innocently",
+  "Intensely",
+  "Interestingly",
+  "Irritatingly",
+  "Joyfully",
+  "Kindly",
+  "Lazily",
+  "Lightly",
+  "Loosely",
+  "Loudly",
+  "Lovingly",
+  "Loyally",
+  "Majestically",
+  "Meaningfully",
+  "Mechanically",
+  "Mildly",
+  "Miserably",
+  "Mockingly",
+  "Mysteriously",
+  "Naturally",
+  "Neatly",
+  "Nicely",
+  "Oddly",
+  "Offensively",
+  "Officially",
+  "Partially",
+  "Passively",
+  "Peacefully",
+  "Perfectly",
+  "Playfully",
+  "Politely",
+  "Positively",
+  "Powerfully",
+  "Quaintly",
+  "Quarrelsomely",
+  "Quietly",
+  "Roughly",
+  "Rudely",
+  "Ruthlessly",
+  "Slowly",
+  "Softly",
+  "Strangely",
+  "Swiftly",
+  "Threateningly",
+  "Timidly",
+  "Very",
+  "Violently",
+  "Wildly",
+  "Yieldingly"
+] as const;
+
+// Descriptor Table 2 - Adjectives (d100)
+export const DESCRIPTOR_2_ADJECTIVES = [
+  "Abnormal",
+  "Amusing",
+  "Artificial",
+  "Average",
+  "Beautiful",
+  "Bizarre",
+  "Boring",
+  "Bright",
+  "Broken",
+  "Clean",
+  "Cold",
+  "Colorful",
+  "Colorless",
+  "Comforting",
+  "Creepy",
+  "Cute",
+  "Damaged",
+  "Dark",
+  "Defeated",
+  "Dirty",
+  "Disagreeable",
+  "Dry",
+  "Dull",
+  "Empty",
+  "Enormous",
+  "Extraordinary",
+  "Extravagant",
+  "Faded",
+  "Familiar",
+  "Fancy",
+  "Feeble",
+  "Festive",
+  "Flawless",
+  "Forlorn",
+  "Fragile",
+  "Fragrant",
+  "Fresh",
+  "Full",
+  "Glorious",
+  "Graceful",
+  "Hard",
+  "Harsh",
+  "Healthy",
+  "Heavy",
+  "Historical",
+  "Horrible",
+  "Important",
+  "Interesting",
+  "Juvenile",
+  "Lacking",
+  "Large",
+  "Lavish",
+  "Lean",
+  "Less",
+  "Lethal",
+  "Lively",
+  "Lonely",
+  "Lovely",
+  "Magnificent",
+  "Mature",
+  "Messy",
+  "Mighty",
+  "Military",
+  "Modern",
+  "Mundane",
+  "Mysterious",
+  "Natural",
+  "Normal",
+  "Odd",
+  "Old",
+  "Pale",
+  "Peaceful",
+  "Petite",
+  "Plain",
+  "Poor",
+  "Powerful",
+  "Protective",
+  "Quaint",
+  "Rare",
+  "Reassuring",
+  "Remarkable",
+  "Rotten",
+  "Rough",
+  "Ruined",
+  "Rustic",
+  "Scary",
+  "Shocking",
+  "Simple",
+  "Small",
+  "Smooth",
+  "Soft",
+  "Strong",
+  "Stylish",
+  "Unpleasant",
+  "Valuable",
+  "Vibrant",
+  "Warm",
+  "Watery",
+  "Weak",
+  "Young"
+] as const;
+
 export interface MeaningTableResult {
   verb_roll: number;
   verb: string;
@@ -219,6 +427,16 @@ export interface MeaningTableResult {
   subject: string;
   subject_index: number;
   meaning: string;
+}
+
+export interface DescriptorTableResult {
+  adverb_roll: number;
+  adverb: string;
+  adverb_index: number;
+  adjective_roll: number;
+  adjective: string;
+  adjective_index: number;
+  description: string;
 }
 
 /**
@@ -245,6 +463,33 @@ export function rollMeaningTable(): MeaningTableResult {
     subject,
     subject_index: subjectIndex + 1, // Return 1-indexed for display
     meaning: `${verb} ${subject}`,
+  };
+}
+
+/**
+ * Roll on the Descriptor Tables (Adverb/Adjective)
+ */
+export function rollDescriptorTable(): DescriptorTableResult {
+  // Roll 2d100 for adverb and adjective
+  const adverbRoll = Math.floor(Math.random() * 100) + 1;
+  const adjectiveRoll = Math.floor(Math.random() * 100) + 1;
+
+  // Get adverb (1-indexed, so subtract 1 for array access)
+  const adverbIndex = Math.min(adverbRoll - 1, DESCRIPTOR_1_ADVERBS.length - 1);
+  const adverb = DESCRIPTOR_1_ADVERBS[adverbIndex];
+
+  // Get adjective (1-indexed, so subtract 1 for array access)
+  const adjectiveIndex = Math.min(adjectiveRoll - 1, DESCRIPTOR_2_ADJECTIVES.length - 1);
+  const adjective = DESCRIPTOR_2_ADJECTIVES[adjectiveIndex];
+
+  return {
+    adverb_roll: adverbRoll,
+    adverb,
+    adverb_index: adverbIndex + 1, // Return 1-indexed for display
+    adjective_roll: adjectiveRoll,
+    adjective,
+    adjective_index: adjectiveIndex + 1, // Return 1-indexed for display
+    description: `${adverb} ${adjective}`,
   };
 }
 
@@ -280,4 +525,38 @@ export function getSubjectByIndex(index: number): string | undefined {
     return undefined;
   }
   return ACTION_SUBJECT[index - 1];
+}
+
+/**
+ * Get all available adverbs
+ */
+export function getDescriptor1Adverbs(): readonly string[] {
+  return DESCRIPTOR_1_ADVERBS;
+}
+
+/**
+ * Get all available adjectives
+ */
+export function getDescriptor2Adjectives(): readonly string[] {
+  return DESCRIPTOR_2_ADJECTIVES;
+}
+
+/**
+ * Get a specific adverb by index (1-indexed)
+ */
+export function getAdverbByIndex(index: number): string | undefined {
+  if (index < 1 || index > DESCRIPTOR_1_ADVERBS.length) {
+    return undefined;
+  }
+  return DESCRIPTOR_1_ADVERBS[index - 1];
+}
+
+/**
+ * Get a specific adjective by index (1-indexed)
+ */
+export function getAdjectiveByIndex(index: number): string | undefined {
+  if (index < 1 || index > DESCRIPTOR_2_ADJECTIVES.length) {
+    return undefined;
+  }
+  return DESCRIPTOR_2_ADJECTIVES[index - 1];
 }

@@ -1,7 +1,9 @@
 import { RequestHandler } from "express";
 import {
   rollMeaningTable as rollMeaningTableTS,
+  rollDescriptorTable as rollDescriptorTableTS,
   MeaningTableResult,
+  DescriptorTableResult,
 } from "../lib/mythic-meaning-table";
 
 /**
@@ -15,6 +17,22 @@ const runMeaningTable = (): Promise<MeaningTableResult> => {
     return Promise.reject(
       new Error(
         error instanceof Error ? error.message : "Meaning table error occurred",
+      ),
+    );
+  }
+};
+
+/**
+ * Executes the Mythic Descriptor Table using TypeScript implementation
+ */
+const runDescriptorTable = (): Promise<DescriptorTableResult> => {
+  try {
+    const result = rollDescriptorTableTS();
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(
+      new Error(
+        error instanceof Error ? error.message : "Descriptor table error occurred",
       ),
     );
   }
@@ -47,6 +65,46 @@ export const rollMeaningTable: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Error rolling Meaning Table:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      details: error instanceof Error ? error.stack : undefined,
+    });
+  }
+};
+
+/**
+ * Express handler: rolls on the Mythic Descriptor Tables
+ */
+export const rollDescriptorTable: RequestHandler = async (req, res) => {
+  try {
+    console.log("Rolling Descriptor Table (Adverb/Adjective)");
+
+    const result = await runDescriptorTable();
+
+    console.log("Descriptor Table result:", result);
+
+    const response = {
+      success: true,
+      adverb_roll: result.adverb_roll || 0,
+      adverb: result.adverb || "Unknown",
+      adverb_index: result.adverb_index || 0,
+      adjective_roll: result.adjective_roll || 0,
+      adjective: result.adjective || "Unknown",
+      adjective_index: result.adjective_index || 0,
+      description: result.description || "Unknown Unknown",
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log("Sending response:", response);
+    res.json(response);
+  } catch (error) {
+    console.error("Error rolling Descriptor Table:", error);
     console.error("Error details:", {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,

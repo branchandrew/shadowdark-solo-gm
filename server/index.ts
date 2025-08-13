@@ -5,7 +5,7 @@ import { handleAIChat } from "./routes/ai-chat";
 import { generateAdventure } from "./routes/adventure-generator";
 import { generateScene } from "./routes/scene-generator";
 import { rollFateChart } from "./routes/mythic-fate";
-import { rollMeaningTable } from "./routes/mythic-meaning";
+import { rollMeaningTable, rollDescriptorTable } from "./routes/mythic-meaning";
 import { getSessionData } from "./routes/session-data";
 import { getCreatureTypes } from "./routes/creature-types";
 import {
@@ -24,6 +24,10 @@ import {
   generateSteadingNarrative,
   getSettlementTypes,
 } from "./routes/steading-generator";
+import { villainGenerator } from "./routes/villain-generator";
+import { generateNamesRoute, getAlignmentOptionsRoute } from "./routes/name-generator";
+import { generateCursesRoute, getCurseCountRoute, getCurseCategoriesRoute } from "./routes/curse-generator";
+import { generateDangersRoute, generateDangerNarrativeRoute } from "./routes/danger-generator";
 
 // Load environment variables if .env file exists
 if (process.env.NODE_ENV !== "production") {
@@ -53,6 +57,7 @@ export function createServer() {
   app.post("/api/generate-scene", generateScene);
   app.post("/api/roll-fate", rollFateChart);
   app.post("/api/roll-meaning", rollMeaningTable);
+  app.post("/api/roll-descriptor", rollDescriptorTable);
   app.post("/api/get-session-data", getSessionData);
   app.get("/api/creature-types", getCreatureTypes);
   app.post("/api/generate-hex-map", generateHexMapEndpoint);
@@ -67,6 +72,22 @@ export function createServer() {
   app.post("/api/generate-steading-step", generateSteadingStepRoute);
   app.post("/api/generate-steading-narrative", generateSteadingNarrative);
   app.get("/api/settlement-types", getSettlementTypes);
+
+  // Villain generator routes
+  app.post("/api/villain-generator", villainGenerator);
+
+  // Name generator routes
+  app.post("/api/generate-names", generateNamesRoute);
+  app.get("/api/alignment-options", getAlignmentOptionsRoute);
+
+  // Curse generator routes
+  app.post("/api/generate-curses", generateCursesRoute);
+  app.get("/api/curse-count", getCurseCountRoute);
+  app.get("/api/curse-categories", getCurseCategoriesRoute);
+
+  // Danger generator routes
+  app.post("/api/generate-dangers", generateDangersRoute);
+  app.post("/api/generate-danger-narrative", generateDangerNarrativeRoute);
 
   return app;
 }

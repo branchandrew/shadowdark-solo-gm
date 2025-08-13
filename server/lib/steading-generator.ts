@@ -1,9 +1,11 @@
 /**
  * Steading Generator (TypeScript)
- * 
+ *
  * Generates random settlements (steadings) with various characteristics.
  * Converted from Python D&D settlement generator script.
  */
+
+import { rollDescriptorTable } from './mythic-meaning-table.js';
 
 // Settlement types
 export const CIVILIAN_SETTLEMENTS = ["Hamlet", "Village", "City"];
@@ -138,6 +140,11 @@ export interface HamletData extends BaseSettlement {
   totalBuildings: number;
   layout: string;
   secret?: string;
+  descriptors?: {
+    adverb: string;
+    adjective: string;
+    description: string;
+  };
 }
 
 export interface VillageData extends BaseSettlement {
@@ -174,10 +181,23 @@ export interface CityData extends BaseSettlement {
   characteristics: string[];
   appearance: string;
   pointsOfInterest: {
-    general: Record<string, number>;
-    special: string[];
+    special: Array<{
+      location: string;
+      descriptors: {
+        adverb: string;
+        adjective: string;
+        description: string;
+      };
+    }>;
   };
-  buildingsOfInterest: string[];
+  buildingsOfInterest: Array<{
+    building: string;
+    descriptors: {
+      adverb: string;
+      adjective: string;
+      description: string;
+    };
+  }>;
   defense: {
     walled: boolean;
     entrances?: string[];
@@ -268,8 +288,8 @@ export interface TowerData extends BaseSettlement {
 
 export interface AbbeyData extends BaseSettlement {
   type: "Abbey";
-  size: string;
-  population: {
+  abbeySize: string;
+  abbeyPopulation: {
     monksNuns: number;
     abbotLevel: number;
   };
@@ -402,7 +422,7 @@ export class SteadingGenerator {
 
   generateCastleName(): string {
     const firstPart = this.getTableResult(CASTLE_FIRST_PARTS, this.rollD30());
-    const secondPart = this.getTableResult(CASTLE_SECOND_PARTS, Math.floor(Math.random() * 24) + 1);
+    const secondPart = this.getTableResult(CASTLE_SECOND_PARTS, this.rollDie(24));
     return `Castle ${firstPart} ${secondPart}`;
   }
 
@@ -466,6 +486,14 @@ export class SteadingGenerator {
       secret = this.getTableResult(secrets, this.rollD6());
     }
 
+    // Generate descriptors for narrative flavor
+    const descriptorResult = rollDescriptorTable();
+    const descriptors = {
+      adverb: descriptorResult.adverb,
+      adjective: descriptorResult.adjective,
+      description: descriptorResult.description
+    };
+
     return {
       category: "Civilian",
       type: "Hamlet",
@@ -476,7 +504,8 @@ export class SteadingGenerator {
       peasantHouses,
       totalBuildings: 1 + peasantHouses,
       layout,
-      secret
+      secret,
+      descriptors
     };
   }
 
@@ -523,13 +552,14 @@ export class SteadingGenerator {
       "Monument/Memorial", "Orchard", "School", "Tailor"
     ];
     
+    // Special locations - Roll 1d20 as many times as village size
     const special: string[] = [];
     for (let i = 0; i < sizeMultiplier; i++) {
       const roll = this.rollD20();
       special.push(specialLocations[roll - 1]);
     }
     
-    // Defense
+    // Defense - Roll 1d8 as many times as village size
     const defenses: string[] = [];
     for (let i = 0; i < sizeMultiplier; i++) {
       const defenseOptions = [
@@ -539,7 +569,8 @@ export class SteadingGenerator {
       ];
       defenses.push(this.getTableResult(defenseOptions, this.rollDie(8)));
     }
-    
+
+    // Guards - Roll 1d3+3 and multiply by village size
     const guardCount = (this.rollDie(3) + 3) * sizeMultiplier;
     
     // Ruler
@@ -576,13 +607,14 @@ export class SteadingGenerator {
       "Talented craftsman", "Traveling merchant", "Troubled hunter",
       "Vampire/Werewolf hunter", "Village idiot"
     ];
-    
+
+    // Notable NPCs - Roll 1d20 as many times as village size
     const notableNPCs: string[] = [];
     for (let i = 0; i < sizeMultiplier; i++) {
       const roll = this.rollD20();
       notableNPCs.push(npcOptions[roll - 1]);
     }
-    
+
     // Secret (1/6 chance)
     let secret: string | undefined;
     if (this.rollD6() === 1) {
@@ -714,16 +746,6 @@ export class SteadingGenerator {
     }
     
     // Points of interest
-    const general = {
-      blacksmiths: sizeMultiplier,
-      cemeteries: sizeMultiplier,
-      churches: sizeMultiplier,
-      general_stores: sizeMultiplier,
-      libraries: sizeMultiplier,
-      markets: sizeMultiplier,
-      stables: sizeMultiplier,
-      taverns: sizeMultiplier
-    };
     
     const specialLocationOptions = [
       "Abandoned building", "Aqueduct", "Archaeological site", "Bridge",
@@ -733,41 +755,86 @@ export class SteadingGenerator {
       "Pilgrimage", "Plaza", "Slave pit"
     ];
     
-    const special: string[] = [];
+    const special: Array<{
+      location: string;
+      descriptors: {
+        adverb: string;
+        adjective: string;
+        description: string;
+      };
+    }> = [];
     for (let i = 0; i < sizeMultiplier; i++) {
       const roll = this.rollD20();
-      special.push(specialLocationOptions[roll - 1]);
+      const location = specialLocationOptions[roll - 1];
+      const descriptorResult = rollDescriptorTable();
+
+      special.push({
+        location,
+        descriptors: {
+          adverb: descriptorResult.adverb,
+          adjective: descriptorResult.adjective,
+          description: descriptorResult.description
+        }
+      });
     }
     
     // Buildings of interest
-    const buildingsOfInterest: string[] = [];
+    const buildingsOfInterest: Array<{
+      building: string;
+      descriptors: {
+        adverb: string;
+        adjective: string;
+        description: string;
+      };
+    }> = [];
     for (let i = 0; i < sizeMultiplier * 3; i++) {
       const roll = this.rollD20();
-      
+      let building = "";
+
       if (roll >= 1 && roll <= 3) {
+        // Housing - Roll 1d10 for regular city housing only and 1d20 for all types
+        const regularHousingRoll = this.rollDie(10);
         const housingOptions = [
           "Studio", "One bedroom apartment", "Two bedrooms apartment", "Bungalow",
           "Maisonnette", "Penthouse", "Mansion", "Hotel room", "Tower",
           "Boarding house", "Tent", "Houseboat", "Under a bridge", "Shanty",
           "Squat", "Underground bunker", "Caravan", "Treehouse", "Basement", "Hut"
         ];
-        const detail = this.getTableResult(housingOptions, this.rollD20());
-        buildingsOfInterest.push(`Housing: ${detail}`);
+        const detail = this.getTableResult(housingOptions, regularHousingRoll <= 10 ? regularHousingRoll : this.rollD20());
+        building = `Housing: ${detail}`;
       } else if (roll >= 4 && roll <= 10) {
+        // Business - Use exact business table from requirements (1-100)
         const businessOptions = [
-          "Alchemist", "Animal trainer", "Apothecary", "Armorer", "Artist", "Astronomer",
-          "Baker", "Bank", "Blacksmith", "Bookmaker", "Botanist", "Brewery", "Brothel",
-          "Butcher", "Candlemaker", "Candy shop", "Carpenter", "Cartographer", "Casino",
-          "Cheesemaker", "Doctor", "Dollmaker", "Florist", "Fortuneteller", "Foundry",
-          "General store", "Glassblower", "Hairdresser", "Hardware store", "Jeweler",
-          "Lawyer", "Locksmith", "Pawnshop", "Perfumer", "Pet shop", "Potter",
-          "Restaurant", "Sage", "Sauna", "Scribe", "Siege engines seller",
-          "Slaughterhouse", "Stables", "Tailor", "Tanner", "Tapestry maker", "Tavern",
-          "Tinker", "Veterinarian", "Wine shop"
+          "Alchemist", "Alchemist", "Animal trainer", "Animal trainer",
+          "Apothecary", "Apothecary", "Armorer", "Armorer",
+          "Artist", "Artist", "Astronomer", "Astronomer",
+          "Baker", "Baker", "Bank", "Bank",
+          "Blacksmith", "Blacksmith", "Bookmaker", "Bookmaker",
+          "Botanist", "Botanist", "Brewery", "Brewery",
+          "Brothel", "Brothel", "Butcher", "Butcher",
+          "Candlemaker", "Candlemaker", "Candy shop", "Candy shop",
+          "Carpenter", "Carpenter", "Cartographer", "Cartographer",
+          "Casino", "Casino", "Cheesemaker", "Cheesemaker",
+          "Doctor", "Doctor", "Dollmaker", "Dollmaker",
+          "Florist", "Florist", "Fortuneteller", "Fortuneteller",
+          "Foundry", "Foundry", "General store", "General store",
+          "Glassblower", "Glassblower", "Hairdresser", "Hairdresser",
+          "Hardware store", "Hardware store", "Jeweler", "Jeweler",
+          "Lawyer", "Lawyer", "Locksmith", "Locksmith",
+          "Pawnshop", "Pawnshop", "Perfumer", "Perfumer",
+          "Pet shop", "Pet shop", "Potter", "Potter",
+          "Restaurant", "Restaurant", "Sage", "Sage",
+          "Sauna", "Sauna", "Scribe", "Scribe",
+          "Siege engines seller", "Siege engines seller", "Slaughterhouse", "Slaughterhouse",
+          "Stables", "Stables", "Tailor", "Tailor",
+          "Tanner", "Tanner", "Tapestry maker", "Tapestry maker",
+          "Tavern", "Tavern", "Tinker", "Tinker",
+          "Veterinarian", "Veterinarian", "Wine shop", "Wine shop"
         ];
-        const detail = this.getTableResult(businessOptions, Math.floor(Math.random() * 50) + 1);
-        buildingsOfInterest.push(`Business: ${detail}`);
+        const business = this.getTableResult(businessOptions, this.rollD100());
+        building = `Business: ${business}`;
       } else if (roll >= 11 && roll <= 13) {
+        // Official buildings
         const officialOptions = [
           "Arcane university", "Archives", "Asylum", "City hall", "Conservatory",
           "Dispensary", "Embassy", "Fire station", "Mayor office", "Meteorological institute",
@@ -775,15 +842,17 @@ export class SteadingGenerator {
           "Tourist office", "Tribunal", "University", "Water tower"
         ];
         const detail = this.getTableResult(officialOptions, this.rollD20());
-        buildingsOfInterest.push(`Official: ${detail}`);
+        building = `Official: ${detail}`;
       } else if (roll === 14) {
+        // Religious buildings
         const religiousOptions = [
           "Catacombs", "Cathedral", "Church", "Covent", "Mausoleum", "Monastery",
           "Necropolis", "Orphanage", "Sanctuary", "Seminar", "Shrine", "Ziggurat"
         ];
         const detail = this.getTableResult(religiousOptions, this.rollD12());
-        buildingsOfInterest.push(`Religious: ${detail}`);
+        building = `Religious: ${detail}`;
       } else if (roll >= 15 && roll <= 17) {
+        // Public buildings
         const publicOptions = [
           "Aquarium", "Arena", "Art gallery", "Auction hall", "Botanical garden",
           "Event center", "Gymnasium", "Historical building", "House for sale",
@@ -791,8 +860,9 @@ export class SteadingGenerator {
           "Guildhouse", "Public baths", "Theater", "Workshop", "Zoo"
         ];
         const detail = this.getTableResult(publicOptions, this.rollD20());
-        buildingsOfInterest.push(`Public: ${detail}`);
+        building = `Public: ${detail}`;
       } else {
+        // Military buildings (18-20)
         const militaryOptions = [
           "Armory", "Barracks", "Canteen", "Citadel", "Fort", "Guard post",
           "Guard tower", "Jail", "Menagerie", "Military archives", "Military hospital",
@@ -800,8 +870,19 @@ export class SteadingGenerator {
           "Siege workshop", "Spy academy", "Training hall", "Underground vault", "Warehouse"
         ];
         const detail = this.getTableResult(militaryOptions, this.rollD20());
-        buildingsOfInterest.push(`Military: ${detail}`);
+        building = `Military: ${detail}`;
       }
+
+      // Generate mythic descriptors for each building
+      const descriptorResult = rollDescriptorTable();
+      buildingsOfInterest.push({
+        building,
+        descriptors: {
+          adverb: descriptorResult.adverb,
+          adjective: descriptorResult.adjective,
+          description: descriptorResult.description
+        }
+      });
     }
     
     // Defense
@@ -813,10 +894,25 @@ export class SteadingGenerator {
     
     if (isWalled) {
       const entrances: string[] = [];
-      const directions = ["North", "East", "South", "West"];
-      
+      const availableDirections = ["North", "East", "South", "West"];
+
       for (let i = 0; i < sizeMultiplier; i++) {
-        const direction = this.getRandomElement(directions);
+        // Roll 1d4 per entrance to know which cardinal point (reroll any duplicate)
+        let direction: string;
+        let attempts = 0;
+        do {
+          const directionRoll = this.rollDie(4);
+          direction = ["North", "East", "South", "West"][directionRoll - 1];
+          attempts++;
+        } while (entrances.some(e => e.includes(direction)) && attempts < 10);
+
+        // If we couldn't find a unique direction after 10 attempts, just use any available
+        if (entrances.some(e => e.includes(direction))) {
+          const usedDirections = entrances.map(e => e.split(' ')[0]);
+          const remaining = availableDirections.filter(d => !usedDirections.includes(d));
+          direction = remaining.length > 0 ? remaining[0] : direction;
+        }
+
         const entranceRoll = this.rollD6();
         let entranceType: string;
         if (entranceRoll >= 1 && entranceRoll <= 3) {
@@ -826,7 +922,7 @@ export class SteadingGenerator {
         } else {
           entranceType = "Both";
         }
-        
+
         entrances.push(`${direction} entrance: ${entranceType} (guarded by 2 towers)`);
       }
       
@@ -905,7 +1001,6 @@ export class SteadingGenerator {
       characteristics,
       appearance,
       pointsOfInterest: {
-        general,
         special
       },
       buildingsOfInterest,
@@ -946,20 +1041,30 @@ export class SteadingGenerator {
     const noblesInJail = this.rollDie(3);
     const siegeSupplies = this.roll2D6();
     
-    // Treasure
+    // Treasure (following exact requirements)
     const treasure: Record<string, number> = {};
-    if (this.rollDie(2) === 1) {
+
+    // 50% chance of 1d4×10000 gp
+    if (this.rollD100() <= 50) {
       treasure.gold = this.rollDie(4) * 10000;
     }
-    if (this.rollDie(2) === 1) {
+
+    // 50% chance of 1d6×5000 gp
+    if (this.rollD100() <= 50) {
       treasure.additionalGold = this.rollDie(6) * 5000;
     }
-    if (this.rollDie(4) === 1) {
+
+    // 25% chance of 3d6 gems
+    if (this.rollD100() <= 25) {
       treasure.gems = this.rollDie(6) + this.rollDie(6) + this.rollDie(6); // 3d6
     }
-    if (this.rollDie(4) === 1) {
+
+    // 25% chance of 1d10 pieces of jewelry
+    if (this.rollD100() <= 25) {
       treasure.jewelry = this.rollDie(10);
     }
+
+    // 15% chance of 4 magic items + 1d6 scrolls
     if (this.rollD100() <= 15) {
       treasure.magicItems = 4;
       treasure.scrolls = this.rollD6();
@@ -1285,7 +1390,7 @@ export class SteadingGenerator {
       abbotLevel = 9;
       if (monksNuns >= 50) abbotLevel += 1;
     } else {
-      monksNuns = Math.floor(Math.random() * 24) + 1 * 10 + 90;
+      monksNuns = (this.rollDie(24)) * 10 + 90;
       abbotLevel = 9 + Math.floor(monksNuns / 100);
     }
     
@@ -1293,7 +1398,7 @@ export class SteadingGenerator {
     const structureAndLand = {
       protection: "Stone wall with large gate",
       outsideWalls: "Fields and farming buildings (barns, mills, etc.)",
-      areaWithinWalls: `${this.rollDie(2) + 2} acres (= ${1.2 + (this.rollDie(2)) * 0.4}-${1.2 + (this.rollDie(2)) * 0.4 + 0.4} ha)`
+      areaWithinWalls: `${this.rollDie(2) + 2} acres (= ${1.2 + (this.rollDie(2) - 1) * 0.4}-${1.6} ha)`
     };
     
     // Core locations
@@ -1417,8 +1522,8 @@ export class SteadingGenerator {
       name,
       nameVariations: [name],
       disposition: this.generateDisposition(),
-      size,
-      population: {
+      abbeySize: size,
+      abbeyPopulation: {
         monksNuns,
         abbotLevel
       },

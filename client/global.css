@@ -9,6 +9,9 @@
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
+    --primary-color: #F85565;
+    --secondary-color: #ED8C38;
+
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
 
@@ -102,5 +105,51 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'MedievalSharp', serif;
+  }
+
+  p {
+    font-family: serif;
+  }
+
+  input::placeholder {
+    color: #DCCB75;
+  }
+
+  input.even-row-placeholder::placeholder {
+    color: #9B8B44;
+  }
+
+  /* Navigation button hover states - targeting rgb(248, 85, 101) */
+  button[style*="background-color: rgb(248, 85, 101)"]:hover {
+    background-color: rgb(198, 68, 81) !important;
+  }
+
+  /* Generate button hover state - targeting rgb(173, 86, 77) */
+  button[style*="background-color: rgb(173, 86, 77)"]:hover {
+    background-color: rgb(138, 69, 62) !important;
+  }
+
+  /* Primary color button hover state - 20% darker */
+  button[style*="background-color: var(--primary-color)"]:hover {
+    background-color: #C6445A !important;
+  }
+
+  /* Secondary color button hover state - 20% darker */
+  button[style*="background-color: var(--secondary-color)"]:hover {
+    background-color: #BE702D !important;
+  }
+
+  /* Mobile viewport height fix and safe area padding */
+  @media (max-width: 1024px) {
+    .min-h-screen {
+      min-height: 100vh;
+      min-height: 100dvh; /* Use dynamic viewport height when available */
+    }
+
+    /* Add safe area padding for mobile devices */
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
   }
 }

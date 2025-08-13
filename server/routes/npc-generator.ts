@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
-import { generateNPC, generateNPCStep, GeneratedNPC } from "../lib/npc-generator.js";
+import { generateNPC, generateNPCStep, generateIntelligentNPC, GeneratedNPC } from "../lib/npc-generator.js";
 import Anthropic from "@anthropic-ai/sdk";
+import { getGlobalNarrativeRestrictions } from "../lib/llm-instructions.js";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
 
 // Generate a complete NPC with all characteristics
-export function generateCompleteNPC(req: Request, res: Response) {
+export async function generateCompleteNPC(req: Request, res: Response) {
   try {
-    const npc = generateNPC();
+    const npc = await generateIntelligentNPC();
 
     res.json({
       success: true,
@@ -98,6 +99,8 @@ Please create a compelling narrative that:
 6. If any details seem contradictory or don't make logical sense together, feel free to modify them or reinterpret them in a way that creates a more believable character
 
 Write this as a 2-3 paragraph character description that a GM could use to roleplay this NPC effectively. Focus on personality, background, and how all these elements work together to create a memorable character.
+
+${getGlobalNarrativeRestrictions()}
 
 Then, in a separate section below the character description, add:
 

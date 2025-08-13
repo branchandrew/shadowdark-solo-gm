@@ -5,6 +5,7 @@
  */
 
 import { generateNames, type NameAlignment } from "./name-generator.js";
+import { generateSingleIntelligentName } from "./intelligent-name-generator.js";
 
 // NPC race types (different from story arc races)
 export const NPC_RACES: string[] = [
@@ -737,6 +738,50 @@ export class NPCGenerator {
     return this.getRandomElement(LAST_NAMES);
   }
 
+  /**
+   * Generate an intelligent name based on NPC characteristics
+   */
+  private async generateIntelligentName(npcData: {
+    race: string;
+    occupation: string;
+    motivation: string;
+    secret: string;
+  }): Promise<{ firstName: string; lastName: string }> {
+    try {
+      const result = await generateSingleIntelligentName({
+        characterType: "NPC",
+        race: npcData.race,
+        occupation: npcData.occupation,
+        motivation: npcData.motivation,
+        description: `${npcData.race} ${npcData.occupation} with secret: ${npcData.secret}`
+      });
+
+      if (result.success && result.name) {
+        // Split the generated name into first and last name
+        const nameParts = result.name.split(/\s+/);
+        if (nameParts.length >= 2) {
+          return {
+            firstName: nameParts[0],
+            lastName: nameParts.slice(1).join(' ')
+          };
+        } else {
+          return {
+            firstName: nameParts[0] || this.generateFirstName(),
+            lastName: this.generateLastName()
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Error generating intelligent name:", error);
+    }
+
+    // Fallback to traditional name generation
+    return {
+      firstName: this.generateFirstName(),
+      lastName: this.generateLastName()
+    };
+  }
+
   public generateNPC(): GeneratedNPC {
     try {
       return {
@@ -799,6 +844,50 @@ export class NPCGenerator {
 export function generateNPC(): GeneratedNPC {
   const generator = new NPCGenerator();
   return generator.generateNPC();
+}
+
+/**
+ * Generate an NPC with intelligent name selection based on characteristics
+ */
+export async function generateIntelligentNPC(): Promise<GeneratedNPC> {
+  const generator = new NPCGenerator();
+
+  try {
+    // Generate all characteristics first
+    const race = generator.generateRace();
+    const occupation = generator.generateOccupation();
+    const motivation = generator.generateMotivation();
+    const secret = generator.generateSecret();
+    const physicalAppearance = generator.generatePhysicalAppearance();
+    const economicStatus = generator.generateEconomicStatus();
+    const quirk = generator.generateQuirk();
+    const competence = generator.generateCompetence();
+
+    // Generate intelligent name based on characteristics
+    const nameData = await generator.generateIntelligentName({
+      race,
+      occupation,
+      motivation,
+      secret
+    });
+
+    return {
+      race,
+      occupation,
+      motivation,
+      secret,
+      physicalAppearance,
+      economicStatus,
+      quirk,
+      competence,
+      firstName: nameData.firstName,
+      lastName: nameData.lastName,
+    };
+  } catch (error) {
+    console.error("Error generating intelligent NPC:", error);
+    // Fallback to regular generation
+    return generator.generateNPC();
+  }
 }
 
 export function generateNPCStep(step: keyof GeneratedNPC): string {

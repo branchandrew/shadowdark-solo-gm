@@ -1,21 +1,12 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import {
-  User,
-  Briefcase,
-  Heart,
-  Eye,
-  Palette,
-  DollarSign,
-  Zap,
-  Star,
   RefreshCw,
-  Dice1,
-  UserCheck,
-  Tag
+  Edit3,
+  Copy
 } from "lucide-react";
 
 interface GeneratedNPC {
@@ -31,273 +22,442 @@ interface GeneratedNPC {
   lastName: string;
 }
 
-const NPC_STEPS = [
-  { key: 'race', label: 'Race', icon: User, description: 'The racial heritage of the NPC' },
-  { key: 'occupation', label: 'Occupation', icon: Briefcase, description: 'What the NPC does for work' },
-  { key: 'motivation', label: 'Motivation', icon: Heart, description: 'What drives the NPC' },
-  { key: 'secret', label: 'Secret', icon: Eye, description: 'Hidden information about the NPC' },
-  { key: 'physicalAppearance', label: 'Physical Appearance', icon: Palette, description: 'How the NPC looks' },
-  { key: 'economicStatus', label: 'Economic Status', icon: DollarSign, description: 'The NPC\'s wealth level' },
-  { key: 'quirk', label: 'Quirk', icon: Zap, description: 'Unique behavioral trait' },
-  { key: 'competence', label: 'Competence', icon: Star, description: 'The NPC\'s skill and capability level' },
-  { key: 'firstName', label: 'First Name', icon: UserCheck, description: 'The NPC\'s given name' },
-  { key: 'lastName', label: 'Last Name', icon: Tag, description: 'The NPC\'s family name' },
+const GENERATION_STEPS = [
+  { key: 'firstName', label: 'First Name', description: 'Character\'s given name (Algorithmic generation)' },
+  { key: 'lastName', label: 'Last Name', description: 'Character\'s family name (Algorithmic generation)' },
+  { key: 'race', label: 'Race', description: 'Character\'s species or ancestry (Random table roll)' },
+  { key: 'occupation', label: 'Occupation', description: 'Character\'s profession or trade (Random table roll)' },
+  { key: 'physicalAppearance', label: 'Physical Appearance', description: 'Character\'s looks and build (Random table roll)' },
+  { key: 'economicStatus', label: 'Economic Status', description: 'Character\'s wealth level (Random table roll)' },
+  { key: 'quirk', label: 'Quirk', description: 'Character\'s distinctive trait or habit (Random table roll)' },
+  { key: 'competence', label: 'Competence', description: 'Character\'s skill level and effectiveness (Random table roll)' },
+  { key: 'motivation', label: 'Motivation', description: 'Character\'s driving desires and goals (Random table roll)' },
+  { key: 'secret', label: 'Secret', description: 'Character\'s hidden truth or mystery (Random table roll)' },
 ] as const;
 
-export default function NPCGenerator() {
-  const [npc, setNpc] = useState<GeneratedNPC | null>(null);
+interface NPCGeneratorProps {
+  mobileTab?: 'step1' | 'step2';
+}
+
+export default function NPCGenerator({ mobileTab = 'step1' }: NPCGeneratorProps = {}) {
+  const { toast } = useToast();
+  const [npcData, setNpcData] = useState<GeneratedNPC | null>(null);
   const [loading, setLoading] = useState(false);
   const [generatingStep, setGeneratingStep] = useState<string | null>(null);
-  const [userValues, setUserValues] = useState<Partial<GeneratedNPC>>({});
   const [narrative, setNarrative] = useState<string>("");
   const [generatingNarrative, setGeneratingNarrative] = useState(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editValues, setEditValues] = useState<Record<string, string>>({});
+  const [step1Complete, setStep1Complete] = useState(false);
 
-  const generateCompleteNPC = async () => {
+  const generateStep1 = async () => {
     setLoading(true);
+    setNpcData(null);
+    setNarrative('');
+    setStep1Complete(false);
+    
     try {
-      const response = await fetch("/api/generate-npc", {
-        method: "POST",
+      const response = await fetch('/api/generate-npc', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
+      
       if (data.success) {
-        // Merge generated NPC with user-entered values
-        const mergedNpc = { ...data.npc, ...userValues };
-        setNpc(mergedNpc);
+        setNpcData(data.npc);
+        setStep1Complete(true);
+        toast({
+          title: "NPC Generated!",
+          description: `Generated ${data.npc.firstName} ${data.npc.lastName}, a ${data.npc.race} ${data.npc.occupation}.`,
+        });
       } else {
-        console.error("NPC generation failed:", data.error);
+        throw new Error(data.error || 'Failed to generate NPC');
       }
     } catch (error) {
-      console.error("Error generating NPC:", error);
+      console.error('Error generating NPC:', error);
+      toast({
+        title: "Generation Error",
+        description: "Failed to generate NPC. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const generateNPCStep = async (step: keyof GeneratedNPC) => {
-    setGeneratingStep(step);
+  const regenerateStep = async (stepKey: string) => {
+    setGeneratingStep(stepKey);
+    
     try {
-      const response = await fetch("/api/generate-npc-step", {
-        method: "POST",
+      const response = await fetch('/api/generate-npc-step', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ step }),
+        body: JSON.stringify({ step: stepKey }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
-      if (data.success) {
-        setNpc(prev => prev ? { ...prev, [step]: data.result } : null);
-        // Remove this field from user values since it was regenerated
-        setUserValues(prev => {
-          const updated = { ...prev };
-          delete updated[step];
-          return updated;
+      
+      if (data.success && npcData) {
+        setNpcData({
+          ...npcData,
+          [stepKey]: data.result,
+        });
+        toast({
+          title: "Field Regenerated!",
+          description: `${stepKey} has been updated.`,
         });
       } else {
-        console.error("NPC step generation failed:", data.error);
+        throw new Error(data.error || 'Failed to regenerate step');
       }
     } catch (error) {
-      console.error("Error generating NPC step:", error);
+      console.error('Error regenerating step:', error);
+      toast({
+        title: "Generation Error",
+        description: "Failed to regenerate field. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setGeneratingStep(null);
     }
   };
 
-  const handleInputChange = (field: keyof GeneratedNPC, value: string) => {
-    // Update the NPC display
-    setNpc(prev => prev ? { ...prev, [field]: value } : null);
-
-    // Store user-entered value
-    if (value.trim() === '') {
-      // Remove from user values if empty
-      setUserValues(prev => {
-        const updated = { ...prev };
-        delete updated[field];
-        return updated;
-      });
-    } else {
-      // Store user value
-      setUserValues(prev => ({ ...prev, [field]: value }));
-    }
-  };
-
   const generateNarrative = async () => {
-    if (!npc) return;
-
+    if (!npcData) return;
+    
     setGeneratingNarrative(true);
+    
     try {
-      const response = await fetch("/api/generate-npc-narrative", {
-        method: "POST",
+      const response = await fetch('/api/generate-npc-narrative', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ npc }),
+        body: JSON.stringify({
+          npc: npcData,
+        }),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
       const data = await response.json();
+      
       if (data.success) {
         setNarrative(data.narrative);
+        toast({
+          title: "Narrative Generated!",
+          description: "Character narrative has been created.",
+        });
       } else {
-        console.error("Narrative generation failed:", data.error);
+        throw new Error(data.error || 'Failed to generate narrative');
       }
     } catch (error) {
-      console.error("Error generating narrative:", error);
+      console.error('Error generating narrative:', error);
+      toast({
+        title: "Generation Error",
+        description: "Failed to generate narrative. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setGeneratingNarrative(false);
     }
   };
 
-  const resetNPC = () => {
-    setNpc(null);
-    setUserValues({});
-    setNarrative("");
+  const handleEditStart = (field: string, currentValue: any) => {
+    setEditingField(field);
+    setEditValues({ [field]: String(currentValue || '') });
+  };
+
+  const handleEditSave = (field: string) => {
+    if (npcData) {
+      setNpcData({
+        ...npcData,
+        [field]: editValues[field],
+      });
+    }
+    setEditingField(null);
+    setEditValues({});
+  };
+
+  const handleEditCancel = () => {
+    setEditingField(null);
+    setEditValues({});
+  };
+
+  const handleCopyField = async (stepKey: string, value: any) => {
+    const stepData = GENERATION_STEPS.find(step => step.key === stepKey);
+    const label = stepData?.label || stepKey;
+    const textToCopy = `${label}: ${String(value)}`;
+
+    const success = await copyToClipboard(textToCopy);
+
+    if (success) {
+      toast({
+        title: "Copied to clipboard",
+        description: "Content has been successfully copied.",
+      });
+    } else {
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy content to clipboard. Please manually select and copy the text.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    // Try modern Clipboard API first
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (err) {
+      console.warn('Clipboard API failed, falling back to execCommand:', err);
+    }
+
+    // Fallback to the older document.execCommand method
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const success = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      if (success) {
+        return true;
+      } else {
+        throw new Error('execCommand copy failed');
+      }
+    } catch (err) {
+      console.error('All copy methods failed:', err);
+      return false;
+    }
+  };
+
+  const handleCopyNarrative = async () => {
+    const success = await copyToClipboard(narrative);
+
+    if (success) {
+      toast({
+        title: "Copied to clipboard",
+        description: "Narrative has been successfully copied.",
+      });
+    } else {
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy narrative to clipboard. Please manually select and copy the text.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const renderStepValue = (step: typeof GENERATION_STEPS[0], value: any) => {
+    const isEditing = editingField === step.key;
+
+    if (isEditing) {
+      return (
+        <div className="space-y-2">
+          <Input
+            value={editValues[step.key] || ''}
+            onChange={(e) => setEditValues({ ...editValues, [step.key]: e.target.value })}
+            className="w-full font-serif"
+            autoFocus
+          />
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => handleEditSave(step.key)}>
+              Save
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleEditCancel}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return <span className="font-serif font-semibold" style={{ paddingTop: '6px' }}>{String(value)}</span>;
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-6 w-6" />
-            NPC Generator
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-2">
-            <Button
-              onClick={generateCompleteNPC}
-              disabled={loading}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-              {loading ? "Generating..." : "Generate Complete NPC"}
-            </Button>
-            {npc && (
-              <Button
-                onClick={resetNPC}
-                variant="outline"
-              >
-                Clear NPC
-              </Button>
+    <div className="flex h-full">
+      {/* Step 1 - Left Panel */}
+      <div className={`flex flex-col h-full flex-1 lg:border-r border-gray-300 lg:pr-3.5 ${mobileTab === 'step2' ? 'hidden lg:flex' : ''}`}>
+        <div className="border-b border-gray-200 pb-4 flex-shrink-0">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Step 1</h2>
+          <p className="text-gray-600 mb-4">Generate and edit basic information about your NPC.</p>
+          
+          <Button
+            onClick={generateStep1}
+            disabled={loading}
+            className="w-auto"
+            style={{
+              backgroundColor: 'var(--secondary-color)',
+              borderRadius: '20px 17px 22px 15px',
+              fontFamily: 'MedievalSharp, cursive',
+            }}
+          >
+            {loading ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Generating NPC...
+              </>
+            ) : (
+              "Generate NPC"
             )}
-          </div>
-        </CardContent>
-      </Card>
+          </Button>
+        </div>
 
-      {/* NPC Editor */}
-      <Card>
-        <CardHeader>
-          <CardTitle>NPC Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4">
-            {NPC_STEPS.map(({ key, label, icon: Icon, description }) => (
-              <div key={key} className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                  <label className="font-medium text-sm">{label}</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Input
-                    placeholder={description}
-                    value={npc?.[key as keyof GeneratedNPC] || ''}
-                    onChange={(e) => {
-                      if (!npc) {
-                        setNpc({
-                          race: '',
-                          occupation: '',
-                          motivation: '',
-                          secret: '',
-                          physicalAppearance: '',
-                          economicStatus: '',
-                          quirk: '',
-                          competence: '',
-                          firstName: '',
-                          lastName: '',
-                        });
-                      }
-                      handleInputChange(key as keyof GeneratedNPC, e.target.value);
-                    }}
-                    className="flex-1"
-                  />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      if (!npc) {
-                        setNpc({
-                          race: '',
-                          occupation: '',
-                          motivation: '',
-                          secret: '',
-                          physicalAppearance: '',
-                          economicStatus: '',
-                          quirk: '',
-                          competence: '',
-                          firstName: '',
-                          lastName: '',
-                        });
-                      }
-                      generateNPCStep(key as keyof GeneratedNPC);
-                    }}
-                    disabled={generatingStep === key}
-                    title={`Generate random ${label.toLowerCase()}`}
-                  >
-                    <Dice1 className={`h-4 w-4 ${generatingStep === key ? "animate-spin" : ""}`} />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <div className="flex-1 overflow-y-auto min-h-0 mt-6">
+          {npcData && (
+            <div className="space-y-4 pr-2">
+              {GENERATION_STEPS.filter((step) => {
+                const value = npcData[step.key as keyof GeneratedNPC];
+                // Only show fields that actually have values
+                return value !== undefined && value !== null && value !== '';
+              }).map((step) => {
+                const value = npcData[step.key as keyof GeneratedNPC];
+                const isGenerating = generatingStep === step.key;
+                const isEditing = editingField === step.key;
 
-      {/* NPC Narrative Generation */}
-      {npc && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Character Narrative</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Button
-                onClick={generateNarrative}
-                disabled={generatingNarrative}
-                className="flex items-center gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${generatingNarrative ? "animate-spin" : ""}`} />
-                {generatingNarrative ? "Generating Narrative..." : "Generate Character Narrative"}
-              </Button>
-
-              {narrative && (
-                <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">Character Description:</h4>
-                  <div className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800 dark:text-gray-200">
-                    {narrative}
-                  </div>
-                </div>
-              )}
+                return (
+                  <Card key={step.key}>
+                    <CardHeader className="pb-1.5">
+                      <CardTitle className="text-base">
+                        <p className="flex-1 min-w-0">
+                          <span className="font-bold text-sm">{step.label}</span>
+                          <span className="text-sm text-gray-600 font-normal"> {step.description}</span>
+                        </p>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="bg-gray-50 border border-gray-200 rounded-md p-1.5">
+                        <div className={`flex gap-3 ${step.key === 'firstName' || step.key === 'lastName' || step.key === 'race' ? 'items-center justify-start' : 'items-start'}`}>
+                          <div className="flex-1">
+                            {renderStepValue(step, value)}
+                          </div>
+                          <div className="flex-shrink-0 flex items-center">
+                            {!isEditing && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditStart(step.key, value)}
+                                disabled={isGenerating || !value}
+                                className="text-gray-500 hover:text-primary p-1"
+                              >
+                                <Edit3 className="w-3 h-3" />
+                              </Button>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleCopyField(step.key, value)}
+                              disabled={!value}
+                              className="text-gray-500 hover:text-primary p-1"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => regenerateStep(step.key)}
+                              disabled={isGenerating || isEditing}
+                              className="p-1"
+                            >
+                              {isGenerating ? (
+                                <RefreshCw className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <RefreshCw className="w-3 h-3" />
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </div>
+      </div>
+
+      {/* Step 2 - Right Panel */}
+      <div className={`flex flex-col h-full flex-1 lg:pl-3.5 ${mobileTab === 'step1' ? 'hidden lg:flex' : ''}`}>
+        <div className="border-b border-gray-200 pb-4 flex-shrink-0">
+          <h2 className={`text-2xl font-semibold mb-2 ${step1Complete ? 'text-gray-800' : 'text-gray-400'}`}>Step 2</h2>
+          <p className={`mb-4 ${step1Complete ? 'text-gray-600' : 'text-gray-400'}`}>Generate AI narrative and storytelling content.</p>
+          <Button
+            onClick={generateNarrative}
+            disabled={generatingNarrative || !step1Complete}
+            className="w-auto"
+            style={{
+              backgroundColor: step1Complete ? 'var(--secondary-color)' : '#9CA3AF',
+              borderRadius: '18px 24px 16px 21px',
+              fontFamily: 'MedievalSharp, cursive',
+            }}
+          >
+            {generatingNarrative ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Generating Narrative...
+              </>
+            ) : (
+              "Generate AI Narrative"
+            )}
+          </Button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto min-h-0 mt-6">
+          {step1Complete && (
+            <div className="pr-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <span>AI Narrative</span>
+                      <span className="text-sm text-gray-600 font-normal">Rich storytelling for DM use</span>
+                    </div>
+                    {narrative && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCopyNarrative}
+                        className="text-gray-500 hover:text-primary p-1"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-gray-50 rounded-md">
+                    {narrative ? (
+                      <div className="prose prose-sm max-w-none font-serif">
+                        <p className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
+                          {narrative}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 italic font-serif">
+                        Click "Generate AI Narrative" to create rich storytelling content about this character
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
