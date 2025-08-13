@@ -1,6 +1,5 @@
----
+yaml---
 deployment:
- tasks:
- - export DEPLOYPATH=/home/user/public_html/
- - /bin/cp index.html $DEPLOYPATH
- - /bin/cp style.css $DEPLOYPATH
+  tasks:
+    - export DEPLOYPATH=/home/thelsggl/public_html/
+    - /bin/cp -R * $DEPLOYPATH
