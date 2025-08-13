@@ -1,5 +1,9 @@
----
 deployment:
   tasks:
     - export DEPLOYPATH=/home/thelsggl/public_html/
-    - /bin/cp -R dist/* $DEPLOYPATH
+    - /bin/echo "Cleaning deployment directory"
+    - /bin/rm -rf $DEPLOYPATH/*
+    - /bin/echo "Copying SPA files"
+    - /bin/cp -R dist/spa/* $DEPLOYPATH/
+    - /bin/echo "Deployment complete, listing files:"
+    - /bin/ls -la $DEPLOYPATH/
