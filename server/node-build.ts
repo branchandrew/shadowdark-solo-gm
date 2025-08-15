@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-globalThis.fetch = fetch as any;
+(globalThis as any).fetch = fetch;
 
 import path from "path";
 import { createServer } from "./index";
