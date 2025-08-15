@@ -10577,7 +10577,7 @@ function createServer() {
   app2.post("/api/generate-danger-narrative", generateDangerNarrativeRoute);
   return app2;
 }
-globalThis.fetch = fetch;
+Object.assign(globalThis, { fetch });
 const app = createServer();
 const port = process.env.PORT || 3e3;
 const __dirname = import.meta.dirname;
