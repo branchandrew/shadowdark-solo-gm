@@ -1,6 +1,3 @@
-import fetch from 'node-fetch';
-(globalThis as any).fetch = fetch;
-
 import path from "path";
 import { createServer } from "./index";
 import * as express from "express";
