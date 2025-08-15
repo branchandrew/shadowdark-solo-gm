@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import path from "path";
 import * as express from "express";
 import express__default from "express";
@@ -10576,6 +10577,7 @@ function createServer() {
   app2.post("/api/generate-danger-narrative", generateDangerNarrativeRoute);
   return app2;
 }
+globalThis.fetch = fetch;
 const app = createServer();
 const port = process.env.PORT || 3e3;
 const __dirname = import.meta.dirname;
